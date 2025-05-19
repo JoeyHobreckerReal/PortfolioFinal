@@ -1,0 +1,135 @@
+<!-- According to ChatGPT (2025, April 10), “Give structure of an HTML website black background, centered title, five audio elements with IDs, and a button to enable sound. Give 10 examples. ” resulted exmaples of strucuter of simle sound playing interface  -->
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Sound Player</title>
+  <style>
+    body {
+      background: black;->
+      color: white;
+      text-align: center;
+      font-family: sans-serif;
+      margin: 20px;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 20px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-top: 20px;
+    }
+    button:disabled {
+      background-color: #cccccc;
+    }
+    #status {
+      margin-top: 10px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Sound Player</h1>
+  <div id="status">Waiting for connection...</div>
+  <button id="startButton">START AUDIO</button>
+  
+  <audio id="greenSound">
+    <source src="pianosound1.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="redSound">
+    <source src="pianosound2.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="blueSound">
+    <source src="pianosound3.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="yellowSound">
+    <source src="pianosound4.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="melodySound">
+    <source src="Melody.mp3" type="audio/mpeg">
+  </audio>
+
+  <script src="https://df-demo.id.tue.nl/assets/javascripts/oocsi-web.js"></script>
+  
+  <script>
+    function connectOOCSI() {
+      OOCSI.connect("wss://oocsi.id.tue.nl/ws", "simple-sound-player");
+      OOCSI.subscribe("channel7", handleOOCSIMessage);
+      document.getElementById("status").textContent = "Connected";
+    }
+    // According to ChatGPT (2025, April 10), “Explain how to play only one sound at a time by pausing all others before playing the selected one, using a function resets audio elements by ID. Give minimum of 10 examples. ” resulted in examples of methods on how to handle playing several different audio files on the website
+    function handleOOCSIMessage(msg) {
+      if (msg.data.radio_button) {
+        var button = msg.data.radio_button;
+        
+        if (button === "green") {
+          playSound("greenSound");
+        } else if (button === "red") {
+          playSound("redSound");
+        } else if (button === "blue") {
+          playSound("blueSound");
+        } else if (button === "yellow") {
+          playSound("yellowSound");
+        } else if (button === "correct") {
+          playSound("melodySound");
+        }
+      }
+    }
+    
+    function playSound(soundId) {
+      stopAllSounds();
+      
+      var sound = document.getElementById(soundId);
+      var startButton = document.getElementById("startButton");
+      
+      if (startButton.disabled) {
+        sound.play();
+      } else {
+        startButton.style.backgroundColor = "red";
+        setTimeout(function() {
+          startButton.style.backgroundColor = "#4CAF50";
+        }, 500);
+      }
+    }
+    
+    function stopAllSounds() {
+      document.getElementById("greenSound").pause();
+      document.getElementById("greenSound").currentTime = 0;
+      document.getElementById("redSound").pause();
+      document.getElementById("redSound").currentTime = 0;
+      document.getElementById("blueSound").pause();
+      document.getElementById("blueSound").currentTime = 0;
+      document.getElementById("yellowSound").pause();
+      document.getElementById("yellowSound").currentTime = 0;
+      document.getElementById("melodySound").pause();
+      document.getElementById("melodySound").currentTime = 0;
+    }
+    
+    document.getElementById("startButton").addEventListener("click", function() {
+      var tempAudio = new Audio();
+      tempAudio.play().then(function() {
+        document.getElementById("startButton").textContent = "AUDIO ON";
+        document.getElementById("startButton").disabled = true;
+      }).catch(function() {
+        document.getElementById("startButton").textContent = "TRY AGAIN";
+      });
+    });
+    
+    window.onload = connectOOCSI;
+  </script>
+</body>
+</html>
+
+<!-- Sources -->
+<!-- 1. OpenAI. (2025, April 10). ChatGPT [Large language model]. Retrieved from https://chatgpt.com/share/67f7c6f4-647c-8004-8437-5e972c2bb6db
+(Prompt: "Give structure of an HTML website black background, centered title, five audio elements with IDs, and a button to enable sound. Give 10 examples.") -->
+<!-- 2. OpenAI. (2025, April 10). ChatGPT [Large language model]. Retrieved from https://chatgpt.com/share/67f7c80b-61e0-8004-95c0-048e855bbf42
+(Prompt: "Explain how to play only one sound at a time by pausing all others before playing the selected one, using a function resets audio elements by ID. Give minimum of 10 examples.") -->
+
+<!-- Explanation AI Sourcing -->
+<!-- Nothing was directly copied from an AI tool; they were only used to answer questions
+and provide basic bare bone structures.-->
+<!-- 1. Our team never really worked with displaying, playing and storing audio files on a website and we found it hard tog et started. We just ChatGPT to create the basic structure of our website so we had an example to go of on. We did not use the generated code, but did use it to help get us started; it was just as inspiration and for direction.  -->
+<!-- 2. We tried several times to get it working ourselves but it just did not work. We used ChatGPT to generate several working examples to find out what was wrong with our code. The exampels helped us pint point the erros in our code and we got it working.-->

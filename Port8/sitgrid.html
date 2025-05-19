@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <link rel="stylesheet" type="text/css" href="https://dfdemo.id.tue.nl/assets/stylesheets/picoCSS/pico.indigo.min.css">
+ <script type="text/javascript" src="https://df-demo.id.tue.nl/assets/javascripts/oocsiweb.js"></script>
+ <script type="text/javascript" src="fantastic-things.js"></script>
+ <style>
+ html {
+ background: black;
+ }
+ body {
+ touch-action: manipulation;
+ }
+
+ .grid-container {
+ display: flex;
+ flex-wrap: wrap;
+ gap: 10px;
+ background: black;
+ height: 80vh;
+ }
+ .cell {
+ flex: 1 1 calc(33.33% - 5px);
+ min-height: 100px;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ font-size: 5.5rem;
+ color: white;
+ cursor: pointer;
+ }
+ </style>
+</head>
+<body>
+ <div class="grid-container">
+ <div class="cell" data="melody">
+ Play Melody
+ </div>
+ </div>
+</body>
+<script type="text/javascript">
+ // define thing
+ function thing() {
+ // register this thing with the name 'Situational Grid' and data path 'sitgrid';
+ // no input, output is 'situation'
+ fantasticThings.register('Situational Grid ', 'sitgrid', [], ['situation'])
+ // define own shared data
+ let situation = fantasticThings.data('situation')
+ // register grid handlers
+ document.querySelectorAll('.grid-container .cell').forEach(d => {
+ d.addEventListener('click', () => {
+ situation(d.attributes.data.value);
+ fantasticThings.activity();
+ setTimeout(() => {
+ situation("reset");
+ }, 500);
+ })
+ });
+ }
+</script>
+</html>

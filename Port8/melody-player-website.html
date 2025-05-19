@@ -1,0 +1,262 @@
+<!-- Basic structure HTML for website -->
+<!-- According to ChatGPT (2025, April 1), "Show me multiple simple structures of html code. On the main page there is a black screen and there are piano notes. Need to see the music lines and the notes on there. Give me 8 possible options. Next to the lines need to be numbers." resulted in an layout suggestion. -->
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>MELODY PLAYER</title>
+  <script src="https://df-demo.id.tue.nl/assets/javascripts/oocsi-web.js"></script>
+  <style>
+    body {
+      background: black;
+      color: white;
+      text-align: center;
+      font-family: sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      color: white;
+      margin-bottom: 30px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .sheet-music {
+      background-color: white;
+      padding: 20px;
+      margin: 20px auto;
+      width: 80%;
+      border-radius: 5px;
+      position: relative;
+    }
+    .staff {
+      position: relative;
+      height: 120px;
+      margin: 30px 0;
+    }
+    .staff-line {
+      position: absolute;
+      height: 2px;
+      width: 100%;
+      background-color: black;
+    }
+    .staff-line:nth-child(1) { top: 0; }
+    .staff-line:nth-child(2) { top: 30px; }
+    .staff-line:nth-child(3) { top: 60px; }
+    .staff-line:nth-child(4) { top: 90px; }
+    .staff-line:nth-child(5) { top: 120px; }
+    
+    .line-numbers {
+      position: absolute;
+      left: 5px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 0 5px;
+    }
+    .line-number {
+      font-weight: bold;
+      color: black;
+    }
+    
+    .notes {
+      display: flex;
+      justify-content: space-around;
+      position: absolute;
+      width: 80%;
+      height: 100%;
+      left: 10%;
+    }
+    .note {
+      position: relative;
+      width: 20px;
+    }
+    .note-head {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: black;
+    }
+    .note-stem {
+      position: absolute;
+      width: 2px;
+      height: 40px;
+      background-color: black;
+      left: 18px;
+    }
+    
+    #status {
+      margin: 20px 0;
+      font-size: 18px;
+      height: 24px;
+    }
+    #success-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: green;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+      color: white;
+      font-size: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>MELODY PLAYER</h1>
+    <p>Use your phone to play the melody on the piano keys</p>
+    <div class="sheet-music">
+      <div class="staff">
+        <div class="staff-line"></div>
+        <div class="staff-line"></div>
+        <div class="staff-line"></div>
+        <div class="staff-line"></div>
+        <div class="staff-line"></div>        
+        <div class="line-numbers">
+          <div class="line-number">5</div>
+          <div class="line-number">4</div>
+          <div class="line-number">3</div>
+          <div class="line-number">2</div>
+          <div class="line-number">1</div>
+        </div>   
+        <div class="notes">
+        </div>
+      </div>
+    </div>
+    
+    <div id="status">Connect your phone and play the melody!</div>
+  </div>
+  <div id="success-screen">
+    <h2>CREATED MELODY!</h2>
+    <p>Sound 4 is now available in the main control room.</p>
+  </div>
+  
+  <!-- According to ChatGPT (2025, April 1), "Explain how you connect something to OOCSI with examples. HTML code. " resulted in examples and suggestion of how to create a connection. -->
+  <!-- According to ChatGPT (2025, April 1), "Show me how I can have multiple websites at one time connected to one oocsi channel." resulted in examples and explanations. -->
+  <script>
+    const correctMelody = [3, 1, 4, 1, 5];
+    
+    OOCSI.connect("wss://oocsi.id.tue.nl/ws", "channel7/melody-player-web");
+    OOCSI.subscribe("channel7", handleOOCSI);
+    setTimeout(function() {
+      OOCSI.send("channel7", { 
+        "source": "melody_player_web", 
+        "status": "online" 
+      });
+    }, 1000);
+    
+    // According to ChatGPT (2025, April 1), "Show me 5 different implementations of a JavaScript function that places musical notes on a web-based staff" resulted in several examples of how to do this.
+    function placeNotes() {
+      const notesContainer = document.querySelector('.notes');
+      notesContainer.innerHTML = '';
+      correctMelody.forEach((noteValue, index) => {
+        const noteElement = document.createElement('div');
+        noteElement.className = 'note';    
+        const noteHead = document.createElement('div');
+        noteHead.className = 'note-head';
+        noteHead.style.top = `${(5 - noteValue) * 30}px`;        
+        const noteStem = document.createElement('div');
+        noteStem.className = 'note-stem';
+        noteStem.style.top = `${(5 - noteValue) * 30}px`;     
+        noteElement.appendChild(noteHead);
+        noteElement.appendChild(noteStem);
+        notesContainer.appendChild(noteElement);
+      });
+    }
+    
+    function handleOOCSI(msg) {
+      if (msg.data) {
+        if (msg.data.source === "melody_player_phone" && msg.data.action === "note_played") {
+        }  
+        if (msg.data.source === "melody_player_phone" && msg.data.action === "submit_melody") {
+          if (msg.data.melody && Array.isArray(msg.data.melody)) {
+            checkMelody(msg.data.melody);
+          }
+        }
+      }
+    }
+    
+    function checkMelody(playedMelody) {
+      if (playedMelody.length !== correctMelody.length) {
+        OOCSI.send("channel7", {
+          source: "melody_player_web",
+          action: "feedback",
+          result: "incorrect",
+          message: "Wrong number of notes!"
+        });
+        return false;
+      }
+      
+      let isCorrect = true;
+      for (let i = 0; i < correctMelody.length; i++) {
+        if (playedMelody[i] !== correctMelody[i]) {
+          isCorrect = false;
+          break;
+        }
+      }
+      
+      if (isCorrect) {
+        showSuccess();
+      } else {
+        OOCSI.send("channel7", {
+          source: "melody_player_web",
+          action: "feedback",
+          result: "incorrect",
+          message: "Incorrect melody. Try again!"
+        });
+        document.getElementById("status").textContent = "Incorrect melody. Try again!";
+      }
+    }
+    
+    function showSuccess() {
+      document.getElementById("success-screen").style.display = "flex";
+      
+      OOCSI.send("channel7", {
+        source: "melody_player_web",
+        action: "feedback",
+        result: "correct",
+        message: "Melody correct!"
+      });
+      
+      OOCSI.send("channel7", {
+        source: "melody_player_web",
+        action: "puzzleComplete",
+        sound4: true
+      });
+      
+      setTimeout(() => {
+        document.getElementById("success-screen").style.display = "none";
+      }, 5000);
+    }
+    
+    window.addEventListener("load", () => {
+      placeNotes();
+    });
+  </script>
+</body>
+</html>
+
+<!-- Sources -->
+<!-- 1. OpenAI. (2025, April 1). ChatGPT [Large language model]. Retrieved from https://chatgpt.com/share/67ebd32d-7b50-8004-b0aa-ba88e88900d7 
+(Prompt: "Show me multiple simple structures of html code. On the main page there is a black screen and there are piano notes. Need to see the music lines and the notes on there. Give me 8 possible options. Next to the lines need to be numbers.") -->
+<!-- 2. OpenAI. (2025, April 1). ChatGPT [Large language model]. Retrieved from https://chatgpt.com/share/67ebd348-a778-8004-a3fc-e327ccd5f6be 
+(Prompt: "Explain how you connect something to OOCSI with examples. HTML code.") -->
+<!-- 3. OpenAI. (2025, April 1). ChatGPT [Large language model]. Retrieved from https://chatgpt.com/share/67ebd372-b054-8004-911e-194849cf4b46 
+(Prompt: "Show me how I can have multiple websites at one time connected to one oocsi channel.") -->
+<!-- 4. OpenAI. (2025, April 1). ChatGPT [Large language model]. Retrieved from https://chatgpt.com/share/67ebd362-6eec-8004-9b70-5d8788a8eda1 
+(Prompt: "Show me 5 different implementations of a JavaScript function that places musical notes on a web-based staff.") -->
+
+<!-- Explanation-->
+<!-- 1. Our team does not have a lot of experience with coding with HTML and we found it hard to get started. We used ChatGPT to create the basic structure of our website so we had an example to go of on. We did not use the generated code, but did use it to help get us started; it was just as inspiration and for direction. -->
+<!-- 2. Our team still found it hard to work with OOCSI and we used Chatgpt for direction and examples. 
+<!-- 3. Our team underfound an issue with having multiple websites using the same channel in OOCSI. Seperetly they runned fine; but when we runend multiple websites with the same channel only one would work. We found what was wrong with Chatgpt and how to solve it.   -->
+<!-- 4. We did not know how to create the music notes on the website. We used Chatgpt for direction and examples. -->

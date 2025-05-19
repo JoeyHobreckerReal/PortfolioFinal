@@ -1,0 +1,226 @@
+<!-- Basic structure HTML for website -->
+<!-- According to ChatGPT (2025, March 10), “Give me the basic structure of a website with
+only one page. On this page will be buttons and text” resulted in an layout suggestion. -->
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Music Editor</title>
+<style>
+body {
+background: black;
+color: white;
+text-align: center;
+font-family: sans-serif;
+margin: 20px;
+}
+button {
+margin: 10px;
+padding: 10px 20px;
+font-size: 16px;
+cursor: pointer;
+}
+#WeergevenFrequency {
+margin-top: 20px;
+font-size: 20px;
+}
+#GroenSchermModus {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: green;
+display: flex;
+justify-content: center;
+align-items: center;
+font-size: 48px;
+color: black;
+z-index: 9999;
+}
+section {
+margin: 20px 0;
+}
+</style>
+</head>
+<body>
+<!-- Buttons and frequency display -->
+<button id="startFrequency">Start Frequency</button>
+<button id="stopFrequency">Stop Frequency</button>
+<button id="spelen van Morse Code">Play Morse Code</button>
+<h1>Music Editor</h1>
+<div id="WeergevenFrequency">Current Frequency: N/A</div>
+
+<!--Info Text on Website -->
+<section>
+<h2>What is Happing?</h2>
+<p>
+You and your team are a group of audio engineers and musicians working on the final
+mix of a famous artist's new album. However, the producer mysteriously vanished before
+completing the last track, and the studio has gone into lockdown mode due to a system
+security breach. The only way out? Finish the mix, unlock the studio, and escape before time
+runs out!
+</p>
+<h2>How to Edit music</h2>
+<p>
+How can you Edit music to Create a Great SonG? Here we will tell you! First you have to
+find A Great SAMPLE. This is Not Hard; just listen to your FAvorITE songs! After that you
+need to Get IN THE recording STUDIO. Get togETHER wiTH SoMe FRieNDs and make it a
+fun gateway! Just HAvE FuN.
+</p>
+<h2>Morse Code</h2>
+<p>
+A → . B → -... C → -.-. D → -.. E → . F → ..-. G → --. H → .... I → .. J → .--- K → -.- L →
+.-.. M → -- N → -. O → --- P → .--. Q → --.- R → .-. S → ... T → - U → ..- V → ...-
+W → .-- X → -..- Y → -.-- Z → --..
+0 → ----- 1 → .---- 2 → ..--- 3 → ...-- 4 → ....- 5 → ..... 6 → -.... 7 → --... 8 → ---.. 9 → ----.
+</p>
+<h2>How to Release your song</h2>
+<p>
+You have many different platforms to release your music on. You have things like Spotify
+and SoundCloud, but you could even give out physical copies of your music to your friends
+and family; this is way more memorable. Another good way is to try to create a TikTok trend
+out of it; this will give your song a lot of attention.
+</p>
+</section>
+<!-- Audio Start -->
+<audio id="Geluid">
+<source src="Morse.mp3" type="audio/mpeg">
+</audio>
+<!-- Starting with OOCSI CXonnection -->
+<script src="https://df-demo.id.tue.nl/assets/javascripts/oocsi-web.js"></script>
+<!-- ChatGPT (2025, March 10) provided framework how to generate frequency sound on
+an HTML website that reacts to slider on ESP32. -->
+<script>
+var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+var oscillator = null;
+var gainNode = null;
+var toneStarted = false;
+var FreqcuencyNu = 0;
+var conditionStartTime = null;
+var effectActive = false;
+function updateFrequencyDisplay() {
+document.getElementById("WeergevenFrequency").textContent = "Current Frequency: "
++ FreqcuencyNu;
+}
+// Start playing frequency
+function startTone() {
+if (!toneStarted) {
+oscillator = audioCtx.createOscillator();
+gainNode = audioCtx.createGain();
+oscillator.type = "sine";
+oscillator.frequency.value = FreqcuencyNu;
+oscillator.connect(gainNode);
+gainNode.connect(audioCtx.destination);
+oscillator.start();
+toneStarted = true;
+OOCSI.send("channel7", { "source": "frequency_generator", "action": "startFrequency", "frequency": FreqcuencyNu });
+}
+}
+function stopTone() {
+if (toneStarted) {
+oscillator.stop();
+oscillator.disconnect();
+gainNode.disconnect();
+toneStarted = false;
+OOCSI.send("channel7", { "source": "frequency_generator", "action": "stopFrequency" });
+}
+}
+function triggerTargetEffect() {
+if (!effectActive) {
+if (toneStarted) {
+stopTone();
+}
+effectActive = true;
+OOCSI.send("channel7", { "source": "frequency_generator", "action": "targetFrequencyReached", "frequency":
+FreqcuencyNu, "sound1": true });
+var overlay = document.createElement("div");
+overlay.id = "GroenSchermModus";
+overlay.textContent = "TARGET FREQUENCY REACHED!";
+document.body.appendChild(overlay);
+setTimeout(function() {
+if (overlay.parentNode) {
+overlay.parentNode.removeChild(overlay);
+}
+effectActive = false;
+}, 10000);
+}
+}
+
+// Creating a connection to oocsi to receive and send data
+OOCSI.connect("wss://oocsi.id.tue.nl/ws", "channel7/frequency-generator");
+OOCSI.subscribe("channel7", handleOOCSI);   
+
+function handleOOCSI(msg) {
+  if (msg.data) {
+    // Handle frequency data
+    if (msg.data.Frequency !== undefined) {
+      FreqcuencyNu = msg.data.Frequency;
+      updateFrequencyDisplay();
+      if (toneStarted && oscillator) {
+        oscillator.frequency.value = FreqcuencyNu;
+      }
+      if (FreqcuencyNu >= 9900 && FreqcuencyNu <= 10100) {
+        if (!conditionStartTime) {
+          conditionStartTime = Date.now();
+        } else {
+          if (Date.now() - conditionStartTime >= 3000 && !effectActive) {
+            triggerTargetEffect();
+            conditionStartTime = null;
+          }
+        }
+      } else {
+        conditionStartTime = null;
+      }
+    }
+  }
+}
+
+// ChatGPT (2025, March 10) provided an explanation of OOCSI and sending updates
+// from a website to it
+document.getElementById("startFrequency").addEventListener("click", function() {
+audioCtx.resume().then(function() {
+startTone();
+});
+});
+document.getElementById("stopFrequency").addEventListener("click", function() {
+stopTone();
+});
+document.getElementById("spelen van Morse Code").addEventListener("click",
+function(e) {
+e.stopPropagation();
+if (toneStarted) {
+stopTone();
+}
+var morseAudio = document.getElementById("Geluid");
+morseAudio.play();
+OOCSI.send("channel7", { "source": "frequency_generator", "action": "playMorse" });
+});
+</script>
+</body>
+</html>
+<!-- Sources -->
+<!-- 1. OpenAI. (2025, March 10). ChatGPT [Large language model]. Retrieved from
+https://chatgpt.com/share/67ceb532-9374-8004-91fa-5466d5ef8847 (Prompt: “Give me the
+basic structure of a website with only one page. On this page will be buttons and text”) -->
+<!-- 2. OpenAI. (2025, March 10). ChatGPT [Large language model]. Retrieved from
+https://chatgpt.com/share/67ceb63e-9678-8004-a461-64553659359b (Prompt: “Show me
+how to generate frequency sound on an HTML website”) -->
+<!-- 3. OpenAI. (2025, March 10). ChatGPT [Large language model]. Retrieved from
+https://chatgpt.com/share/67cf0c59-5868-8004-91d6-3212b74e9bd1 (Prompt: “How do you
+work with OOCSI; how do you send from a website updates to OOCSI”) -->
+<!-- Explanation AI Sourcing -->
+<!-- Nothing was directly copied from an AI tool; they were only used to answer questions
+and provide basic bare bone structures.-->
+<!-- 1. Our team had limited experience with coding a website in HTML and JavaScript and
+we found it hard to get started. We just ChatGPT to create the basic structure of our website
+so we had an example to go of on. We did not use the generated code, but did use it to help
+get us started; it was just as inspiration and for direction. -->
+<!-- 2. Our first idea for creating a certain frequency that is dependend on the value of the
+slider. This first idea was having a audio file and playing a certain part of that file for a certain
+value of the slider. We did not know of any other way to do this, but it was extremly important
+for our project, so we asked Chatgpt to look if it was even possible for our coding level to do.
+It gave us a method that was eassy to understand and code. We did not use the code
+generated by Chatgpt, but did use the method it suggested. -->
+<!-- 3. We had some trouble understanding how to connect the website to oocsi and asked
+Chatgpt to expalin it to us. We again did not use the generated code, it was only for direction
+-->

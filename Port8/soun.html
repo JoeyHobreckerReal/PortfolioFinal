@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <link rel="stylesheet" type="text/css" href="https://dfdemo.id.tue.nl/assets/stylesheets/picoCSS/pico.indigo.min.css">
+ <script type="text/javascript" src="https://dfdemo.id.tue.nl/assets/javascripts/p5.min.js"></script>
+ <script type="text/javascript" src="https://dfdemo.id.tue.nl/assets/javascripts/p5.sound.min.js"></script>
+ <script type="text/javascript" src="https://df-demo.id.tue.nl/assets/javascripts/oocsiweb.js"></script>
+ <script type="text/javascript" src="fantastic-things.js"></script>
+</head>
+<body></body>
+<script type="text/javascript">
+ // thing variables
+ let situation;
+ // define thing
+ function thing() {
+ // register this thing with the name 'Soun ' and data path 'soun';
+ // input is 'situation', no output
+ fantasticThings.register('Soun ', 'soun', ['button'], [])
+ // define own shared data
+ situation = fantasticThings.data('situation')
+ // connect external data
+ fantasticThings.connect('radio', 'button', 'situation')
+ // connect to sitgrid
+ fantasticThings.connect("sitgrid", "situation", "situation")
+ // subscribe to situation update
+ situation.subscribe((value) => {
+
+ sound[value]?.stop()
+ sound[value]?.play()
+ })
+ }
+ // define internal data
+ let sound = {};
+ // flag for initialization of browser sound engine
+ let tappedOnce = false;
+ function preload() {
+ sound['melody'] = loadSound('Melody DCE.mp3');
+ sound['green'] = loadSound('pianosound1.mp3');
+ sound['red'] = loadSound('pianosound2.mp3');
+ sound['blue'] = loadSound('pianosound3.mp3');
+ sound['yellow'] = loadSound('pianosound4.mp3');
+ }
+ function setup() {
+ let canvas = createCanvas(windowWidth, windowHeight);
+ canvas.parent('canvasContainer');
+ background(0)
+ }
+ function draw() {
+ background(0)
+ if(!tappedOnce) {
+ fill(255)
+ text("Tap screen once to activate sound!", 50, 50)
+ } else {
+ translate(width/2, height/2)
+ rotate(radians(frameCount*2))
+ fill(map(sin(radians(frameCount*5)), -1, 1, 100, 255))
+ ellipse(0, map(sin(radians(frameCount*5)), -1, 1, 50, 150), 20, 20)
+ }
+ }
+ function touchStarted() {
+ tappedOnce = true;
+ }
+</script>

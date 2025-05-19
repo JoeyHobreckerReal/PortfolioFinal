@@ -1,0 +1,302 @@
+
+
+<!-- Basic structure HTML for website -->
+<!-- According to ChatGPT (2025, April 1), "Show me 5 multiple simple structures of html code - examples. The website will be displayed only on a phone. There is only one page. On this page there are 5 piano keys. They need to be able to be used like piano keys. On piano keys we need text." resulted in an layout suggestions. -->
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Melody Player Phone</title>
+  <script src="https://df-demo.id.tue.nl/assets/javascripts/oocsi-web.js"></script>
+  <style>
+    body {
+      background: black;
+      color: white;
+      text-align: center;
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100vh;
+      touch-action: manipulation;
+    }
+    .container {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    .piano-container {
+      display: flex;
+      flex-direction: column;
+      height: 80%;
+      width: 100%;
+    }
+    .piano-key {
+      flex: 1;
+      margin: 2px;
+      background-color: white;
+      color: black;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      user-select: none;
+      -webkit-user-select: none;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .piano-key:active {
+      background-color: #cccccc;
+    }
+    .controls {
+      padding: 10px;
+      display: flex;
+      justify-content: space-around;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #333;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    button:active {
+      background-color: #444;
+    }
+    #status {
+      height: 20px;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    #success-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: green;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+      color: white;
+      font-size: 24px;
+    }
+    @media (orientation: landscape) {
+      .container {
+        flex-direction: row;
+      }
+      .piano-container {
+        width: 100%;
+        height: 100%;
+        flex-direction: row;
+      }
+      .key-number {
+        display: none;
+      }
+      .key-note {
+        font-size: 20px;
+      }
+      .controls {
+        position: absolute;
+        bottom: 10px;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="piano-container">
+      <div class="piano-key" id="key-1">
+        <div class="key-number">1</div>
+        <div class="key-note">C</div>
+      </div>
+      <div class="piano-key" id="key-2">
+        <div class="key-number">2</div>
+        <div class="key-note">D</div>
+      </div>
+      <div class="piano-key" id="key-3">
+        <div class="key-number">3</div>
+        <div class="key-note">E</div>
+      </div>
+      <div class="piano-key" id="key-4">
+        <div class="key-number">4</div>
+        <div class="key-note">F</div>
+      </div>
+      <div class="piano-key" id="key-5">
+        <div class="key-number">5</div>
+        <div class="key-note">G</div>
+      </div>
+    </div>
+    <div id="status"></div>
+  </div>
+  
+  <div id="success-screen">
+    <h2>CREATED MELODY!</h2>
+    <p>Sound 4 has been unlocked!</p>
+  </div>
+  
+  <!-- According to ChatGPT (2025, April 1), "show me 5 different simple HTML page examples for phone, page should have 5 big piano keys. When I tap a key, it should play a note (just a soundfile in the same map). And I’d like it to check if I tap them in the correct order (like 3,1,4,1,5). If I get them right, show me a little success message.." resulted in an layout suggestions. -->
+  <script>
+    let playedMelody = [];
+    
+    const audioFiles = [
+      new Audio('pianosound1.mp3'),
+      new Audio('pianosound2.mp3'),
+      new Audio('pianosound3.mp3'),
+      new Audio('pianosound4.mp3'),
+      new Audio('pianosound5.mp3')
+    ];
+    
+    OOCSI.connect("wss://oocsi.id.tue.nl/ws", "channel7/melody-player-phone");
+    OOCSI.subscribe("channel7", handleOOCSI);
+    
+    setTimeout(function() {
+      OOCSI.send("channel7", { 
+        source: "melody_player_phone", 
+        status: "ready" 
+      });
+    }, 1000);
+    
+    function handleOOCSI(msg) {
+      if (msg.data && msg.data.source === "melody_player_web" && msg.data.action === "feedback") {
+        document.getElementById("status").textContent = msg.data.message;
+        if (msg.data.result === "correct") showSuccess();
+      }
+    }
+        
+    function playNote(noteNumber) {
+      const audio = new Audio(`pianosound${noteNumber}.mp3`);
+      audio.play().catch(() => {
+        const index = noteNumber - 1;
+        if (index >= 0 && index < audioFiles.length) {
+          audioFiles[index].currentTime = 0;
+          audioFiles[index].play().catch(() => {});
+        }
+      });
+    }
+    
+    
+    // According to ChatGPT (2025, April 1), "Beginner-friendly code snippet. 5 buttons, track right/wrong inputs, show text feedback, reset if wrong. HTML file. Show multiple methods and examples, min of 5" resulted in an layout suggestions and examples.
+    // According to ChatGPT (2025, April 1), "Simple sequence check. Array of correct presses. On correct, flash green. On wrong, flash red + reset.Show multiple methods and examples, min of 5" resulted in an layout suggestions and examples.
+    function addNoteToMelody(noteNumber) {
+      const correctMelody = [3, 1, 4, 1, 5];
+      const expectedNote = correctMelody[playedMelody.length];
+      OOCSI.send("channel7", {
+        source: "melody_player_phone",
+        action: "note_played",
+        note: noteNumber
+      });
+      
+      if (noteNumber === expectedNote) {
+        playedMelody.push(noteNumber);
+        const keyElement = document.getElementById(`key-${noteNumber}`);
+        const originalColor = keyElement.style.backgroundColor;
+        keyElement.style.backgroundColor = "#90EE90";
+        setTimeout(() => keyElement.style.backgroundColor = originalColor, 100);
+        if (playedMelody.length === correctMelody.length) submitMelody();
+      } else {        
+        const keyElement = document.getElementById(`key-${noteNumber}`);
+        const originalColor = keyElement.style.backgroundColor;
+        keyElement.style.backgroundColor = "#FFA07A";
+        setTimeout(() => keyElement.style.backgroundColor = originalColor, 200);
+        playedMelody = [];
+        document.getElementById("status").textContent = "Wrong note! Start over.";
+        setTimeout(() => document.getElementById("status").textContent = "", 1500);
+        OOCSI.send("channel7", {
+          source: "melody_player_phone",
+          action: "reset_melody",
+          reason: "wrong_note"
+        });
+      }
+    }
+    
+    function resetMelody() {
+      playedMelody = [];
+      document.getElementById("status").textContent = "";
+    }
+    
+    function submitMelody() {
+      if (!playedMelody.length) {
+        document.getElementById("status").textContent = "Play some notes first!";
+        return;
+      }
+      OOCSI.send("channel7", {
+        source: "melody_player_phone",
+        action: "submit_melody",
+        melody: playedMelody
+      });
+    }
+    
+    function showSuccess() {
+      document.getElementById("success-screen").style.display = "flex";
+      OOCSI.send("channel7", {
+        source: "melody_player_phone",
+        action: "puzzleComplete",
+        sound4: true
+      });
+      setTimeout(() => {
+        document.getElementById("success-screen").style.display = "none";
+        resetMelody();
+      }, 5000);
+    }
+    
+    for (let i = 1; i <= 5; i++) {
+      const keyElement = document.getElementById(`key-${i}`);
+      
+      keyElement.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        keyElement.style.backgroundColor = "#cccccc";
+        playNote(i);
+        addNoteToMelody(i);
+      });
+      
+      keyElement.addEventListener("touchend", (e) => {
+        e.preventDefault();
+        keyElement.style.backgroundColor = "white";
+      });
+      
+      keyElement.addEventListener("mousedown", () => {
+        keyElement.style.backgroundColor = "#cccccc";
+        playNote(i);
+        addNoteToMelody(i);
+      });
+      
+      keyElement.addEventListener("mouseup", () => {
+        keyElement.style.backgroundColor = "white";
+      });
+    }
+    
+    window.addEventListener("orientationchange", () => {
+      setTimeout(() => window.scrollTo(0, 0), 100);
+    });
+  </script>
+</body>
+</html>
+
+<!-- Sources -->
+<!-- 1. OpenAI. (2025, April 1). ChatGPT [Large language model]. Retrieved from https://chatgpt.com/share/67ebe101-bb30-8004-8ac0-6040f3690e1a 
+(Prompt: "Show me 5 multiple simple structures of html code - examples. The website will be displayed only on a phone. There is only one page. On this page there are 5 piano keys. They need to be able to be used like piano keys. On piano keys we need text.") -->
+<!-- 2. OpenAI. (2025, April 1). ChatGPT [Large language model]. Retrieved from https://chatgpt.com/share/67ebf306-a9f0-8004-bca6-b9f52ca28361 
+(Prompt: "show me 5 different simple HTML page examples for phone, page should have 5 big piano keys. When I tap a key, it should play a note (just a soundfile in the same map). And I’d like it to check if I tap them in the correct order (like 3,1,4,1,5). If I get them right, show me a little success message.") -->
+<!-- 3. OpenAI. (2025, April 1). ChatGPT [Large language model]. Retrieved from https://chatgpt.com/share/67ebf517-6a78-8004-8b42-b95af3d6b866 
+(Prompt: "Beginner-friendly code snippet. 5 buttons, track right/wrong inputs, show text feedback, reset if wrong. HTML file. Show multiple methods and examples, min of 5") -->
+<!-- 4. OpenAI. (2025, April 1). ChatGPT [Large language model]. Retrieved from https://chatgpt.com/share/67ebf556-140c-8004-934f-5d695ef19223 
+(Prompt: "Simple sequence check. Array of correct presses. On correct, flash green. On wrong, flash red + reset.Show multiple methods and examples, min of 5") -->
+
+<!-- Explanation AI Sourcing -->
+<!-- Nothing was directly copied from an AI tool; they were only used to answer questions
+and provide basic bare bone structures.-->
+<!-- 1. Our team had limited experience with coding a website in HTML and JavaScript and
+we found it hard to get started. We asked ChatGPT to create the basic structure of our website
+so we had an example to go of on. We did not use the generated code, but did use it to help
+get us started; it was just as inspiration and for direction. -->
+<!-- 2. Our team had limited experience with coding a website in HTML a
+we found it hard to get started. We did not know how to integrate the piano keys into our website. We asked ChatGPT to create the basic structure of our website
+so we had an example to go of on. We did not use the generated code, but did use it to help get us started; it was just as inspiration and for direction -->
+<!-- 3. We did not know how to give the users feedback that they used the wrong note and how to track if the users fille din the correct melody or the wrong melody. We asked chatgpt to point us in the right direction.-->
+<!-- 4. We did not know how to give the users feedback that they used the wrong note and how to track if the users fille din the correct melody or the wrong melody. We asked chatgpt to point us in the right direction.-->
+

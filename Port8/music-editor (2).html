@@ -1,0 +1,212 @@
+<!-- Basic structure HTML for website -->
+<!-- According to ChatGPT (2025, March 25), "Give me the basic structure of a website with only one page. On this page will be audiofiles displayed and text. It should be possible to play the audiofiles on the screen. Give them an ID and are 5 audio files. the text is on top of the screen. " resulted in an layout suggestion. -->
+<!--According to ChatGPT (2025, March 25),"Create the basic structure of an HTML website with only one black frontpage and text." Resulted in a layout suggestion-->
+
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music Editor</title>
+  <script type="text/javascript" src="https://df-demo.id.tue.nl/assets/javascripts/oocsi-web.js"></script>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: white;
+      margin-top: 30px;
+    }
+    .sound-container {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 50px;
+      align-items: center;
+    }
+    .sound-box {
+      width: 80%;
+      max-width: 400px;
+      padding: 15px;
+      border: 1px solid #333;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .empty {
+      color: #666;
+    }
+    button {
+      background-color: #333;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #444;
+    }
+    #play-all {
+      margin-top: 30px;
+      display: none;
+    }
+    #success-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: green;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    #success-screen h2 {
+      font-size: 36px;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h1>EDITOR - Edit your music!</h1>
+  <div class="sound-container">
+    <div class="sound-box" id="sound1-box">
+      <span>Sound 1</span>
+      <span class="empty">EMPTY</span>
+    </div>
+    <div class="sound-box" id="sound2-box">
+      <span>Sound 2</span>
+      <span class="empty">EMPTY</span>
+    </div>
+    <div class="sound-box" id="sound3-box">
+      <span>Sound 3</span>
+      <span class="empty">EMPTY</span>
+    </div>
+    <div class="sound-box" id="sound4-box">
+      <span>Sound 4</span>
+      <span class="empty">EMPTY</span>
+    </div>
+  </div> 
+  <button id="play-all">Play them all at once, maybe you have created the song!</button>
+  <div id="success-screen">
+    <h2>YOU FINISHED THE SONG AND ESCAPED!</h2>
+    <h3>CONGRATULATIONS!</h3>
+  </div>
+  
+  
+  
+  <!--Setting up the audio files-->
+  <!--According to ChatGPT (2025, March 25),"Could you show me how to define an object with several sounds, each having a property to show if it's available and an audio file to play? " Resulted in a layout suggestion-->
+  
+  <script>
+    const sounds = {
+      sound1: {
+        available: false,
+        audio: new Audio('Frequency.mp3')
+      },
+      sound2: {
+        available: false,
+        audio: new Audio('sound2.mp3')
+      },
+      sound3: {
+        available: false,
+        audio: new Audio('Melody.mp3')
+      },
+      sound4: {
+        available: false,
+        audio: new Audio('sequence_31415')
+      }
+    };
+    
+    
+
+  
+    // Creating an connection to oocsi to receive and send data 
+        
+    OOCSI.connect("wss://oocsi.id.tue.nl/ws", "channel7/music-editor-soundbox");
+    OOCSI.subscribe("channel7", handleOOCSI);   
+    setTimeout(function() {
+      OOCSI.send("channel7", { "source": "soundbox_editor", "website_status": "online" });
+    }, 1000);
+    
+    function handleOOCSI(msg) {
+      if (msg.data) {
+        if (msg.data.sound1) {
+          unlockSound('sound1');
+        }       
+        if (msg.data.sound2) {
+          unlockSound('sound2');
+        }
+        if (msg.data.sound3) {
+          unlockSound('sound3');
+        }
+        if (msg.data.sound4) {
+          unlockSound('sound4');
+        }
+      }
+    }
+
+     
+    // Finishing the audio logic     
+    //According to ChatGPT (2025, March 25),"Please write some JavaScript that manages multiple sound items on a webpage. Each sound starts off locked and can be unlocked, at which point a button should appear to play it. There should also be a way to play just one sound at a time, and if all sounds are unlocked, show an option to play them all at once and display a success message. Use sound id's. " Resulted in a layout suggestion                 
+    function unlockSound(soundId) {
+      if (!sounds[soundId].available) {
+        sounds[soundId].available = true;
+    
+        const soundBox = document.getElementById(`${soundId}-box`);
+        soundBox.innerHTML = `
+          <span>${soundId.charAt(0).toUpperCase() + soundId.slice(1)}</span>
+          <button onclick="playSound('${soundId}')">Play</button>
+        `;
+        
+        checkAllSounds();
+      }
+    }
+    
+    function playSound(soundId) {
+      Object.keys(sounds).forEach(id => {
+        sounds[id].audio.pause();
+        sounds[id].audio.currentTime = 0;
+      });
+      sounds[soundId].audio.play();
+    }
+    
+    function checkAllSounds() {
+      const allAvailable = Object.keys(sounds).every(id => sounds[id].available);
+      if (allAvailable) {
+        document.getElementById('play-all').style.display = 'block';
+      }
+    }
+    document.getElementById('play-all').addEventListener('click', function() {
+      Object.keys(sounds).forEach(id => {
+        sounds[id].audio.play();
+      });     
+      document.getElementById('success-screen').style.display = 'flex';
+    });
+  </script>
+</body>
+</html>
+
+<!-- Sources -->
+<!-- 1. OpenAI. (2025, March 25). ChatGPT [Large language model]. Retrieved from https://chatgpt.com/share/67e2d2e4-702c-8004-ae3c-77301fce5cad 
+(Prompt: "Give me the basic structure of a website with only one page. On this page will be audiofiles displayed and text. It should be possible to play the audiofiles on the screen. Give them an ID and are 5 audio files. the text is on top of the screen") -->
+<!-- 2. OpenAI. (2025, March 25). ChatGPT [Large language model]. Retrieved from https://chatgpt.com/share/67e2d2fb-4d44-8004-86c3-8c66e2992f28 
+(Prompt: "Create the basic structure of an HTML website with only one black frontpage and text") -->
+<!-- 3. OpenAI. (2025, March 25). ChatGPT [Large language model]. Retrieved from https://chatgpt.com/share/67e2d311-6ef4-8004-a2ac-66afdeab52a5 
+(Prompt: "Could you show me how to define an object with several sounds, each having a property to show if it's available and an audio file to play?") -->
+<!-- 4. OpenAI. (2025, March 25). ChatGPT [Large language model]. Retrieved from https://chatgpt.com/share/67e2d324-830c-8004-b9ae-2455813181e8 
+(Prompt: "Please write some JavaScript that manages multiple sound items on a webpage. Each sound starts off locked and can be unlocked, at which point a button should appear to play it. There should also be a way to play just one sound at a time, and if all sounds are unlocked, show an option to play them all at once and display a success message. Use sound id's.") -->
+
+<!-- Explanation AI Sourcing -->
+<!-- Nothing was directly copied from an AI tool; they were only used to answer questions
+and provide basic bare bone structures.-->
+<!-- 1. Our team never really worked with displaying, playing and storing audio files on a website and we found it hard tog et started. We just ChatGPT to create the basic structure of our website so we had an example to go of on. We did not use the generated code, but did use it to help get us started; it was just as inspiration and for direction. -->
+<!-- 2. Our team had limited experience with coding a website in HTML and JavaScript and we found it hard to get started. We just ChatGPT to create the basic structure of our website so we had an example to go of on. We did not use the generated code, but did use it to help get us started; it was just as inspiration and for direction.  -->
+<!-- 3. Our team didn't know how to define and manage multiple audio files in JavaScript. We used Chatgpt to provide us with a structure and an example of an object that holds sound files and tracks if they are available. The response but us in the right direction. We didn't copy any of the code directly and only used it for direction.   -->
+<!-- 4. We did not know how to manage locked and unlocked sounds with JavaScript on our website. We also did not know how to add buttons that would be visible or not visible based on the availability of the sounds. We asked ChatGPT for a general idea of how to do this. The example gave us a good idea of how to structure the logic. We adapted these ideas into our own code to suit our own needs. We only used the AI for guidance. -->

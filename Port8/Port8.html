@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Puzzle Hub</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Qwitcher+Grypen:wght@700&family=Monument+Valley:ital,wght@0,400;0,700;1,400&family=Monoton&display=swap');
+        
+        :root {
+            --bg-color: #080808;
+            --paper-color: #121212;
+            --accent-color: #ff6b35;
+            --text-color: #f8f8f8;
+            --secondary-color: #4cc9f0;
+            --tertiary-color: #8338ec;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Monument Valley', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        .header {
+            position: relative;
+            padding: 5rem 2rem;
+            min-height: 40vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(140, 56, 236, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(76, 201, 240, 0.2) 0%, transparent 40%);
+        }
+        
+        .music-tag {
+            font-family: 'Monoton', cursive;
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            margin-bottom: 2rem;
+            letter-spacing: 0.2em;
+            text-shadow: 0 0 15px rgba(255, 107, 53, 0.7);
+        }
+        
+        h1 {
+            font-family: 'Abril Fatface', serif;
+            font-size: 4.5rem;
+            margin-bottom: 1rem;
+            line-height: 1;
+            text-align: center;
+            letter-spacing: -0.02em;
+            position: relative;
+            z-index: 2;
+        }
+        
+        h1 .puzzle {
+            display: block;
+            font-size: 6rem;
+            line-height: 0.9;
+            background: linear-gradient(45deg, var(--accent-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.8rem;
+            font-weight: 300;
+            margin-bottom: 4rem;
+            text-align: center;
+            color: var(--text-color);
+            letter-spacing: 0.1em;
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Music Icons */
+        .music-icon {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            opacity: 0.6;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+        }
+        
+        .music-1 {
+            top: 15%;
+            right: 15%;
+            transform: rotate(15deg);
+            animation: float-music 8s ease-in-out infinite;
+        }
+        
+        .music-2 {
+            bottom: 20%;
+            left: 15%;
+            transform: rotate(-10deg);
+            animation: float-music 6s ease-in-out infinite 1s;
+        }
+
+        @keyframes float-music {
+            0% { transform: rotate(15deg) translateY(0px); }
+            50% { transform: rotate(18deg) translateY(-15px); }
+            100% { transform: rotate(15deg) translateY(0px); }
+        }
+        
+        /* Buttons Container */
+        .buttons-container {
+            position: relative;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            z-index: 2;
+        }
+        
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+        
+        .music-button {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            background-color: var(--paper-color);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            min-height: 280px;
+        }
+        
+        .music-button:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+        }
+        
+        .button-header {
+            background: linear-gradient(135deg, var(--accent-color), var(--tertiary-color));
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .music-button:nth-child(2) .button-header {
+            background: linear-gradient(135deg, var(--secondary-color), var(--tertiary-color));
+        }
+        
+        .music-button:nth-child(3) .button-header {
+            background: linear-gradient(135deg, var(--tertiary-color), var(--accent-color));
+        }
+        
+        .music-button:nth-child(4) .button-header {
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+        }
+        
+        .button-header::before {
+            content: "";
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.3) 0%, transparent 50%);
+            top: -50%;
+            left: -50%;
+            transition: all 0.6s ease-out;
+            opacity: 0;
+        }
+        
+        .music-button:hover .button-header::before {
+            opacity: 1;
+            transform: scale(1.2);
+        }
+        
+        .button-title {
+            font-family: 'Abril Fatface', serif;
+            font-size: 1.8rem;
+            color: var(--text-color);
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .button-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .button-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1.5rem;
+        }
+        
+        .button-icon {
+            align-self: flex-end;
+            width: 30px;
+            height: 30px;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+        
+        .music-button:hover .button-icon {
+            transform: translateX(5px);
+            opacity: 1;
+        }
+        
+        /* Decorative Elements */
+        .decorative-circle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.15;
+            filter: blur(60px);
+            z-index: -1;
+        }
+
+        .circle-1 {
+            width: 400px;
+            height: 400px;
+            background-color: var(--tertiary-color);
+            top: -200px;
+            right: -200px;
+        }
+
+        .circle-2 {
+            width: 300px;
+            height: 300px;
+            background-color: var(--secondary-color);
+            bottom: 10%;
+            left: -150px;
+        }
+
+        .circle-3 {
+            width: 500px;
+            height: 500px;
+            background-color: var(--accent-color);
+            opacity: 0.1;
+            top: 40%;
+            right: -250px;
+        }
+
+        /* Video Player Section */
+        .video-player-section {
+            padding: 3rem 2rem;
+            max-width: 1200px;
+            margin: 3rem auto;
+            background-color: var(--paper-color);
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .video-player-section .video-title {
+            font-family: 'Abril Fatface', serif;
+            font-size: 2.5rem;
+            color: var(--text-color);
+            margin-bottom: 2rem;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .video-player-section video {
+            width: 100%;
+            max-width: 800px;
+            border-radius: 8px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            outline: none; 
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 3.5rem;
+            }
+            
+            h1 .puzzle {
+                font-size: 4.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.4rem;
+            }
+            
+            .button-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .video-player-section .video-title {
+                font-size: 2rem;
+            }
+            .video-player-section {
+                padding: 2rem 1rem;
+                margin: 2rem auto;
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 1200px) {
+            .button-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="decorative-circle circle-1"></div>
+    <div class="decorative-circle circle-2"></div>
+    <div class="decorative-circle circle-3"></div>
+    
+    <header class="header">
+        <div class="music-icon music-1">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#ff6b35" stroke-width="1.5">
+                <path d="M9 18V5l12-2v13" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="6" cy="18" r="3" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="18" cy="16" r="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        
+        <div class="music-icon music-2">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#4cc9f0" stroke-width="1.5">
+                <path d="M14.5 2.5c0 4-6 4-6 4v12c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2v-4.5c0-1.1-.9-2-2-2h-4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        
+        <div class="music-tag">INTERACTIVE</div>
+        <h1>Music <span class="puzzle">PUZZLE</span></h1>
+        <div class="subtitle">Select a puzzle to start</div>
+    </header>
+    
+    <main class="buttons-container">
+        <div class="button-grid">
+            <!-- Button 1 -->
+            <a href="melody-player-phone.html" class="music-button" target="_blank" rel="noopener noreferrer">
+                <div class="button-header">
+                    <h2 class="button-title">Piano Puzzle</h2>
+                </div>
+                <div class="button-content">
+                    <p class="button-description">This is one of the puzzles and is connected to the next website. On the next website you can read sheet music and you need to play the correct melody on this piano.</p>
+                    <svg class="button-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#ff6b35" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </a>
+            
+            <!-- Button 2 -->
+            <a href="melody-player-website.html" class="music-button" target="_blank" rel="noopener noreferrer">
+                <div class="button-header">
+                    <h2 class="button-title">Sheet Music</h2>
+                </div>
+                <div class="button-content">
+                    <p class="button-description">On this website you can read the sheet music.</p>
+                    <svg class="button-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#4cc9f0" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </a>
+            
+            <!-- Button 3 -->
+            <a href="music-editor (2).html" class="music-button" target="_blank" rel="noopener noreferrer">
+                <div class="button-header">
+                    <h2 class="button-title">Sound Collection</h2>
+                </div>
+                <div class="button-content">
+                    <p class="button-description">If you complete all the puzzles (in total 4) you have unlocked all the sounds and are finished.</p>
+                    <svg class="button-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#8338ec" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </a>
+            
+            <!-- Button 4 -->
+            <a href="music-editor-updated.html" class="music-button" target="_blank" rel="noopener noreferrer">
+                <div class="button-header">
+                    <h2 class="button-title">Frequency Slider</h2>
+                </div>
+                <div class="button-content">
+                    <p class="button-description">This website was connected to an ESP32 with a slider and you needed to find the correct frequency with the slider.</p>
+                    <svg class="button-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#ff6b35" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </a>
+        </div>
+    </main>
+
+    <section class="video-player-section">
+        <h2 class="video-title">Challenge Video</h2>
+        <video controls>
+            <source src="Challenge2-movie.mp4" type="audio/mpeg">
+            Your browser does not support the video tag.
+        </video>
+    </section>
+    
+    <script>
+        // Add animation for buttons when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttons = document.querySelectorAll('.music-button');
+            
+            buttons.forEach((button, index) => {
+                button.style.opacity = 0;
+                button.style.transform = 'translateY(30px)';
+                
+                setTimeout(() => {
+                    button.style.transition = 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                    button.style.opacity = 1;
+                    button.style.transform = 'translateY(0)';
+                }, 300 + (index * 150));
+            });
+            
+            // Simple parallax effect on scroll
+            window.addEventListener('scroll', function() {
+                const scrollY = window.scrollY;
+                const header = document.querySelector('.header');
+                
+                // Check if elements exist before trying to style them
+                const musicTag = document.querySelector('.music-tag');
+                const h1Element = document.querySelector('h1');
+                const subtitleElement = document.querySelector('.subtitle');
+
+                if (musicTag) {
+                    musicTag.style.transform = `translateY(${scrollY * 0.2}px)`;
+                }
+                if (h1Element) {
+                    h1Element.style.transform = `translateY(${scrollY * 0.1}px)`;
+                }
+                if (subtitleElement) {
+                    subtitleElement.style.transform = `translateY(${scrollY * 0.15}px)`;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

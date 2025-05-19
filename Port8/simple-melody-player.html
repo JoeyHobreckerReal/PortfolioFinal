@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Melody Player</title>
+  <style>
+    body {
+      background: black;
+      color: white;
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .play-button {
+      padding: 20px 40px;
+      font-size: 24px;
+      background-color: #333;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .play-button:hover {
+      background-color: #444;
+    }
+    
+    .play-button:active {
+      background-color: #555;
+    }
+  </style>
+</head>
+<body>
+  <button class="play-button" id="playButton">Play Melody</button>
+  
+  <audio id="melodyAudio" src="Melody.mp3"></audio>
+  
+  <script>
+    document.getElementById('playButton').addEventListener('click', function() {
+      const audio = document.getElementById('melodyAudio');
+      audio.currentTime = 0; // Reset to beginning
+      audio.play();
+    });
+  </script>
+</body>
+</html>
