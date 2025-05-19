@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Retro Journey</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background-color: #001f3f; /* Deep ocean blue */
+            color: #ffffff; /* White text */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between; /* Pushes footer to bottom */
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            position: relative; /* For pseudo-elements like bubbles */
+        }
+
+        /* Bubbles Animation */
+        .bubbles {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%; /* Cover full screen for bubbles to rise */
+            pointer-events: none; /* Bubbles should not interfere with clicks */
+            z-index: 1; /* Above waves, below content */
+        }
+
+        .bubble {
+            position: absolute;
+            background-color: rgba(173, 216, 230, 0.3); /* Light blue, semi-transparent */
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%; /* Pixelated circle */
+            animation: rise 10s infinite ease-in;
+            bottom: -20px; /* Start below screen */
+        }
+
+        /* Pixelated effect for bubbles (optional, border-radius makes them round) */
+        /* For more pixelated bubbles, you'd typically use small square divs or a canvas */
+
+        @keyframes rise {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 1;
+            }
+            50% {
+                transform: translateX(calc(var(--x-offset) * 1px)); /* Horizontal sway */
+            }
+            100% {
+                transform: translateY(-100vh) translateX(calc(var(--x-offset) * 2px)); /* Rise to top */
+                opacity: 0;
+            }
+        }
+
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background for text */
+            border: 4px solid #FFDC00; /* Pixel yellow border */
+            padding: 20px;
+            margin: 20px auto; /* Centered with some margin */
+            width: 90%;
+            max-width: 800px; /* Max width for readability */
+            box-shadow: 0 0 0 4px #001f3f, 0 0 0 8px #FFDC00; /* Double border effect */
+            text-align: left;
+            line-height: 1.8;
+            font-size: 12px; /* Smaller font for pixel feel */
+            position: relative; /* For z-index stacking */
+            z-index: 2; /* Above waves and bubbles */
+        }
+        
+        .container h1 {
+            font-size: 20px;
+            color: #FF851B; /* Pixel orange */
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px #001f3f; /* Shadow for depth */
+        }
+
+        .container p {
+            margin-bottom: 15px;
+            color: #DDDDDD; /* Lighter grey for text */
+        }
+        
+        .container p strong {
+            color: #7FDBFF; /* Light blue for emphasis */
+        }
+
+        /* Style for the green highlighted link */
+        .green-highlight-link {
+            color: #00FF00; /* Green color */
+            text-decoration: underline;
+        }
+        .green-highlight-link:hover {
+            color: #33FF33; /* Lighter green on hover */
+        }
+
+
+        .button-nav {
+            display: flex;
+            justify-content: center;
+            gap: 20px; /* Space between buttons */
+            margin-top: 30px;
+            width: 100%;
+            padding-bottom: 20px; /* Ensure space from bottom if content is short */
+            position: relative; /* For z-index stacking */
+            z-index: 2; /* Above waves and bubbles */
+        }
+
+        .btn {
+            font-family: 'Press Start 2P', cursive;
+            background-color: #FFDC00; /* Pixel yellow */
+            color: #001f3f; /* Deep ocean blue text */
+            border: 3px solid #001f3f; /* Dark border */
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 4px 4px 0px #FF851B; /* Pixel orange shadow */
+            transition: all 0.1s ease-in-out;
+            display: inline-block; /* Proper button behavior */
+        }
+
+        .btn:hover {
+            background-color: #FF851B; /* Pixel orange on hover */
+            color: #FFFFFF;
+            box-shadow: 2px 2px 0px #FFDC00; /* Adjust shadow on hover */
+            transform: translate(2px, 2px); /* Slight press effect */
+        }
+
+        .btn:active {
+            background-color: #F012BE; /* Pixel pink on active */
+            box-shadow: 0px 0px 0px #FFDC00;
+            transform: translate(4px, 4px); /* Deeper press effect */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                width: 95%;
+                padding: 15px;
+                font-size: 10px; /* Even smaller for small screens */
+            }
+            .container h1 {
+                font-size: 18px;
+            }
+            .btn {
+                font-size: 12px;
+                padding: 8px 15px;
+            }
+            .button-nav {
+                flex-direction: column; /* Stack buttons on small screens */
+                align-items: center;
+            }
+            .wave {
+                height: 70px;
+                background-size: 400px 70px;
+            }
+             @keyframes wave-animation { /* Adjust animation for smaller wave */
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-400px); }
+            }
+            .ocean {
+                height: 100px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="ocean">
+        <div class="wave"></div>
+        <div class="wave wave2"></div>
+        <div class="wave wave3"></div>
+    </div>
+    <div class="bubbles" id="bubble-container">
+        </div>
+
+    <div class="container">
+        <h1>My Journey & Vision</h1>
+        <p>
+            I’m going to develop my <strong>PI</strong>, my <strong>vision</strong> and my <strong>competencies</strong> by following electives focused around entrepreneurship in B3.1. This will help me reach my vision.
+        </p>
+        <p>
+            I’m improving my general design abilities by working as the sole industrial designer at the company <strong>Zeliox</strong>. I work directly with the owner to work out new concepts and improve existing products. I have complete freedom and access to industrial machines to produce my prototypes. I’m learning what it takes to create a real product, how to talk to clients, how to work out and present my concepts, how to sketch professionally, how to brainstorm, and much more. I can’t show my work at the company since it’s confidential.
+        </p>
+        <p>
+            I’m also starting my own company, I’m selling my own <strong>3D products</strong> on the platform Etsy and I’m developing several of my own concept into full products and apps. An example is my <a href="Portfolio.html" target="_blank" class="green-highlight-link">Fina Line of self-help and self-manegement apps</a>. You can find the prototypes in the end at the projects Folder
+        </p>
+        <p>
+            To sell these products I need websites – that’s why I’m challenging my <strong>coding skills</strong> with this portfolio.
+        </p>
+        <p>
+            By doing these things I push myself to <strong>learn</strong>.
+        </p>
+    </div>
+
+    <div class="button-nav">
+        <a href="Page2.html" class="btn">Back</a>
+        <a href="Page4.html" class="btn">Next</a>
+    </div>
+
+    <script>
+        // JavaScript for dynamic bubble creation
+        document.addEventListener('DOMContentLoaded', function() {
+            const bubbleContainer = document.getElementById('bubble-container');
+            const numberOfBubbles = 20; // Adjust for more/less bubbles
+
+            for (let i = 0; i < numberOfBubbles; i++) {
+                createBubble();
+            }
+
+            function createBubble() {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                
+                // Random size for bubbles (pixelated means small variations)
+                const size = Math.random() * 10 + 5; // 5px to 15px
+                bubble.style.width = `${Math.floor(size / 2) * 2}px`; // Keep it 'blocky'
+                bubble.style.height = `${Math.floor(size / 2) * 2}px`;
+                
+                // Random horizontal start position
+                bubble.style.left = `${Math.random() * 100}%`;
+                
+                // Random animation duration
+                bubble.style.animationDuration = `${Math.random() * 5 + 8}s`; // 8s to 13s
+                
+                // Random delay before starting
+                bubble.style.animationDelay = `${Math.random() * 5}s`;
+
+                // Custom property for horizontal sway in animation
+                bubble.style.setProperty('--x-offset', (Math.random() - 0.5) * 100); // Random sway amount
+
+                bubbleContainer.appendChild(bubble);
+
+                // Remove bubble from DOM after animation to prevent buildup
+                bubble.addEventListener('animationend', function() {
+                    bubble.remove();
+                    createBubble(); // Optionally, create a new bubble to replace it
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>

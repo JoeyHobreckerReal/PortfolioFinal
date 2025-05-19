@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collaboration Reflection</title>
+    <style>
+        :root {
+            --primary-color: #4a86e8;
+            --secondary-color: #93c47d;
+            --accent-color: #c27ba0;
+            --background-color: #000510;
+            --text-color: #e8e8e8;
+            --card-bg: rgba(10, 20, 40, 0.7);
+            --node-green: #4bdb65;
+            --node-blue: #4a86e8;
+            --node-yellow: #f6b26b;
+            --node-purple: #c27ba0;
+            --node-orange: #ff9900;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(100, 149, 237, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 90% 60%, rgba(106, 90, 205, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(76, 0, 130, 0.05) 0%, transparent 60%);
+            transition: all 0.5s ease;
+            overflow-x: hidden;
+        }
+
+        .light-mode {
+            --background-color: #f0f6ff;
+            --text-color: #1a1a2e;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(100, 149, 237, 0.07) 0%, transparent 50%),
+                radial-gradient(circle at 90% 60%, rgba(106, 90, 205, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(176, 196, 222, 0.03) 0%, transparent 60%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, var(--node-purple), var(--node-blue), var(--node-green));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            z-index: 100;
+            color: var(--text-color);
+            transition: transform 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(30deg);
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .reflection-text {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(8px);
+            line-height: 1.6;
+        }
+
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .image-container {
+            display: flex;
+            flex-direction: column;
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .image-container:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-bottom: 3px solid var(--accent-color);
+        }
+
+        .image-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, 
+                rgba(var(--node-green), 0.2), 
+                rgba(var(--node-blue), 0.2), 
+                rgba(var(--node-purple), 0.2));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .image-container:hover::before {
+            opacity: 1;
+        }
+
+        .image-description {
+            padding: 1.5rem;
+            background: var(--card-bg);
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+        }
+
+        .nav-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(90deg, var(--node-green), var(--node-blue));
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-button:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .nav-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.5s;
+        }
+
+        .nav-button:hover::before {
+            left: 100%;
+        }
+
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.2;
+            filter: blur(10px);
+        }
+
+        .shape1 {
+            width: 150px;
+            height: 150px;
+            background: var(--node-green);
+            top: 15%;
+            left: 10%;
+            animation: float 25s infinite linear;
+        }
+
+        .shape2 {
+            width: 100px;
+            height: 100px;
+            background: var(--node-blue);
+            bottom: 20%;
+            right: 15%;
+            animation: float 18s infinite linear reverse;
+        }
+
+        .shape3 {
+            width: 80px;
+            height: 80px;
+            background: var(--node-purple);
+            bottom: 35%;
+            left: 25%;
+            animation: float 30s infinite linear;
+        }
+
+        .shape4 {
+            width: 120px;
+            height: 120px;
+            background: var(--node-yellow);
+            top: 25%;
+            right: 25%;
+            animation: float 22s infinite linear reverse;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(10px, 15px) rotate(90deg); }
+            50% { transform: translate(5px, -10px) rotate(180deg); }
+            75% { transform: translate(-10px, 5px) rotate(270deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .image-gallery {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="floating-shapes">
+        <div class="shape shape1"></div>
+        <div class="shape shape2"></div>
+        <div class="shape shape3"></div>
+        <div class="shape shape4"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>Collaboration Reflection</h1>
+            <button class="theme-toggle" id="themeToggle">🌙</button>
+        </header>
+
+        <main>
+            <div class="reflection-text">
+                <p>In this second year on the university I improved my collaborating skills by building on the foundations I created in year 1. The focus of this year was to become more structured and intentional in my collaboration. I will discuss the courses where I made the most progress in my collaboration skills:</p>
+            </div>
+
+            <div class="image-gallery">
+                <div class="image-container" onclick="pulseEffect(this)">
+                    <img src="visual1.png" alt="Group Collaboration Learning – Sustainability in Design">
+                    <div class="image-description">
+                        <p>Figure 11: Group Collaboration Learning – Sustainability in Design</p>
+                    </div>
+                </div>
+                <div class="image-container" onclick="pulseEffect(this)">
+                    <img src="visual2.png" alt="Creative Collaboration – Aesthetics of Interaction">
+                    <div class="image-description">
+                        <p>Figure 12: Creative Collaboration Aesthetics of Interaction</p>
+                    </div>
+                </div>
+                <div class="image-container" onclick="pulseEffect(this)">
+                    <img src="visual3.png" alt="Task Delegation – Games & Play">
+                    <div class="image-description">
+                        <p>Figure 13: Task Delegation Games & Play</p>
+                    </div>
+                </div>
+                <div class="image-container" onclick="pulseEffect(this)">
+                    <img src="visual4.png" alt="Leadership & Collaboration Growth – KitchenCompass & FlavorFusion">
+                    <div class="image-description">
+                        <p>Figure 14: Leadership Growth KitchenCompass & FlavorFusion - CBL3</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reflection-text">
+                <p>I also improved in how I handle feedback. In year 1 I never wrote it down or integrated it properly – I never took it serious, I always trusted myself more. This year I made it a point to document all the feedback I got and to act on it.</p>
+                <p>An example was during CBL3. We received feedback about the creativity of our project and our UI + UX design. We saw how errors and fixed them by changes the way users would interact with our product. We did run out of time to fully test our changes, but I learned that early and continuous feedback is really important.</p>
+                <p>I compared my growth in collaboration with last school year – I now realise that collaboration is more than just working with others – it's about having a shared goal and structure, listening and having respect for each other, and learning from your team members and using everybody's strengths. I have grown to somebody who can lead, organize and improve the creativity of those around me.</p>
+            </div>
+
+            <div class="navigation">
+                <a href="Page8.html"><button class="nav-button">Back</button></a>
+                <a href="Page10.html"><button class="nav-button">Next</button></a>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('light-mode');
+            
+            if (body.classList.contains('light-mode')) {
+                themeToggle.textContent = '☀️';
+            } else {
+                themeToggle.textContent = '🌙';
+            }
+        });
+        
+        // Pulse effect for image click
+        function pulseEffect(element) {
+            element.style.transform = 'scale(1.05)';
+            element.style.boxShadow = '0 0 30px rgba(74, 134, 232, 0.6)';
+            
+            setTimeout(() => {
+                element.style.transform = '';
+                element.style.boxShadow = '';
+            }, 500);
+        }
+        
+        // Create moving stars/particles in the background
+        function createParticles() {
+            const container = document.querySelector('.floating-shapes');
+            
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random size
+                const size = Math.random() * 3 + 1;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random position
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Styling
+                particle.style.position = 'absolute';
+                particle.style.background = 'white';
+                particle.style.borderRadius = '50%';
+                particle.style.opacity = Math.random() * 0.5 + 0.2;
+                
+                // Animation
+                particle.style.animation = `float ${Math.random() * 20 + 10}s infinite linear`;
+                
+                container.appendChild(particle);
+            }
+        }
+        
+        // Run on page load
+        window.onload = function() {
+            createParticles();
+        };
+    </script>
+</body>
+</html>

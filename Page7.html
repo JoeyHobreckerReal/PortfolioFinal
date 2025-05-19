@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technology and Realization</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #9370DB;
+            --secondary-color: #E6E6FA;
+            --accent-color: #8A2BE2;
+            --text-color: #333;
+            --bg-color: #f8f8ff;
+        }
+        
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: var(--text-color);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-grow: 1;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            padding: 20px;
+            width: 100%;
+        }
+        
+        .title-container {
+            position: relative;
+            display: inline-block;
+            margin: 0 auto;
+            padding: 10px;
+        }
+        
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3.5rem;
+            margin: 0;
+            position: relative;
+            color: var(--accent-color);
+            display: inline-block;
+        }
+        
+        .letter {
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+        
+        .runaway-letter {
+            display: inline-block;
+            position: absolute;
+            color: #ff6b6b;
+            font-weight: 700;
+            font-size: 3.5rem;
+            z-index: 10;
+            transition: all 0.2s ease;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        .main-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            margin: 20px 0;
+            flex-grow: 1;
+        }
+        
+        .image-container {
+            position: relative;
+            max-width: 90%;
+            margin: 0 auto;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        
+        .image-container:hover {
+            transform: scale(1.02);
+        }
+        
+        .main-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px;
+        }
+        
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(147, 112, 219, 0.1) 0%, rgba(138, 43, 226, 0.1) 100%);
+            pointer-events: none;
+            border-radius: 12px;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+            margin-bottom: 30px;
+        }
+        
+        .nav-button {
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            font-family: 'Space Grotesk', sans-serif;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.5s ease;
+        }
+        
+        .nav-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(147, 112, 219, 0.3);
+            background-color: var(--accent-color);
+        }
+        
+        .nav-button:hover::before {
+            left: 100%;
+        }
+        
+        .back-button::before {
+            content: '←';
+            margin-right: 5px;
+        }
+        
+        .next-button::after {
+            content: '→';
+            margin-left: 5px;
+        }
+        
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+            }
+            25% {
+                transform: translateY(-30px) translateX(15px);
+            }
+            50% {
+                transform: translateY(-15px) translateX(30px);
+            }
+            75% {
+                transform: translateY(-25px) translateX(-15px);
+            }
+        }
+        
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+            }
+            25% {
+                transform: translateY(-30px) translateX(15px);
+            }
+            50% {
+                transform: translateY(-15px) translateX(30px);
+            }
+            75% {
+                transform: translateY(-25px) translateX(-15px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .main-image {
+                max-width: 100%;
+            }
+            
+            .nav-button {
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="container">
+        <header>
+            <div class="title-container">
+                <h1 id="title">Technology and Realization</h1>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <div class="image-container">
+                <img src="Visualization.png" alt="Technology and Realization Visualization" class="main-image">
+                <div class="image-overlay"></div>
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <a href="Page6.html" class="nav-button back-button">Back</a>
+            <a href="Page8.html" class="nav-button next-button">Next</a>
+        </div>
+    </div>
+    
+    <script>
+        // Create title with jumping letters
+        const titleElement = document.getElementById('title');
+        const titleText = titleElement.textContent;
+        let titleHTML = '';
+        
+        for (let i = 0; i < titleText.length; i++) {
+            titleHTML += `<span class="letter">${titleText[i]}</span>`;
+        }
+        
+        titleElement.innerHTML = titleHTML;
+        
+        // Make random letters jump periodically
+        const letters = document.querySelectorAll('.letter');
+        
+        function randomJump() {
+            // Don't animate too many letters at once
+            const maxJumping = Math.min(3, Math.floor(letters.length / 5));
+            const jumpingIndices = new Set();
+            
+            while (jumpingIndices.size < maxJumping) {
+                const randomIndex = Math.floor(Math.random() * letters.length);
+                jumpingIndices.add(randomIndex);
+            }
+            
+            jumpingIndices.forEach(index => {
+                const letter = letters[index];
+                letter.style.animation = 'jump 0.5s ease';
+                
+                setTimeout(() => {
+                    letter.style.animation = '';
+                }, 500);
+            });
+            
+            // Schedule next jump
+            setTimeout(randomJump, Math.random() * 2000 + 1000);
+        }
+        
+        // Start the jumping after a delay
+        setTimeout(randomJump, 1500);
+        
+        const imageContainer = document.querySelector('.image-container');
+        
+        // Track mouse movement - removed for this version
+        
+        // Create background particles
+        const particlesContainer = document.getElementById('particles');
+        const particlesCount = 12;
+        
+        for (let i = 0; i < particlesCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            // Random size
+            const size = Math.random() * 50 + 30;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            // Random position
+            particle.style.left = `${Math.random() * 100}vw`;
+            particle.style.top = `${Math.random() * 100}vh`;
+            
+            // Random animation delay
+            particle.style.animationDelay = `${Math.random() * 10}s`;
+            
+            particlesContainer.appendChild(particle);
+        }
+    </script>
+</body>
+</html>

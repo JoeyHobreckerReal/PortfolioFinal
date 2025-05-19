@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Sources - The Crimson Archives</title>
+    <!--
+    ============================================================================
+    MY SOURCES - A MONUMENT TO CONSULTED KNOWLEDGE
+    ============================================================================
+    This document chronicles the sources that have whispered secrets.
+    ============================================================================
+    -->
+    <style>
+        /*
+        ========================================================================
+        I. CORE STYLES & RESET - LAYING THE FOUNDATION STONES
+        ========================================================================
+        */
+
+        :root {
+            /* Primary Color Palette - The Hues of Damnation */
+            --color-primary-red: #ff2222;       /* A searing, vibrant flame red */
+            --color-dark-red: #990000;         /* Deep, coagulated blood red */
+            --color-darker-red: #660000;       /* The heart of a dying ember */
+            --color-blackest-red: #330000;     /* Almost black, tinged with malice */
+            --color-accent-glow: #ff5555;      /* A softer, ethereal red glow */
+            --color-text-primary: #f0e6e6;     /* Pale ash, for readability */
+            --color-text-secondary: #c0b6b6;   /* Faded script, for lesser details */
+            --color-text-highlight: #ffcccc;   /* Touched by firelight */
+            --color-background-deep: #0a0000;  /* The void's embrace */
+            --color-background-main: #1a0505;  /* Charred earth */
+            --color-background-panel: rgba(20, 0, 0, 0.65); /* Translucent obsidian */
+            --color-border-somber: #4d0000;    /* A subtle, menacing line */
+            --color-border-fiery: #7f0000;     /* A border that smolders */
+
+            /* Typography - The Language of Shadows */
+            --font-primary-headings: 'Cinzel Decorative', 'Times New Roman', Times, serif; /* Ancient, imposing */
+            --font-secondary-body: 'Lora', 'Georgia', serif; /* Elegant, readable horror */
+
+            /* Spacing & Layout - The Architecture of Fear */
+            --spacing-unit: 8px;
+            --spacing-small: var(--spacing-unit);        /* 8px */
+            --spacing-medium: calc(var(--spacing-unit) * 2); /* 16px */
+            --spacing-large: calc(var(--spacing-unit) * 4);  /* 32px */
+            --spacing-xlarge: calc(var(--spacing-unit) * 6); /* 48px */
+            --spacing-xxlarge: calc(var(--spacing-unit) * 8);/* 64px */
+
+            /* Effects & Transitions - The Unseen Movements */
+            --transition-speed-normal: 0.3s;
+            --transition-speed-fast: 0.15s;
+            --transition-timing-ease: ease-in-out;
+
+            /* Borders & Shadows - Edges of Reality */
+            --shadow-subtle-glow: 0 0 10px rgba(255, 51, 51, 0.3);
+            --shadow-deep-inset: inset 0 0 15px rgba(0, 0, 0, 0.5);
+            --shadow-ominous-spread: 0 5px 25px rgba(51, 0, 0, 0.7);
+        }
+
+        /* Universal Reset - Stripping Away Illusions */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* HTML Root Styling - The Soul of the Page */
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+            scrollbar-color: var(--color-dark-red) var(--color-blackest-red);
+            scrollbar-width: thin;
+        }
+
+        /* Webkit Scrollbar Styling */
+        body::-webkit-scrollbar { width: 10px; }
+        body::-webkit-scrollbar-track { background: var(--color-blackest-red); border-radius: 5px; }
+        body::-webkit-scrollbar-thumb { background-color: var(--color-dark-red); border-radius: 5px; border: 2px solid var(--color-blackest-red); }
+        body::-webkit-scrollbar-thumb:hover { background-color: var(--color-primary-red); }
+
+        /* Body Styling - The Canvas of Nightmares */
+        body {
+            background-color: var(--color-background-main);
+            background-image:
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100" height="100" filter="url(%23n)" opacity="0.03"/></svg>'),
+                linear-gradient(145deg, var(--color-background-deep) 0%, var(--color-background-main) 40%, var(--color-blackest-red) 100%);
+            color: var(--color-text-primary);
+            font-family: var(--font-secondary-body);
+            line-height: 1.75;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding-top: var(--spacing-large);
+            padding-bottom: var(--spacing-large);
+        }
+
+        /*
+        ========================================================================
+        II. TYPOGRAPHY - THE VERY LETTERS OF DOOM
+        ========================================================================
+        */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-primary-headings);
+            color: var(--color-primary-red);
+            letter-spacing: 1px;
+            margin-bottom: var(--spacing-medium);
+            line-height: 1.3;
+            font-weight: 700;
+        }
+
+        .page-title {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            text-shadow:
+                0 0 7px var(--color-accent-glow),
+                0 0 12px var(--color-accent-glow),
+                0 0 20px var(--color-dark-red),
+                0 0 35px var(--color-darker-red),
+                2px 2px 5px rgba(0,0,0,0.7);
+            animation: pulse-title-glow 4s infinite alternate ease-in-out;
+            margin-bottom: var(--spacing-xlarge); /* Increased margin since subtitle is gone */
+            color: var(--color-primary-red);
+        }
+
+        p {
+            margin-bottom: var(--spacing-medium);
+            color: var(--color-text-primary);
+        }
+
+        a {
+            color: var(--color-accent-glow);
+            text-decoration: none;
+            transition: color var(--transition-speed-fast) var(--transition-timing-ease), text-shadow var(--transition-speed-fast) var(--transition-timing-ease);
+        }
+
+        a:hover,
+        a:focus {
+            color: var(--color-primary-red);
+            text-decoration: underline;
+            text-decoration-style: wavy;
+            text-decoration-color: var(--color-dark-red);
+            text-shadow: 0 0 5px var(--color-accent-glow);
+            outline: none;
+        }
+
+        em { /* General emphasis, used for book titles and journal names */
+            font-style: italic;
+            color: var(--color-text-highlight);
+        }
+
+        strong, .bolded-author {
+            font-weight: bold;
+            color: var(--color-text-highlight);
+        }
+
+        /*
+        ========================================================================
+        III. LAYOUT & CONTAINER STYLES - STRUCTURING THE MADNESS
+        ========================================================================
+        */
+        .page-wrapper {
+            width: 90%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: var(--spacing-medium) var(--spacing-medium);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xlarge);
+            padding: var(--spacing-large) 0;
+            border-bottom: 3px double var(--color-border-fiery);
+            background: radial-gradient(ellipse at top, rgba(51,0,0,0.5) 0%, transparent 70%);
+        }
+
+        .main-content-area {
+            background-color: var(--color-background-panel);
+            border: 1px solid var(--color-border-somber);
+            box-shadow: var(--shadow-ominous-spread), var(--shadow-deep-inset);
+            padding: var(--spacing-large);
+            border-radius: 12px;
+            flex-grow: 1;
+            margin-bottom: var(--spacing-xlarge);
+        }
+
+        .page-footer {
+            text-align: center;
+            padding: var(--spacing-large) 0;
+            margin-top: auto;
+            border-top: 3px double var(--color-border-fiery);
+            background: radial-gradient(ellipse at bottom, rgba(51,0,0,0.5) 0%, transparent 70%);
+        }
+
+        /*
+        ========================================================================
+        IV. REFERENCES LIST STYLING - THE CATALOG OF ARCANA
+        ========================================================================
+        */
+        .references-list-proper {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .reference-entry {
+            padding: var(--spacing-medium) var(--spacing-medium) var(--spacing-medium) var(--spacing-large);
+            margin-bottom: var(--spacing-large);
+            border-left: 5px solid var(--color-dark-red);
+            background-color: rgba(0, 0, 0, 0.25);
+            border-radius: 0 8px 8px 0;
+            transition: background-color var(--transition-speed-normal) var(--transition-timing-ease),
+                        border-left-color var(--transition-speed-normal) var(--transition-timing-ease),
+                        transform var(--transition-speed-fast) var(--transition-timing-ease),
+                        box-shadow var(--transition-speed-normal) var(--transition-timing-ease);
+            position: relative;
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.3);
+        }
+
+        .reference-entry:hover {
+            background-color: rgba(51, 10, 10, 0.45);
+            border-left-color: var(--color-primary-red);
+            transform: translateY(-2px) translateX(2px);
+            box-shadow: 0 3px 15px rgba(80,0,0,0.6), inset 0 0 10px rgba(0,0,0,0.4);
+        }
+
+        .reference-entry::before {
+            content: "❖";
+            font-family: 'Times New Roman', Times, serif;
+            position: absolute;
+            left: calc(var(--spacing-medium) - 2px);
+            top: 50%;
+            transform: translateY(-50%) rotate(0deg);
+            color: var(--color-dark-red);
+            font-size: 1.2em;
+            opacity: 0.8;
+            transition: color var(--transition-speed-normal) var(--transition-timing-ease),
+                        transform var(--transition-speed-normal) var(--transition-timing-ease),
+                        opacity var(--transition-speed-normal) var(--transition-timing-ease),
+                        text-shadow var(--transition-speed-normal) var(--transition-timing-ease);
+        }
+
+        .reference-entry:hover::before {
+            color: var(--color-primary-red);
+            opacity: 1;
+            transform: translateY(-50%) rotate(180deg) scale(1.1);
+            text-shadow: 0 0 5px var(--color-accent-glow);
+        }
+
+        .reference-author {
+            font-weight: bold;
+            color: var(--color-text-highlight);
+            display: inline;
+        }
+
+        .reference-year {
+            color: #ffaaaa;
+            display: inline;
+        }
+
+        .reference-title {
+            color: var(--color-text-primary);
+            display: block; 
+            margin-top: calc(var(--spacing-small) / 2);
+            margin-bottom: calc(var(--spacing-small) / 2);
+        }
+        .reference-title em { /* Italicize only the descriptive part of the title */
+             font-style: italic;
+             color: var(--color-text-highlight); /* Match existing em style */
+        }
+        .reference-title span { /* For the non-italic prompt part, if needed, but handled by default text */
+            font-style: normal;
+        }
+
+
+        .reference-source,
+        .reference-retrieval-date,
+        .reference-details {
+            color: var(--color-text-secondary);
+            font-size: 0.95em;
+        }
+        /* Journal names or specific source parts can be italicized using <em> within .reference-source */
+
+        .reference-link {
+            color: var(--color-accent-glow);
+            word-break: break-all;
+            font-style: normal; /* Ensure link itself is not italic if following an italic source */
+            display: block; /* Make link appear on new line for very long URLs if needed, or inline */
+            margin-top: calc(var(--spacing-small) / 4); /* Small space above link */
+        }
+
+
+        .reference-link:hover,
+        .reference-link:focus {
+            color: var(--color-primary-red);
+            text-decoration-style: solid;
+        }
+
+        /*
+        ========================================================================
+        V. BUTTONS & INTERACTIVE ELEMENTS - WIELDING THE POWER
+        ========================================================================
+        */
+        .home-portal-button {
+            display: inline-block;
+            padding: var(--spacing-medium) var(--spacing-xlarge);
+            background-color: var(--color-darker-red);
+            color: var(--color-text-primary);
+            text-decoration: none;
+            font-family: var(--font-primary-headings);
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            border: 2px solid var(--color-blackest-red);
+            border-radius: 8px;
+            transition: background-color var(--transition-speed-normal) var(--transition-timing-ease),
+                        color var(--transition-speed-normal) var(--transition-timing-ease),
+                        box-shadow var(--transition-speed-normal) var(--transition-timing-ease),
+                        border-color var(--transition-speed-normal) var(--transition-timing-ease),
+                        transform var(--transition-speed-fast) var(--transition-timing-ease);
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4), inset 0 -2px 4px rgba(0,0,0,0.3);
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path fill="%23ff2222" stroke="%23000000" stroke-width="1" d="M16 0 L20 12 L32 12 L24 20 L28 32 L16 24 L4 32 L8 20 L0 12 L12 12 Z" transform="rotate(10 16 16)"/></svg>') 16 16, pointer;
+        }
+
+        .home-portal-button:hover,
+        .home-portal-button:focus {
+            background-color: var(--color-primary-red);
+            color: #fff;
+            border-color: var(--color-accent-glow);
+            box-shadow: 0 0 15px var(--color-accent-glow),
+                        0 0 25px var(--color-primary-red),
+                        0 6px 12px rgba(0,0,0,0.5),
+                        inset 0 2px 5px rgba(255,255,255,0.2);
+            transform: translateY(-2px) scale(1.02);
+            outline: none;
+        }
+        .home-portal-button:active {
+            transform: translateY(1px) scale(0.98);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3), inset 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        /*
+        ========================================================================
+        VI. ANIMATIONS & SUBTLE EFFECTS - THE BREATH OF THE DAMNED
+        ========================================================================
+        */
+        @keyframes pulse-title-glow {
+            0% {
+                text-shadow:
+                    0 0 6px var(--color-accent-glow),
+                    0 0 10px var(--color-accent-glow),
+                    0 0 18px var(--color-dark-red),
+                    0 0 30px var(--color-darker-red),
+                    2px 2px 4px rgba(0,0,0,0.6);
+                color: var(--color-primary-red);
+            }
+            50% {
+                 text-shadow:
+                    0 0 10px var(--color-primary-red),
+                    0 0 18px var(--color-primary-red),
+                    0 0 30px var(--color-dark-red),
+                    0 0 50px var(--color-darker-red),
+                    2px 2px 6px rgba(0,0,0,0.8);
+                color: #ff6666;
+            }
+            100% {
+                text-shadow:
+                    0 0 6px var(--color-accent-glow),
+                    0 0 10px var(--color-accent-glow),
+                    0 0 18px var(--color-dark-red),
+                    0 0 30px var(--color-darker-red),
+                    2px 2px 4px rgba(0,0,0,0.6);
+                color: var(--color-primary-red);
+            }
+        }
+
+        /* Click Ripple Effect */
+        .click-ripple {
+            position: fixed; /* Use fixed positioning for viewport-relative clicks */
+            border-radius: 50%;
+            background-color: var(--color-accent-glow); /* Ripple color */
+            opacity: 0.7; /* Initial opacity */
+            transform: scale(0);
+            animation: ripple-effect 0.7s ease-out;
+            pointer-events: none; /* So it doesn't interfere with other clicks */
+            z-index: 9999; /* On top of everything */
+        }
+
+        @keyframes ripple-effect {
+            0% {
+                transform: scale(0);
+                opacity: 0.7;
+            }
+            50% {
+                opacity: 0.3; /* Fade a bit mid-way */
+            }
+            100% {
+                transform: scale(15); /* Adjust scale factor for desired size */
+                opacity: 0;
+            }
+        }
+
+
+        /*
+        ========================================================================
+        VII. DECORATIVE ELEMENTS & EMBEDS - SIGILS AND SYMBOLS
+        ========================================================================
+        */
+        .svg-icon-decorative {
+            width: 50px;
+            height: 50px;
+            fill: var(--color-dark-red);
+            margin: 0 auto var(--spacing-medium);
+            display: block;
+            filter: drop-shadow(0 0 3px var(--color-accent-glow));
+        }
+
+        /*
+        ========================================================================
+        VIII. RESPONSIVE DESIGN - ADAPTING TO THE VOID'S WHIMS
+        ========================================================================
+        */
+        @media (max-width: 1024px) {
+            .page-wrapper { width: 95%; }
+        }
+
+        @media (max-width: 768px) {
+            html { font-size: 15px; }
+            .page-header { margin-bottom: var(--spacing-xlarge); }
+            .main-content-area { padding: var(--spacing-medium); border-radius: 8px; }
+            .reference-entry { padding: var(--spacing-small) var(--spacing-small) var(--spacing-small) var(--spacing-medium); margin-bottom: var(--spacing-medium); }
+            .reference-entry::before { left: calc(var(--spacing-small) - 2px); font-size: 1em; }
+            .home-portal-button { padding: var(--spacing-medium) var(--spacing-large); width: 80%; max-width: 300px; }
+            .page-footer { padding: var(--spacing-medium) 0; }
+        }
+
+        @media (max-width: 480px) {
+            html { font-size: 14px; }
+            .page-wrapper { width: 98%; padding: var(--spacing-small); }
+            .page-header { padding: var(--spacing-medium) 0; }
+            .main-content-area { padding: var(--spacing-small); border-radius: 6px; }
+            .page-title { letter-spacing: 0.5px; }
+            .home-portal-button { font-size: clamp(0.9rem, 3.5vw, 1.1rem); }
+            .reference-entry { border-left-width: 4px; }
+        }
+
+        /*
+        ========================================================================
+        IX. ACCESSIBILITY CONSIDERATIONS - EVEN IN DARKNESS, CLARITY
+        ========================================================================
+        */
+        *:focus-visible {
+            outline: 3px dashed var(--color-accent-glow);
+            outline-offset: 2px;
+            box-shadow: 0 0 0 4px var(--color-background-main), 0 0 0 6px var(--color-accent-glow);
+        }
+
+        @media (prefers-contrast: more) {
+            :root {
+                --color-text-primary: #ffffff;
+                --color-text-secondary: #e0e0e0;
+                --color-background-main: #000000;
+                --color-background-panel: rgba(0,0,0,0.8);
+                --color-primary-red: #ff4d4d;
+                --color-accent-glow: #ff8080;
+            }
+            .page-title {
+                text-shadow: 1px 1px 0 var(--color-blackest-red), -1px -1px 0 var(--color-blackest-red),
+                             1px -1px 0 var(--color-blackest-red), -1px 1px 0 var(--color-blackest-red),
+                             0 0 10px var(--color-primary-red);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+            .page-title { animation: none; }
+            .reference-entry:hover::before { transform: translateY(-50%) scale(1.05); }
+            .click-ripple { animation: none; display: none; } /* Disable ripple if motion reduced */
+        }
+
+        /*
+        ========================================================================
+        X. UTILITY CLASSES - TOOLS FROM THE SHADOWS
+        ========================================================================
+        */
+        .text-center { text-align: center; }
+        .hidden-visually { border:0; clip:rect(0 0 0 0); height:1px; margin:-1px; overflow:hidden; padding:0; position:absolute; width:1px; white-space:nowrap; }
+        .mb-small { margin-bottom: var(--spacing-small); }
+        .mb-medium { margin-bottom: var(--spacing-medium); }
+        .mb-large { margin-bottom: var(--spacing-large); }
+        .mt-small { margin-top: var(--spacing-small); }
+        .mt-medium { margin-top: var(--spacing-medium); }
+        .mt-large { margin-top: var(--spacing-large); }
+
+        /*
+        ========================================================================
+        XI. PRINT STYLES - FOR THOSE WHO DARE TO ARCHIVE
+        ========================================================================
+        */
+        @media print {
+            body { background-color: #fff; background-image: none; color: #000; font-size: 12pt; padding: 1cm; }
+            :root {
+                --color-primary-red: #800000; --color-dark-red: #400000; --color-text-primary: #000000;
+                --color-text-secondary: #333333; --color-text-highlight: #111111; --color-accent-glow: #aa0000;
+            }
+            .page-wrapper, .main-content-area, .page-header, .page-footer { box-shadow: none; border: 1px solid #ccc; padding: 0.5cm; margin-bottom: 0.5cm; background: none; }
+            .page-header, .page-footer { border-width: 2px; }
+            .page-title { text-shadow: none; color: var(--color-dark-red); }
+            .home-portal-button, .reference-entry::before, .svg-icon-decorative, .click-ripple { display: none !important; }
+            .reference-entry { border-left-color: var(--color-dark-red); background-color: #f9f9f9; padding: 0.3cm; page-break-inside: avoid; }
+            a, .reference-link { color: #000080; text-decoration: underline; }
+            .reference-link::after { content: " (" attr(href) ")"; font-size: 9pt; color: #555; }
+            html, body { width: auto !important; height: auto !important; overflow: visible !important; }
+        }
+    </style>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <svg style="display:none;">
+        <defs>
+            <symbol id="flame-icon" viewBox="0 0 24 24">
+                <path d="M12.6,2.6C12.6,2.6,12.5,2.5,12.5,2.5C11.1,1.6,9.9,1,8.5,1C5.2,1,3.2,3.5,3.2,6.4c0,2.1,1.1,4.3,2.9,6.4 C7.7,14.9,10,18,10,18c0,0,0.1,0.1,0.1,0.1c0.3,0.5,0.8,0.8,1.4,0.8s1.1-0.3,1.4-0.8c0,0,0.1-0.1,0.1-0.1c0,0,2.3-3.1,3.9-5.2 c1.8-2.1,2.9-4.3,2.9-6.4C19.8,3.5,17.8,1,14.5,1C13.1,1,11.9,1.6,10.5,2.5C10.5,2.5,10.4,2.6,10.4,2.6z M10,16.3 c-0.2-0.3-2-2.8-3.4-4.7c-1.4-1.9-2.2-3.6-2.2-5.2c0-2.1,1.5-3.9,4.1-3.9c1,0,1.9,0.4,2.6,1c0.7-0.6,1.6-1,2.6-1 c2.6,0,4.1,1.8,4.1,3.9c0,1.6-0.8,3.3-2.2,5.2C13,13.5,11.2,16,11,16.3C11,16.3,11,16.3,10,16.3z"/>
+                <path d="M12,4.1c-0.4-0.4-1-0.6-1.6-0.6c-1.2,0-2.2,0.9-2.2,2.1c0,0.9,0.5,1.9,1.3,2.9c0.8,1,1.7,2.3,1.7,2.3s0.1,0.1,0.1,0.1 c0.1,0.2,0.3,0.3,0.6,0.3s0.4-0.1,0.6-0.3c0,0,0.1-0.1,0.1-0.1c0,0,0.9-1.3,1.7-2.3c0.8-1,1.3-1.9,1.3-2.9c0-1.2-1-2.1-2.2-2.1 C13,3.5,12.4,3.7,12,4.1z"/>
+            </symbol>
+            <symbol id="stylized-pentagram-sft" viewBox="0 0 100 100">
+                <polygon points="50,5 61,39 98,39 68,62 79,96 50,75 21,96 32,62 2,39 39,39"
+                         fill="currentColor" stroke="var(--color-blackest-red)" stroke-width="2"/>
+            </symbol>
+        </defs>
+    </svg>
+
+    <div class="page-wrapper">
+        <header class="page-header">
+            <svg class="svg-icon-decorative" viewBox="0 0 24 24" aria-hidden="true" style="width: 70px; height: 70px; margin-bottom: var(--spacing-medium);">
+                <use href="#flame-icon"/>
+            </svg>
+            <h1 class="page-title">My Sources</h1>
+            <!-- Subtitle and Last Scrying removed -->
+        </header>
+
+        <main class="main-content-area">
+            <!-- Main section heading and category heading removed -->
+            <ul class="references-list-proper">
+                <li class="reference-entry">
+                    <span class="reference-author bolded-author">OpenAI.</span>
+                    (<span class="reference-year">2025a, May 19</span>).
+                    <span class="reference-title">
+                        <em>Image depicting designer traits (creativity, adaptability, laziness) in a nature-minimalistic, clean, professional theme.</em>
+                        [AI-generated image using the prompt: "My biggest traits as a designer are creativity, adaptability and laziness.  Theme is nature minimalstic clean professional create image"]
+                    </span>
+                    <span class="reference-source">ChatGPT.</span>
+                    <a href="https://chatgpt.com/share/682b3e95-77c8-8004-bc70-8a51f0f4d5bf" target="_blank" class="reference-link">https://chatgpt.com/share/682b3e95-77c8-8004-bc70-8a51f0f4d5bf</a>
+                </li>
+                <li class="reference-entry">
+                    <span class="reference-author bolded-author">OpenAI.</span>
+                    (<span class="reference-year">2025b, May 19</span>).
+                    <span class="reference-title">
+                        <em>Image depicting designer strengths and weaknesses in a nature-minimalistic, clean, professional theme.</em>
+                        [AI-generated image using the prompt: "My strengths are creativity, rapid development and design, embracing new technologies and techniques, adaptability, experimentation and a willingness to take risks. My weaknesses are attentiveness to feedback, refining my work and confidence in a team. Theme is nature minimalstic clean professional create image"]
+                    </span>
+                    <span class="reference-source">ChatGPT.</span>
+                    <a href="https://chatgpt.com/share/682b3e95-77c8-8004-bc70-8a51f0f4d5bf" target="_blank" class="reference-link">https://chatgpt.com/share/682b3e95-77c8-8004-bc70-8a51f0f4d5bf</a>
+                </li>
+                <li class="reference-entry">
+                    <span class="reference-author bolded-author">OpenAI.</span>
+                    (<span class="reference-year">2025c, May 19</span>).
+                    <span class="reference-title">
+                        <em>Stylized image of a brain with no background.</em>
+                        [AI-generated image using the prompt: "Generate image of brain in this style and stuff but no background"]
+                    </span>
+                    <span class="reference-source">ChatGPT.</span>
+                    <a href="https://chatgpt.com/share/682b3ef8-7034-8004-b78a-5b4ecc293de0" target="_blank" class="reference-link">https://chatgpt.com/share/682b3ef8-7034-8004-b78a-5b4ecc293de0</a>
+                </li>
+                <li class="reference-entry">
+                    <span class="reference-author bolded-author">OpenAI.</span>
+                    (<span class="reference-year">2025d, May 19</span>).
+                    <span class="reference-title">
+                        <em>Simple, clean, blue logo with no background for a debater game.</em>
+                        [AI-generated image using the prompt: "Generate simple clean logo blue color scheme no background for a debater game"]
+                    </span>
+                    <span class="reference-source">ChatGPT.</span>
+                    <a href="https://chatgpt.com/share/682b3f15-5e48-8004-9f90-067db1c4f160" target="_blank" class="reference-link">https://chatgpt.com/share/682b3f15-5e48-8004-9f90-067db1c4f160</a>
+                </li>
+                <li class="reference-entry">
+                    <span class="reference-author bolded-author">OpenAI.</span>
+                    (<span class="reference-year">2025e, May 19</span>).
+                    <span class="reference-title">
+                        <em>Clean, simple, orange logo with no background for KitchenCompass project.</em>
+                        [AI-generated image using the prompt: "do you know my kitchencompass proejct?Okey can you generate a clean really simple orange color scheme logo for it no background"]
+                    </span>
+                    <span class="reference-source">ChatGPT.</span>
+                    <a href="https://chatgpt.com/share/682b3f41-c244-8004-aa75-1af312bdde56" target="_blank" class="reference-link">https://chatgpt.com/share/682b3f41-c244-8004-aa75-1af312bdde56</a>
+                </li>
+                <li class="reference-entry">
+                    <span class="reference-author bolded-author">OpenAI.</span>
+                    (<span class="reference-year">2025f, May 19</span>).
+                    <span class="reference-title">
+                        <em>Simple, green symbol (no text, no background) for an image recognition website for ingredients.</em>
+                        [AI-generated image using the prompt: "Create simple symbol no text no background green color scheme simple image recongition webstie that recongizes ingredients"]
+                    </span>
+                    <span class="reference-source">ChatGPT.</span>
+                    <a href="https://chatgpt.com/share/682b3f7f-14b0-8004-807f-06c67a75b897" target="_blank" class="reference-link">https://chatgpt.com/share/682b3f7f-14b0-8004-807f-06c67a75b897</a>
+                </li>
+                <li class="reference-entry">
+                    <span class="reference-author bolded-author">OpenAI.</span>
+                    (<span class="reference-year">2025g, May 19</span>).
+                    <span class="reference-title">
+                        <em>Simple, green symbol (no text, no background) for an escape room.</em>
+                        [AI-generated image using the prompt: "Create simple symbol no text no background green color scheme simple image for an escape room"]
+                    </span>
+                    <span class="reference-source">ChatGPT.</span>
+                    <a href="https://chatgpt.com/share/682b3fac-aaf8-8004-b867-4b449f1d3a44" target="_blank" class="reference-link">https://chatgpt.com/share/682b3fac-aaf8-8004-b867-4b449f1d3a44</a>
+                </li>
+                <li class="reference-entry">
+                    <span class="reference-author bolded-author">OpenAI.</span>
+                    (<span class="reference-year">2025h, May 19</span>).
+                    <span class="reference-title">
+                        <em>Simple symbol with a brown coffee cup (no text, no background) for a design cafe.</em>
+                        [AI-generated image using the prompt: "Create simple symbol no text no background green color scheme simple image for a design cafe Do only the cafe cup to a brown color scheme"]
+                    </span>
+                    <span class="reference-source">ChatGPT.</span>
+                    <a href="https://chatgpt.com/share/682b3fd6-3b34-8004-bac0-19b695f88f92" target="_blank" class="reference-link">https://chatgpt.com/share/682b3fd6-3b34-8004-bac0-19b695f88f92</a>
+                </li>
+                <li class="reference-entry">
+                    <span class="reference-author bolded-author">OpenAI.</span>
+                    (<span class="reference-year">2025i, May 19</span>).
+                    <span class="reference-title">
+                        <em>Clean, simple logo with no background for KitchenCompass, styled after a reference image.</em>
+                        [AI-generated image using the prompt: "Create a logo for kitchenompass clean simple no background in style of image"]
+                    </span>
+                    <span class="reference-source">ChatGPT.</span>
+                    <a href="https://chatgpt.com/share/682b403b-133c-8004-aa69-cff36a94eb6a" target="_blank" class="reference-link">https://chatgpt.com/share/682b403b-133c-8004-aa69-cff36a94eb6a</a>
+                </li>
+                <li class="reference-entry">
+                    <span class="reference-author bolded-author">OpenAI.</span>
+                    (<span class="reference-year">2025j, May 19</span>).
+                    <span class="reference-title">
+                        <em>Modified KitchenCompass logo (orange color scheme, no surrounding text, placed at top).</em>
+                        [AI-generated image using the prompt: "Put that logo on the top, remove the text around it tho. Change the whole thing up - make it orange color scheme."]
+                    </span>
+                    <span class="reference-source">ChatGPT.</span>
+                    <a href="https://chatgpt.com/share/682b4094-1d68-8004-8079-b565385a6519" target="_blank" class="reference-link">https://chatgpt.com/share/682b4094-1d68-8004-8079-b565385a6519</a>
+                </li>
+            </ul>
+        </main>
+
+        <footer class="page-footer">
+            <svg class="svg-icon-decorative" viewBox="0 0 100 100" aria-hidden="true" style="width: 40px; height: 40px; margin-bottom: var(--spacing-medium); fill: var(--color-dark-red);">
+                <use href="#stylized-pentagram-sft"/>
+            </svg>
+            <a href="Home.html" class="home-portal-button">Return to Sanctum (Home)</a>
+            <p style="font-size: 0.8em; color: var(--color-text-secondary); margin-top: var(--spacing-large);">
+            </p>
+        </footer>
+    </div> <!-- End of .page-wrapper -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('%cPage Scripts Summoned Successfully!', 'color: #ff2222; font-weight: bold; font-size: 1.2em; text-shadow: 1px 1px 0 #000;');
+
+            // Mouse Click Ripple Effect
+            document.addEventListener('click', function(e) {
+                // Prevent ripple on interactive elements like links or buttons
+                if (e.target.closest('a, button, input, select, textarea')) {
+                    return;
+                }
+
+                // Check for prefers-reduced-motion system setting
+                const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+                if (motionQuery.matches) {
+                    return; // Don't show ripple if user prefers reduced motion
+                }
+
+                const ripple = document.createElement('div');
+                ripple.className = 'click-ripple';
+                document.body.appendChild(ripple);
+
+                const initialSize = 20; // px, initial diameter of the ripple
+                ripple.style.width = `${initialSize}px`;
+                ripple.style.height = `${initialSize}px`;
+
+                // Position ripple at click coordinates relative to the viewport
+                ripple.style.left = `${e.clientX - (initialSize / 2)}px`;
+                ripple.style.top = `${e.clientY - (initialSize / 2)}px`;
+
+                // Remove ripple element after animation finishes
+                ripple.onanimationend = () => {
+                    ripple.remove();
+                };
+            });
+
+            // Easter egg: click the main title
+            const pageTitle = document.querySelector('.page-title');
+            if (pageTitle) {
+                pageTitle.addEventListener('click', function() {
+                    console.warn('%cYou have gazed into the Abyss... and the Abyss has a very nice font.', 'color: #ff5555; font-family: "Cinzel Decorative"; font-size: 1.5em;');
+                    this.style.transition = 'transform 0.2s ease-in-out, color 0.2s ease-in-out';
+                    const originalColor = this.style.color;
+                    this.style.transform = 'scale(1.02)';
+                    this.style.color = 'var(--color-accent-glow)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                        this.style.color = originalColor || 'var(--color-primary-red)';
+                    }, 300);
+                });
+                console.log('The Page Title awaits your curious click...');
+            }
+
+            console.log('%cAll scripts have run their course. The digital spirits are at rest... for now.', 'color: #990000;');
+        });
+    </script>
+
+</body>
+</html>

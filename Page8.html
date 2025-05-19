@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User and Society - Year 2 Reflection</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        :root {
+            --color-primary: #00bcd4; /* Cyan - for general accents */
+            --color-text: #e0e0e0;
+            --color-bg: #1a1a2e; /* Deep navy blue */
+            --color-bg-alt: #162447; /* Slightly lighter navy */
+            --color-card-bg: #1f4068; /* Even lighter, more muted blue for cards */
+            --color-border: #e43f5a; /* Contrasting reddish pink for borders/highlights */
+
+            --color-start-end: #ffab00; /* 🔶 */
+            --color-green: #4CAF50;    /* 🟩 */
+            --color-blue: #2196F3;     /* 🟦 */
+            --color-yellow: #FFEB3B;   /* 🟨 */
+            --color-purple: #9C27B0;   /* 🟪 */
+            --color-orange: #FF9800;   /* 🟧 */
+            --color-light-blue: #03A9F4;/* 🔷 */
+            --color-brown: #795548;    /* 🟫 */
+            --color-action: #8BC34A;   /* ✅ */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.6;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-image: linear-gradient(135deg, var(--color-bg) 0%, var(--color-bg-alt) 100%);
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background-color: var(--color-card-bg);
+            padding: 30px 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--color-primary);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--color-primary);
+        }
+
+        header h1 {
+            font-size: 2.8em;
+            color: var(--color-primary);
+            font-weight: 700;
+            text-shadow: 0 0 10px var(--color-primary);
+        }
+
+        .flowchart-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-left: 5px solid;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .flowchart-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .flowchart-section h2 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        .flowchart-section h2 .emoji {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        .flowchart-section ul {
+            list-style-type: none;
+            padding-left: 5px;
+        }
+
+        .flowchart-section ul li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .flowchart-section ul li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--color-primary); /* Use primary color for arrows */
+            font-weight: bold;
+        }
+        .flowchart-section.understanding-users ul li::before,
+        .flowchart-section.working-clients ul li::before,
+        .flowchart-section.social-ethical ul li::before,
+        .flowchart-section.creative-interaction ul li::before,
+        .flowchart-section.feelings-challenges ul li::before {
+            content: '⬇'; /* Down arrow for specific sections */
+        }
+
+
+        .lesson {
+            margin-top: 15px;
+            padding: 10px 15px;
+            background-color: rgba(0,0,0,0.1);
+            border-radius: 5px;
+            border-left: 3px solid; /* Will be colored by section */
+            font-style: italic;
+        }
+        .lesson strong {
+            font-style: normal;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        /* Specific Section Colors */
+        .start-end { border-left-color: var(--color-start-end); } /* Style kept in case .start-end is used elsewhere, e.g., for an END block */
+        .start-end h2 { color: var(--color-start-end); }
+        .start-end .lesson { border-left-color: var(--color-start-end); background-color: rgba(255, 171, 0, 0.1); }
+
+        .projects { border-left-color: var(--color-green); }
+        .projects h2 { color: var(--color-green); }
+        .projects .lesson { border-left-color: var(--color-green); background-color: rgba(76, 175, 80, 0.1);}
+
+
+        .understanding-users { border-left-color: var(--color-blue); }
+        .understanding-users h2 { color: var(--color-blue); }
+        .understanding-users .lesson { border-left-color: var(--color-blue); background-color: rgba(33, 150, 243, 0.1);}
+
+        .working-clients { border-left-color: var(--color-yellow); }
+        .working-clients h2 { color: var(--color-yellow); }
+        .working-clients ul li::before { color: var(--color-yellow); }
+        .working-clients .lesson { border-left-color: var(--color-yellow); background-color: rgba(255, 235, 59, 0.1); color: #333} /* Darker text for yellow bg */
+        .working-clients .lesson strong { color: #333; }
+
+
+        .social-ethical { border-left-color: var(--color-purple); }
+        .social-ethical h2 { color: var(--color-purple); }
+        .social-ethical ul li::before { color: var(--color-purple); }
+        .social-ethical .lesson { border-left-color: var(--color-purple); background-color: rgba(156, 39, 176, 0.1);}
+
+        .creative-interaction { border-left-color: var(--color-orange); }
+        .creative-interaction h2 { color: var(--color-orange); }
+        .creative-interaction ul li::before { color: var(--color-orange); }
+        .creative-interaction .lesson { border-left-color: var(--color-orange); background-color: rgba(255, 152, 0, 0.1);}
+
+        .feelings-challenges { border-left-color: var(--color-light-blue); }
+        .feelings-challenges h2 { color: var(--color-light-blue); }
+        .feelings-challenges ul li::before { color: var(--color-light-blue); }
+        .feelings-challenges .lesson {display: none;} /* No lesson for this one per original data */
+
+
+        .growth-insights { border-left-color: var(--color-brown); }
+        .growth-insights h2 { color: var(--color-brown); }
+        .growth-insights ul li::before { color: var(--color-brown); }
+        .growth-insights .lesson {display: none;} /* No lesson for this one per original data */
+
+        .action-plan { border-left-color: var(--color-action); }
+        .action-plan h2 { color: var(--color-action); }
+        .action-plan ul li::before { color: var(--color-action); }
+        .action-plan .lesson {display: none;} /* No lesson for this one per original data */
+
+        /* Styles for the image gallery */
+        .gallery {
+            margin-top: 20px; /* Space above the gallery */
+            margin-bottom: 20px; /* Space below the gallery, before the lesson */
+            display: flex;
+            flex-direction: column; /* Stack images vertically */
+            align-items: center; /* Center images if they are narrower than container */
+            gap: 25px; /* Space between each image-item */
+        }
+
+        .image-item {
+            text-align: center; /* Center the caption text */
+            max-width: 100%; /* Ensure item doesn't overflow its container */
+        }
+
+        .image-item img {
+            max-width: 100%; /* Makes image responsive, scales down to fit */
+            height: auto;   /* Maintains aspect ratio */
+            border-radius: 8px; /* Optional: rounded corners for images */
+            border: 2px solid var(--color-orange); /* Border color matching the section */
+            display: block; /* Removes extra space below image if inline */
+            margin-left: auto; /* Center image if it's smaller than max-width */
+            margin-right: auto;
+            margin-bottom: 8px; /* Space between image and its caption */
+        }
+
+        .caption {
+            font-size: 0.9em;
+            color: var(--color-text);
+            font-style: italic;
+        }
+
+
+        .navigation {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .nav-button {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: var(--color-primary);
+            color: var(--color-bg);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            border: 1px solid transparent;
+            box-shadow: 0 4px 15px rgba(0, 188, 212, 0.3);
+        }
+
+        .nav-button:hover {
+            background-color: #0097a7; /* Darker cyan */
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 188, 212, 0.5);
+        }
+        .nav-button.back {
+            background-color: transparent;
+            color: var(--color-primary);
+            border: 1px solid var(--color-primary);
+            box-shadow: none;
+        }
+        .nav-button.back:hover {
+            background-color: rgba(0, 188, 212, 0.1);
+            color: var(--color-primary);
+            box-shadow: 0 0 15px rgba(0, 188, 212, 0.3);
+        }
+
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+            .container {
+                padding: 20px;
+            }
+            .flowchart-section h2 {
+                font-size: 1.1em;
+            }
+            .flowchart-section h2 .emoji {
+                font-size: 1.3em;
+            }
+            .nav-button {
+                padding: 10px 15px;
+                font-size: 0.9em;
+            }
+            .navigation {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .nav-button {
+                width: 100%;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>User and Society</h1>
+        </header>
+
+        <!-- The START section that was here has been removed -->
+
+        <section class="flowchart-section projects">
+            <h2><span class="emoji">🟩</span>PROJECTS WHERE I LEARNED ABOUT USERS</h2>
+            <ul>
+                <li>KitchenCompass (Artifice, CBL3)</li>
+                <li>Connected Experiences</li>
+                <li>More-Than-Human Design</li>
+                <li>Zeliox Work</li>
+                <li>Aesthetics of Interaction</li>
+                <li>Design Research</li>
+            </ul>
+        </section>
+
+        <section class="flowchart-section understanding-users">
+            <h2><span class="emoji">🟦</span>UNDERSTANDING USERS</h2>
+            <ul>
+                <li>I worked with real users and clients for first time</li>
+                <li>Saw users struggle with the bad UI of Kitchencompass</li>
+                <li>Used new ways of interacting with technology – people were just confused</li>
+                <li>Not enough testing = bad results</li>
+                <li>Learned that feedback helps improve design</li>
+                <li>Learned how to do interviews & research before designing</li>
+            </ul>
+            <div class="lesson">
+                <strong>Lesson:</strong>
+                <br>→ Test with real users + test as much as possible + be structured in your testing
+                <br>→ Ask people what they need
+                <br>→ Design is about their experience, not just your idea
+            </div>
+        </section>
+
+        <section class="flowchart-section working-clients">
+            <h2><span class="emoji">🟨</span>WORKING WITH CLIENTS (ZELIOX)</h2>
+            <ul>
+                <li>Did not know how to interact with clients + what to ask</li>
+                <li>Learned to explain ideas clearly</li>
+                <li>Learned to show prototypes in a way people understand</li>
+                <li>Learned how to work together with client</li>
+            </ul>
+            <div class="lesson">
+                <strong>Lesson:</strong>
+                <br>→ Good questions = better feedback
+                <br>→ Preparation creates confidence
+                <br>→ Clients are part of the design, not outside it
+            </div>
+        </section>
+
+        <section class="flowchart-section social-ethical">
+            <h2><span class="emoji">🟪</span>SOCIAL + ETHICAL THINKING</h2>
+            <ul>
+                <li>More-Than-Human Design: thought about nature + non-human things</li>
+                <li>Saw that designs have big impact on society and environment</li>
+                <li>Design can change habits and systems</li>
+            </ul>
+            <div class="lesson">
+                <strong>Lesson:</strong>
+                <br>→ Think beyond the user
+                <br>→ Design = responsibility
+                <br>→ Good design thinks about people, animals, and the planet
+            </div>
+        </section>
+
+        <section class="flowchart-section creative-interaction">
+            <h2><span class="emoji">🟧</span>CREATIVE INTERACTION (AESTHETICS OF INTERACTION)</h2>
+            <ul>
+                <li>Built fun alarm clocks</li>
+                <li>Created weird and playful interactions</li>
+                <li>Emotions and surprises powerful design tool</li>
+                <li>Broke normal rules to make something new</li>
+            </ul>
+
+            <div class="gallery">
+                <div class="image-item">
+                    <img src="P1.png" alt="Fun Alarm Clock 1">
+                    <p class="caption">Figure 7 Fun Alarm Clock 1</p>
+                </div>
+                <div class="image-item">
+                    <img src="P2.png" alt="Fun Alarm Clock 2">
+                    <p class="caption">Figure 8 Fun Alarm Clock 2</p>
+                </div>
+                <div class="image-item">
+                    <img src="P3.png" alt="Fun Alarm Clock 3">
+                    <p class="caption">Figure 9 Fun Alarm Clock 3</p>
+                </div>
+                <div class="image-item">
+                    <img src="P4.png" alt="Fun Alarm Clock 4">
+                    <p class="caption">Figure 10 Fun Alarm Clock 4</p>
+                </div>
+            </div>
+
+            <div class="lesson">
+                <strong>Lesson:</strong>
+                <br>→ Design can be playful
+                <br>→ Emotions matter
+                <br>→ Creative design = stronger experiences
+            </div>
+        </section>
+
+        <section class="flowchart-section feelings-challenges">
+            <h2><span class="emoji">🔷</span>FEELINGS & CHALLENGES</h2>
+            <ul>
+                <li>Unsure when users became confused</li>
+                <li>Did not test enough</li>
+                <li>Often stressed from doing to much work in group</li>
+                <li>Low confidence in client meetings</li>
+                <li>Stress from clients meetings</li>
+            </ul>
+        </section>
+
+        <section class="flowchart-section growth-insights">
+            <h2><span class="emoji">🟫</span>GROWTH & INSIGHTS</h2>
+            <ul>
+                <li>Learned to test more + think as users</li>
+                <li>Now what questions to ask client</li>
+                <li>Learned to test and change designs based on feedback</li>
+                <li>Designs affects not just humans but everything in our world</li>
+            </ul>
+        </section>
+
+        <section class="flowchart-section action-plan">
+            <h2><span class="emoji">✅</span>ACTION PLAN (WHAT I’LL DO NEXT)</h2>
+            <ul>
+                <li>Talk to users early in the process</li>
+                <li>Use research + testing to improve your designs - start doing this at the start of the process</li>
+                <li>Work with clients, not just for them</li>
+                <li>Realize the impact your designs have on the natural world</li>
+                <li>Design for people, society, and the environment</li>
+                <li>Be creative and dare to be different</li>
+            </ul>
+        </section>
+
+
+        <nav class="navigation">
+            <a href="Page7.html" class="nav-button back">← Back</a>
+            <a href="Page9.html" class="nav-button next">Next →</a>
+        </nav>
+    </div>
+
+</body>
+</html>

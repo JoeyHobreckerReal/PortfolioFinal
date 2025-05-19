@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMART Goal Reflection</title>
+    <style>
+        /* Base styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* Container for all content */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Header styling */
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        h1 {
+            color: #3a7bd5;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .subtitle {
+            font-style: italic;
+            color: #6d7993;
+            margin-bottom: 2rem;
+        }
+        
+        /* Main content area */
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Image containers */
+        .image-container {
+            margin: 2.5rem 0;
+            padding: 1.5rem;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .image-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Images */
+        .goal-image {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            transition: transform 0.5s ease;
+        }
+        
+        .image-container:hover .goal-image {
+            transform: scale(1.02);
+        }
+        
+        /* Image captions - Kept for potential future use or structure, but content removed as per request */
+        .image-caption {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #3a7bd5;
+        }
+        
+        /* Paragraphs */
+        p {
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Navigation buttons */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .nav-button {
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(45deg, #3a7bd5, #00d2ff);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(45deg, #00d2ff, #3a7bd5);
+        }
+        
+        /* Floating elements */
+        .floating-element {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(45deg, rgba(58, 123, 213, 0.2), rgba(0, 210, 255, 0.2));
+            animation: float 8s infinite ease-in-out;
+            z-index: 0;
+        }
+        
+        .element1 {
+            width: 100px;
+            height: 100px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .element2 {
+            width: 70px;
+            height: 70px;
+            top: 50%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+        
+        .element3 {
+            width: 120px;
+            height: 120px;
+            bottom: 15%;
+            left: 25%;
+            animation-delay: 4s;
+        }
+        
+        .element4 {
+            width: 50px;
+            height: 50px;
+            top: 70%;
+            right: 30%;
+            animation-delay: 6s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(10deg);
+            }
+        }
+        
+        /* Takeaway section */
+        .takeaway {
+            background: linear-gradient(45deg, #f1f5f9, #e2e8f0);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+            position: relative;
+            z-index: 1;
+            border-left: 5px solid #3a7bd5;
+        }
+        
+        .takeaway h2 {
+            color: #3a7bd5;
+            margin-top: 0;
+        }
+        
+        /* Click effect - particles */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: particle 1s forwards ease-out;
+            z-index: 2;
+        }
+        
+        @keyframes particle {
+            0% {
+                opacity: 1;
+                transform: scale(0);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1);
+            }
+        }
+        
+        /* Visual divider */
+        .divider {
+            height: 3px;
+            background: linear-gradient(to right, transparent, #3a7bd5, transparent);
+            margin: 2rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Floating elements for visual interest -->
+        <div class="floating-element element1"></div>
+        <div class="floating-element element2"></div>
+        <div class="floating-element element3"></div>
+        <div class="floating-element element4"></div>
+        
+        <header>
+            <h1>SMART Goal Reflection</h1>
+        </header>
+        
+        <div class="content">
+            <p>I used a lot of SMART goals in the last two years to help me work on my personal and professional Identity. They are useful tools but don't guarantee growth, but they help put the focus on critical areas.</p>
+            
+            <div class="image-container" id="image1">
+                <img src="visual5.png" alt="Looking Back at Goals from Year 1" class="goal-image">
+                <!-- Removed caption content -->
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="image-container" id="image2">
+                <img src="visual6.png" alt="SMART Goals Year 2" class="goal-image">
+                <!-- Removed caption content -->
+            </div>
+            
+            <div class="image-container" id="image3">
+                <img src="visual7.png" alt="Year 2 Achievements and Key Insights" class="goal-image">
+                <!-- Removed caption content -->
+            </div>
+            
+            <div class="takeaway">
+                <h2>Takeaway</h2>
+                <p>I use SMART goals to nudge me in the correct direction – they are not a strict system. I growth the most when I just stayed focused, present and active in my daily activities. I will keep setting small goals, but I will base my growth on my intrinsic motivation and daily activities.</p>
+            </div>
+            
+            <div class="navigation">
+                <a href="Page9.html" class="nav-button">← Back</a>
+                <a href="Page11.html" class="nav-button">Next →</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Interactive elements
+        document.addEventListener('click', function(event) {
+            // Create particles on click
+            createParticles(event.clientX, event.clientY);
+            
+            // Add subtle pulse effect to nearby elements
+            const containers = document.querySelectorAll('.image-container');
+            containers.forEach(container => {
+                const rect = container.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                const distance = Math.sqrt(Math.pow(event.clientX - centerX, 2) + Math.pow(event.clientY - centerY, 2));
+                
+                if (distance < 300) {
+                    container.style.transform = 'scale(1.02)';
+                    setTimeout(() => {
+                        container.style.transform = '';
+                    }, 300);
+                }
+            });
+        });
+        
+        // Create particle effect
+        function createParticles(x, y) {
+            const colors = ['#3a7bd5', '#00d2ff', '#6d7993', '#3498db', '#2980b9'];
+            
+            for (let i = 0; i < 10; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // Random properties
+                const size = Math.random() * 15 + 5;
+                const angle = Math.random() * 360;
+                const distance = Math.random() * 100 + 50;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Set styles
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.background = color;
+                particle.style.left = `${x}px`;
+                particle.style.top = `${y}px`;
+                particle.style.opacity = '0.7';
+                
+                // Calculate end position
+                const endX = x + distance * Math.cos(angle * Math.PI / 180);
+                const endY = y + distance * Math.sin(angle * Math.PI / 180);
+                
+                // Add animation
+                particle.animate([
+                    { transform: 'scale(0) translate(0, 0)', opacity: 1 },
+                    { transform: `scale(1) translate(${endX - x}px, ${endY - y}px)`, opacity: 0 }
+                ], {
+                    duration: 1000 + Math.random() * 500,
+                    easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+                });
+                
+                // Add to DOM and remove when animation completes
+                document.body.appendChild(particle);
+                setTimeout(() => {
+                    particle.remove();
+                }, 1500);
+            }
+        }
+        
+        // Add subtle movement to images on hover
+        const images = document.querySelectorAll('.goal-image');
+        images.forEach(image => {
+            image.addEventListener('mousemove', function(e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const xPercent = x / rect.width - 0.5;
+                const yPercent = y / rect.height - 0.5;
+                
+                image.style.transform = `scale(1.03) perspective(500px) rotateY(${xPercent * 5}deg) rotateX(${yPercent * -5}deg)`;
+            });
+            
+            image.addEventListener('mouseleave', function() {
+                image.style.transform = '';
+            });
+        });
+    </script>
+</body>
+</html>

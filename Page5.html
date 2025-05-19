@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math, Data & Computing - Monochromatic Matrix</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500&family=Inter:wght@300;400;600&display=swap');
+
+        :root {
+            --bg-color: #000000;
+            --text-color-primary: #e0e0e0;
+            --text-color-secondary: #b0b0b0;
+            --accent-color: #ffffff;
+            --border-color: #333333;
+            --container-bg: rgba(10, 10, 10, 0.6);
+            --interactive-glow: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif; /* Cleaner sans-serif for general text */
+            background-color: var(--bg-color);
+            color: var(--text-color-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            font-weight: 300;
+            position: relative;
+        }
+
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 800px; /* Slightly narrower for a more focused feel */
+            width: 100%;
+            background-color: var(--container-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 30px 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px; /* Softer radius */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .main-title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600; /* Bolder for title */
+            color: var(--accent-color);
+            font-size: clamp(2em, 5vw, 2.8em);
+            text-align: center;
+            margin-bottom: 50px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            position: relative;
+            opacity: 0;
+            animation: fadeInTitle 1s 0.5s forwards;
+        }
+
+        @keyframes fadeInTitle {
+            to { opacity: 1; }
+        }
+        
+        .main-title::after { /* Minimalist underline */
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 2px;
+            background-color: var(--accent-color);
+            opacity: 0.7;
+        }
+
+
+        .content-section {
+            margin-bottom: 35px;
+            padding-top: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color); /* Bottom border instead of left */
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .content-section:last-of-type {
+            border-bottom: none;
+            margin-bottom: 20px;
+        }
+
+        .content-section.visible {
+            opacity: 1;
+            transform: translateY(0px);
+        }
+        
+        .content-section h2 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 400; /* Lighter weight for H2 */
+            color: var(--accent-color);
+            font-size: clamp(1.2em, 3vw, 1.4em);
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .content-section h2::before { /* Small square bullet */
+            content: "■";
+            color: var(--text-color-secondary);
+            font-size: 0.6em;
+            margin-right: 12px;
+            vertical-align: middle;
+        }
+
+        .content-section p {
+            font-family: 'Roboto Mono', monospace; /* Mono for descriptive text - consistency with intent */
+            font-size: clamp(0.85em, 2vw, 0.9em);
+            color: var(--text-color-secondary);
+            font-weight: 300;
+            padding-left: 22px; /* Align with H2 text start */
+        }
+        
+        .content-section strong {
+            color: var(--text-color-primary); /* Stronger emphasis is just lighter text */
+            font-weight: 400;
+        }
+
+        .special-link {
+            color: #32CD32; /* LimeGreen */
+            text-decoration: underline;
+            font-weight: inherit; /* Inherit font-weight from parent (e.g. strong tag or p tag) */
+        }
+        .special-link:hover {
+            color: #50E650; /* Lighter LimeGreen on hover */
+        }
+
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 800px;
+            padding: 20px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-btn {
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            text-decoration: none;
+            color: var(--text-color-secondary);
+            background-color: transparent;
+            padding: 10px 25px;
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-size: clamp(0.8em, 2vw, 0.85em);
+        }
+        
+
+        .nav-btn:hover {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 10px var(--interactive-glow);
+        }
+        
+        /* Cursor Trail */
+        .cursor-dot {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            background-color: var(--accent-color);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(1);
+            transition: opacity 0.3s ease-out, transform 0.2s ease-out;
+        }
+
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px 20px;
+                margin: 20px;
+            }
+             .main-title {
+                margin-bottom: 40px;
+            }
+            .content-section h2 {
+                font-size: 1.1em;
+            }
+             .content-section p {
+                font-size: 0.8em;
+                padding-left: 18px;
+            }
+            .navigation-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+            .nav-btn {
+                width: 70%;
+                text-align: center;
+                padding: 12px 20px; /* Slightly more padding for touch */
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <canvas id="particle-canvas"></canvas>
+
+    <div class="container">
+        <h1 class="main-title">Math, Data & Computing</h1>
+
+        <section class="content-section">
+            <h2>Description</h2>
+            <p>I have developed my technical skills greatly. For <strong>Designing Connected Experiences</strong> I coded <a href="Port8/Port8.html" class="special-link" target="_blank">6 different websites</a>, I created several digital (fully working) prototypes for <strong><a href="Port6/Port6.html" class="special-link" target="_blank">KitchenCompass</a></strong> (create new account to start), and connected ESP32 boards to OOCSI. In total I wrote an estimated <strong>20.000 lines of code</strong> this year, including the work done for this portfolio – most in HTML, JavaScript, CSS and Python. I also learned how to create fully functional websites / apps with my <strong><a href="Portfolio.html" class="special-link" target="_blank">Fina Projects</a></strong>.</p>
+        </section>
+
+        <section class="content-section">
+            <h2>Feelings</h2>
+            <p>It was empowering to see my code working – like seeing an ESP board connected via OOCSI to my website, or seeing KitchenCompass generate a successful recipe. It was also an <strong>overwhelming process</strong>. I had to debug a lot of my code and this was a <strong>draining process</strong>.</p>
+        </section>
+
+        <section class="content-section">
+            <h2>Evaluation</h2>
+            <p>Currently I’m <strong>extremely comfortable</strong> coding in HTML, JavaScript and CSS. I can create fully functional, aesthetically pleasing and creative website relatively quickly. I also learned how to write code for Arduino’s. I still struggle with <strong>error handling</strong>, <strong>collaborating on code</strong> and how to structure <strong>big projects</strong>.</p>
+        </section>
+
+        <section class="content-section">
+            <h2>Analysis</h2>
+            <p>In Connected Experiences I took on <strong>too much alone</strong> and it slowed our progress down. It also caused a lot of confusing. Seeing the code of other people helped me learn how to structure my code and how to write more effectively. KitchenCompass learned me how to create projects with a lot of code and showed me how to integrate AI (<strong>text-to-text</strong> and <strong>image-to-text</strong>) into my coding projects. I did it again in Fina Therapy.</p>
+        </section>
+
+        <section class="content-section">
+            <h2>Conclusion</h2>
+            <p>Coding is not separate from the design process anymore – it’s a <strong>core tool</strong>, but I still need to learn how to <strong>refine and document better</strong>.</p>
+        </section>
+
+        <section class="content-section">
+            <h2>Action Plan</h2>
+            <p>I will improve my workflow for <strong>debugging</strong> my projects. I will also look at better <strong>version control</strong>, for example with GitHub, to support collaboration better.</p>
+        </section>
+    </div>
+
+    <nav class="navigation-buttons">
+        <a href="Page4.html" class="nav-btn">Prev</a>
+        <a href="Page6.html" class="nav-btn">Next</a>
+    </nav>
+
+    <script>
+        // --- Particle System ---
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particlesArray;
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let mouse = {
+            x: null,
+            y: null,
+            radius: 80 // Interaction radius: particles start reacting when mouse is this close
+        };
+
+        window.addEventListener('mousemove', event => {
+            mouse.x = event.clientX;
+            mouse.y = event.clientY;
+        });
+        window.addEventListener('mouseout', () => {
+            mouse.x = undefined;
+            mouse.y = undefined;
+        });
+
+        class Particle {
+            constructor(x, y, directionX, directionY, size, color) {
+                this.x = x;
+                this.y = y;
+                this.directionX = directionX;
+                this.directionY = directionY;
+                this.size = size;
+                this.color = color;
+                this.baseX = this.x; // Store original position for return
+                this.baseY = this.y;
+                this.density = (Math.random() * 30) + 1; // How quickly it returns
+                this.originalSize = size;
+                this.maxSpeed = 0.3;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+
+            update() {
+                // Mouse interaction
+                let dxMouse = mouse.x - this.x;
+                let dyMouse = mouse.y - this.y;
+                let distanceMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+                let forceDirectionX = dxMouse / distanceMouse;
+                let forceDirectionY = dyMouse / distanceMouse;
+                
+                let maxDistance = mouse.radius;
+                let force = (maxDistance - distanceMouse) / maxDistance; // Stronger force closer to mouse
+                
+                let directionXFinal = this.directionX;
+                let directionYFinal = this.directionY;
+
+                if (distanceMouse < mouse.radius) {
+                    // Run away from mouse
+                    directionXFinal -= forceDirectionX * force * 2.5; // Increase multiplier for more "run"
+                    directionYFinal -= forceDirectionY * force * 2.5;
+                    this.size = this.originalSize * Math.max(0.3, 1 - force * 0.7); // Shrink when running
+                } else {
+                    // Return to base position (gentle drift behavior is dominated by this)
+                    if (this.x !== this.baseX) {
+                        let dxReturn = this.x - this.baseX;
+                        directionXFinal -= dxReturn / (this.density * 20); // Slower return
+                    }
+                    if (this.y !== this.baseY) {
+                        let dyReturn = this.y - this.baseY;
+                        directionYFinal -= dyReturn / (this.density * 20);
+                    }
+                    this.size = this.originalSize;
+                }
+                
+                // Add subtle original drift
+                directionXFinal += (Math.random() - 0.5) * 0.05;
+                directionYFinal += (Math.random() - 0.5) * 0.05;
+
+                // Clamp speed
+                const speed = Math.sqrt(directionXFinal * directionXFinal + directionYFinal * directionYFinal);
+                if (speed > this.maxSpeed) {
+                    directionXFinal = (directionXFinal / speed) * this.maxSpeed;
+                    directionYFinal = (directionYFinal / speed) * this.maxSpeed;
+                }
+                
+                this.x += directionXFinal;
+                this.y += directionYFinal;
+
+                // Boundary checks (simple wrap or bounce)
+                if (this.x > canvas.width + this.size) this.x = -this.size;
+                if (this.x < -this.size) this.x = canvas.width + this.size;
+                if (this.y > canvas.height + this.size) this.y = -this.size;
+                if (this.y < -this.size) this.y = canvas.height + this.size;
+
+                this.draw();
+            }
+        }
+
+        function initParticles() {
+            particlesArray = [];
+            let numberOfParticles = (canvas.height * canvas.width) / 7000; // Increased particle density
+            if (numberOfParticles > 250) numberOfParticles = 250; // Max cap
+
+            for (let i = 0; i < numberOfParticles; i++) {
+                let size = Math.random() * 1.5 + 0.5; // Smaller particles
+                let x = (Math.random() * canvas.width);
+                let y = (Math.random() * canvas.height);
+                let directionX = (Math.random() * 0.2) - 0.1; // Very slow base drift
+                let directionY = (Math.random() * 0.2) - 0.1;
+                let color = `rgba(200, 200, 200, ${Math.random() * 0.5 + 0.2})`; // Light grey, varying opacity
+
+                particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
+            }
+        }
+
+        // No particle connections for a cleaner look
+
+        function animateParticles() {
+            requestAnimationFrame(animateParticles);
+            ctx.clearRect(0, 0, innerWidth, innerHeight);
+
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+            }
+        }
+        
+        window.addEventListener('resize', () => {
+            canvas.width = innerWidth;
+            canvas.height = innerHeight;
+            mouse.radius = 80;
+            initParticles();
+        });
+
+        initParticles();
+        animateParticles();
+
+        // --- Scroll Reveal for Sections ---
+        const sections = document.querySelectorAll('.content-section');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    entry.target.style.transitionDelay = `${index * 120}ms`; // Staggered delay
+                    entry.target.classList.add('visible');
+                } else {
+                     // entry.target.classList.remove('visible'); // Optional: re-trigger on scroll up
+                }
+            });
+        }, {
+            threshold: 0.1 
+        });
+
+        sections.forEach(section => {
+            revealObserver.observe(section);
+        });
+
+        // --- Minimal Cursor Trail ---
+        const trailCount = 5; // Number of dots in the trail
+        const cursorDots = [];
+
+        if (window.matchMedia('(pointer: fine)').matches) { // Only for mouse users
+            for (let i = 0; i < trailCount; i++) {
+                const dot = document.createElement('div');
+                dot.classList.add('cursor-dot');
+                document.body.appendChild(dot);
+                cursorDots.push(dot);
+            }
+
+            let mouseX = 0;
+            let mouseY = 0;
+            let positions = Array(trailCount).fill({x: 0, y: 0});
+
+            window.addEventListener('mousemove', e => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+
+            function animateCursorTrail() {
+                // Update the head of the trail
+                positions.unshift({x: mouseX, y: mouseY});
+                positions.pop();
+
+                cursorDots.forEach((dot, index) => {
+                    const pos = positions[index];
+                    if (pos) {
+                        dot.style.left = `${pos.x}px`;
+                        dot.style.top = `${pos.y}px`;
+                        dot.style.opacity = (trailCount - index) / trailCount * 0.7; // Fade out
+                        dot.style.transform = `translate(-50%, -50%) scale(${(trailCount - index) / trailCount})`; // Shrink
+                    }
+                });
+                requestAnimationFrame(animateCursorTrail);
+            }
+            animateCursorTrail();
+        }
+
+    </script>
+</body>
+</html>

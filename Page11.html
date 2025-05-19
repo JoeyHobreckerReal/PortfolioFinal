@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scientific & Professional Skills - A Cartographer's Chronicle</title>
+    <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=EB+Garamond:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        /* 
+           ==========================================================================
+           Medieval Map Theme - Scientific & Professional Skills Flowchart
+           ==========================================================================
+           File: Page2.html (Implied Name)
+           Author: Conceptual Cartographer (AI)
+           Date: October 26, 2023
+           Description: An HTML page styled to resemble an ancient map or scroll,
+                        displaying a flowchart of scientific and professional skills development.
+                        This file aims for a highly creative and thematic presentation,
+                        with a focus on aesthetics and a "big code file" feel.
+           ==========================================================================
+        */
+
+        /* :: Page Reset & Root Variables :: */
+        /* -------------------------------------------------------------------------- */
+        :root {
+            --font-title: 'IM Fell English SC', serif; /* For grand titles and headings */
+            --font-body: 'EB Garamond', serif;        /* For readable body text */
+            
+            --color-parchment-light: #f8f0e3; /* Lighter parchment for main background */
+            --color-parchment-medium: #ede0c8; /* A mid-tone parchment */
+            --color-parchment-dark: #eaddc7;  /* Darker parchment for accents/shadows */
+            --color-ink-brown: #4a3b32;      /* Dark brown for text, borders, like dried ink */
+            --color-wood-brown: #6b4f40;     /* Medium brown for frames, UI elements, old wood */
+            --color-gold-accent: #b08d57;    /* Muted gold for highlights and important elements */
+            --color-dark-border: #503D3F;    /* A darker, slightly desaturated brown for strong borders */
+
+            /* Section Specific Colors - Muted, Thematic, and Earthy */
+            --color-year1-bg: #a7c7e7;         /* Faded Sky Blue / Periwinkle */
+            --color-year1-border: #829bb5;     /* Darker, desaturated blue border */
+            --color-year2-bg: #e0ac69;         /* Weathered Orange / Terracotta */
+            --color-year2-border: #c08e4e;     /* Darker, richer orange border */
+            --color-challenges-bg: #d9a7a7;    /* Dusty Rose / Faded Red Clay */
+            --color-challenges-border: #b78585;/* Muted reddish-brown border */
+            --color-challenges-accent-yellow: #e6cf80; /* Old Gold / Mustard Yellow for accents */
+            --color-insights-bg: #a3b899;      /* Moss Green / Sage */
+            --color-insights-border: #839a7b;  /* Darker, earthy green border */
+
+            --border-radius-main: 5px;        /* Subtle rounding for a hand-crafted feel */
+            --shadow-soft: 2px 2px 5px rgba(0,0,0,0.1);
+            --shadow-strong: 3px 3px 8px rgba(50,30,20,0.25);
+            --shadow-inset: inset 2px 2px 5px rgba(0,0,0,0.1);
+            --shadow-map-edge: 0 0 20px rgba(0,0,0,0.35), 0 0 35px rgba(0,0,0,0.25) inset; /* For the main scroll */
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* :: Body & Page Layout :: */
+        /* -------------------------------------------------------------------------- */
+        body {
+            font-family: var(--font-body);
+            color: var(--color-ink-brown);
+            background-color: var(--color-parchment-light);
+            /* Elaborate Parchment Texture - multi-layered gradients for depth */
+            background-image: 
+                /* Subtle cross-hatch/fabric texture */
+                linear-gradient(45deg, rgba(170, 150, 120, 0.04) 25%, transparent 25%, transparent 75%, rgba(170, 150, 120, 0.04) 75%),
+                linear-gradient(45deg, rgba(170, 150, 120, 0.04) 25%, transparent 25%, transparent 75%, rgba(170, 150, 120, 0.04) 75%),
+                /* Faint vertical lines for aged paper */
+                linear-gradient(to bottom, rgba(210, 180, 140, 0.07) 1px, transparent 1px),
+                /* Faint horizontal lines */
+                linear-gradient(to right, rgba(210, 180, 140, 0.07) 1px, transparent 1px),
+                /* Mottled stains and age spots */
+                radial-gradient(ellipse at 20% 30%, rgba(225, 200, 170, 0.5) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 70%, rgba(215, 190, 160, 0.4) 0%, transparent 50%),
+                /* Base parchment color */
+                linear-gradient(var(--color-parchment-light), var(--color-parchment-medium));
+            background-size: 8px 8px, 8px 8px, 100% 1.5em, 1.5em 100%, 100% 100%, 100% 100%, 100% 100%;
+            background-position: 0 0, 4px 4px, 0 0, 0 0, 0 0, 0 0, 0 0; /* Offset for fabric texture */
+            line-height: 1.7;
+            padding: 25px; 
+            font-size: 17px; /* Slightly larger base font size for readability */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+            -webkit-font-smoothing: antialiased; /* Crisper text */
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+        
+        .page-wrapper {
+            width: 100%;
+            max-width: 1800px; /* Generous width for the flowchart */
+            margin-left: auto;
+            margin-right: auto;
+            padding: 35px 50px; /* More padding for a grander feel */
+            background-color: var(--color-parchment-dark); 
+            border: 4px solid var(--color-dark-border);
+            border-radius: var(--border-radius-main);
+            box-shadow: var(--shadow-map-edge), 
+                        0 12px 35px rgba(74, 59, 50, 0.45); /* Deeper shadow */
+            position: relative;
+            border-style: groove; /* Or 'ridge', for a more tactile border */
+            border-width: 8px;
+        }
+
+        /* Decorative inner border to simulate layers of a scroll */
+        .page-wrapper::before {
+            content: "";
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            right: 12px;
+            bottom: 12px;
+            border: 2px dashed var(--color-ink-brown);
+            opacity: 0.5;
+            pointer-events: none; 
+            border-radius: 3px;
+            z-index: 0; /* Behind content */
+        }
+        .page-wrapper::after { /* Another layer for depth */
+            content: "";
+            position: absolute;
+            top: 18px;
+            left: 18px;
+            right: 18px;
+            bottom: 18px;
+            border: 1px solid var(--color-wood-brown);
+            opacity: 0.3;
+            pointer-events: none; 
+            border-radius: 2px;
+            z-index: 0;
+        }
+
+        /* :: Page Title - Grand and Thematic :: */
+        /* -------------------------------------------------------------------------- */
+        .main-title {
+            font-family: var(--font-title);
+            font-size: 3.2em; /* Even larger title */
+            color: var(--color-ink-brown);
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px double var(--color-gold-accent); /* Double line for importance */
+            letter-spacing: 1.5px;
+            text-shadow: 1px 1px 0px var(--color-parchment-light), 
+                         2px 2px 0px var(--color-wood-brown),
+                         3px 3px 5px rgba(0,0,0,0.2); /* More pronounced shadow */
+            position: relative;
+        }
+
+        /* Flourishes for the main title */
+        .main-title::before,
+        .main-title::after {
+            content: "❖"; /* Decorative symbol, e.g., Fleuron */
+            font-family: serif; /* Ensures symbol availability */
+            font-size: 0.7em;
+            font-weight: normal;
+            margin: 0 20px;
+            opacity: 0.9;
+            color: var(--color-gold-accent);
+            text-shadow: 1px 1px 1px var(--color-ink-brown);
+            position: relative;
+            top: -3px; /* Fine-tune vertical alignment */
+        }
+        
+        /* :: Flowchart General Styles - The Map Itself :: */
+        /* -------------------------------------------------------------------------- */
+        .flowchart-container {
+            display: flex; 
+            flex-direction: row; 
+            gap: 30px; /* Wider gap between sections */
+            overflow-x: auto; /* Horizontal scrolling for the "map" */
+            padding: 25px 10px; 
+            border: 2px solid var(--color-wood-brown);
+            background-color: rgba(0,0,0,0.03); /* Subtle tint */
+            border-radius: var(--border-radius-main);
+            margin-bottom: 50px; 
+            box-shadow: var(--shadow-inset), 0 0 10px rgba(0,0,0,0.1); /* Inner depth */
+        }
+
+        .flowchart-section {
+            min-width: 340px; 
+            max-width: 420px; 
+            flex: 1 1 340px;  
+            padding: 25px;
+            border-radius: var(--border-radius-main);
+            border: 3px solid; /* Section-specific color */
+            box-shadow: var(--shadow-strong), var(--shadow-inset);
+            display: flex;
+            flex-direction: column;
+            gap: 18px; 
+            transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                        box-shadow 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative; /* For potential corner decorations */
+            background-blend-mode: multiply; /* For texture over color */
+            background-image: linear-gradient(rgba(255,255,255,0.05), rgba(0,0,0,0.05)); /* Subtle texture on sections */
+        }
+
+        .flowchart-section:hover {
+            transform: translateY(-8px) scale(1.02); /* More pronounced hover */
+            box-shadow: 8px 8px 20px rgba(50,30,20,0.3), var(--shadow-inset);
+            z-index: 5; /* Bring to front on hover */
+        }
+
+        .flowchart-section h2 {
+            font-family: var(--font-title);
+            font-size: 1.8em;
+            color: var(--color-ink-brown); /* Base color, section can override */
+            text-align: center;
+            margin-bottom: 8px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--color-ink-brown); /* Stronger underline */
+            opacity: 0.95;
+        }
+        
+        .flowchart-section h2 .emoji-icon { 
+            margin-right: 10px;
+            font-size: 1.1em;
+            vertical-align: -2px;
+        }
+
+        .section-subtitle {
+            font-size: 0.95em;
+            font-style: italic;
+            text-align: center;
+            color: var(--color-wood-brown);
+            margin-bottom: 12px;
+            opacity: 0.85;
+            line-height: 1.4;
+        }
+        
+        /* :: Node Styling - Markers on the Map :: */
+        /* -------------------------------------------------------------------------- */
+        .node {
+            background-color: var(--color-parchment-light);
+            padding: 12px 18px;
+            border: 1px solid var(--color-wood-brown);
+            border-left-width: 3px; /* Thicker left border for emphasis */
+            border-radius: 3px;
+            box-shadow: var(--shadow-soft);
+            font-size: 1em; /* Relative to body font size */
+            line-height: 1.6;
+            transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+            position: relative;
+        }
+        
+        .node:hover {
+            background-color: #fffdf5; /* Even lighter on hover */
+            border-color: var(--color-gold-accent);
+            transform: translateX(3px); /* Slight shift on hover */
+            box-shadow: 3px 3px 7px rgba(0,0,0,0.15);
+        }
+
+        .node .arrow, .node .emoji-icon { 
+            margin-right: 10px;
+            font-weight: bold; 
+            color: var(--color-wood-brown); 
+            display: inline-block; /* For better alignment control */
+        }
+        
+        /* Specific node types */
+        .start-node, .final-node {
+            font-weight: bold;
+            background-color: var(--color-gold-accent); 
+            color: var(--color-ink-brown);
+            border: 2px solid var(--color-wood-brown);
+            border-radius: 4px;
+            text-align: center;
+            padding: 15px;
+            font-size: 1.05em;
+            box-shadow: 0 0 0 3px var(--color-parchment-dark), /* Outer glow effect */
+                        var(--shadow-strong);
+        }
+        .start-node .emoji-icon, .final-node .emoji-icon {
+            color: var(--color-ink-brown); /* Ensure emoji visibility on gold bg */
+        }
+        
+        .merge-node {
+            font-style: italic;
+            background-color: var(--color-parchment-medium); /* Different neutral for merges */
+            text-align: center;
+            border: 1px dashed var(--color-wood-brown);
+            border-left: 5px solid var(--color-gold-accent);
+            border-right: 5px solid var(--color-gold-accent);
+            padding: 12px;
+            font-size: 0.95em;
+        }
+        .merge-node .emoji-icon {
+            color: var(--color-gold-accent);
+        }
+
+        /* Branch Styling - Sub-paths on the Map */
+        .branch-group {
+            display: flex;
+            flex-direction: column; 
+            gap: 18px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+        .branch {
+            padding: 12px;
+            border: 1px dashed var(--color-wood-brown);
+            border-radius: var(--border-radius-main);
+            background-color: rgba(0,0,0,0.03); 
+        }
+        
+        .branch h3 {
+            font-family: var(--font-body); 
+            font-weight: 700; /* Bold, clear subheadings */
+            font-size: 1.15em;
+            color: var(--color-ink-brown);
+            margin-bottom: 10px;
+            padding-bottom: 3px;
+            text-decoration: underline;
+            text-decoration-color: var(--color-gold-accent);
+            text-decoration-style: dotted; /* Or 'wavy' */
+            text-underline-offset: 5px;
+            text-transform: capitalize;
+        }
+        
+        /* Project Node & Challenge Item Styling - Landmarks & Warnings */
+        .project-node, .challenge-item {
+            padding: 18px;
+            border: 1px solid var(--color-wood-brown);
+            border-radius: var(--border-radius-main);
+            background-color: rgba(255,255,255,0.3); /* Lighter than section, more distinct */
+            margin-bottom: 12px; 
+            box-shadow: var(--shadow-inset);
+        }
+
+        .project-node h4, .challenge-item h4 {
+            font-family: var(--font-title);
+            font-size: 1.3em;
+            color: var(--color-ink-brown);
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--color-gold-accent);
+            letter-spacing: 0.5px;
+        }
+
+        .node.negative-outcome {
+            border-left-color: #a03030; /* Dark, desaturated red */
+            background-color: #f5e0e0; /* Faint red tint */
+        }
+        .node.negative-outcome .arrow { color: #a03030; }
+        
+        .node.issue {
+            border-left-color: var(--color-challenges-accent-yellow); /* Yellow for attention */
+        }
+        .node.issue .emoji-icon { /* Targets ❌ */
+            color: #c00000; /* Strong red for 'X' */
+            font-weight: bold;
+        }
+        .node.issue .emoji-icon.sad { /* Targets 😓 */
+            color: #b8860b; /* DarkGoldenrod for 'sad' face */
+        }
+
+        .node.feedback {
+            border-left-color: var(--color-gold-accent);
+            background-color: #fcf8e3; /* Light yellow tint for feedback */
+            font-style: italic;
+        }
+        .node.feedback .emoji-icon { /* For 💬 */
+             color: var(--color-wood-brown);
+        }
+
+        .insight-node {
+            border-left-color: var(--color-insights-border); /* Matching green section border */
+            background-color: #e6f0e3; /* Very light green tint */
+        }
+        .insight-node .emoji-icon { /* For 💡 */
+             color: var(--color-gold-accent); 
+        }
+
+        /* :: Section Specific Colors & Styles - Territories on the Map :: */
+        /* -------------------------------------------------------------------------- */
+        
+        /* Section 1: Year 1 - Personal Development (Light Blue/Periwinkle) */
+        .flowchart-section.year1 {
+            background-color: var(--color-year1-bg);
+            border-color: var(--color-year1-border);
+        }
+        .flowchart-section.year1 h2 {
+            color: #2c3e50; /* Darker slate blue for title */
+            border-bottom-color: var(--color-year1-border);
+        }
+
+        /* Section 2: Year 2 - Applying Professional Skills (Orange/Terracotta) */
+        .flowchart-section.year2 {
+            background-color: var(--color-year2-bg);
+            border-color: var(--color-year2-border);
+        }
+        .flowchart-section.year2 h2 {
+            color: #784d20; /* Richer brown for title */
+            border-bottom-color: var(--color-year2-border);
+        }
+        
+        /* Section 3: Challenges & Feedback (Red/Yellow - Dusty Rose Base) */
+        .flowchart-section.challenges {
+            background-color: var(--color-challenges-bg);
+            border-color: var(--color-challenges-border);
+        }
+        .flowchart-section.challenges h2 {
+            color: #803030; /* Deep, muted red for title */
+            border-bottom-color: var(--color-challenges-border);
+        }
+        .flowchart-section.challenges h2 .emoji-icon { /* Make warning icon prominent */
+            color: var(--color-challenges-accent-yellow);
+            text-shadow: 1px 1px 2px var(--color-ink-brown);
+        }
+        
+        /* Section 4: Insights & Future Goals (Green/Sage) */
+        .flowchart-section.insights {
+            background-color: var(--color-insights-bg);
+            border-color: var(--color-insights-border);
+        }
+        .flowchart-section.insights h2 {
+            color: #335522; /* Forest green for title */
+            border-bottom-color: var(--color-insights-border);
+        }
+
+        /* :: Navigation Buttons - Signposts for the Journey :: */
+        /* -------------------------------------------------------------------------- */
+        .page-navigation {
+            width: 100%;
+            max-width: 650px; 
+            margin-top: 50px; 
+            margin-bottom: 25px; 
+            display: flex;
+            justify-content: center; /* Changed from space-between to center */
+            gap: 40px; /* Added gap for spacing between centered buttons */
+            padding: 15px 0;
+            border-top: 2px solid var(--color-wood-brown); /* Thicker separator */
+            border-bottom: 1px solid var(--color-wood-brown); /* Subtle bottom line */
+            align-self: center; 
+        }
+
+        .nav-button {
+            font-family: var(--font-title);
+            text-decoration: none;
+            color: var(--color-parchment-light);
+            background-color: var(--color-wood-brown);
+            padding: 14px 30px;
+            border-radius: var(--border-radius-main);
+            border: 2px solid var(--color-dark-border);
+            font-size: 1.3em;
+            letter-spacing: 1px;
+            box-shadow: 3px 3px 0px var(--color-dark-border), /* Hard shadow for depth */
+                        inset 1px 1px 3px rgba(255,255,255,0.25), /* Inner highlight */
+                        inset -1px -1px 3px rgba(0,0,0,0.25); /* Inner shadow */
+            transition: all 0.25s ease-out;
+            text-align: center;
+            min-width: 150px; /* Ensure buttons have a good size */
+            transform-style: preserve-3d; /* For 3D-like effects */
+        }
+
+        .nav-button:hover {
+            background-color: var(--color-gold-accent);
+            color: var(--color-ink-brown);
+            border-color: var(--color-ink-brown);
+            box-shadow: 4px 4px 0px var(--color-ink-brown),
+                        inset 1px 1px 4px rgba(255,255,255,0.35),
+                        inset -1px -1px 4px rgba(0,0,0,0.35),
+                        0 6px 12px rgba(0,0,0,0.25); 
+            transform: translateY(-3px) perspective(500px) rotateX(5deg); /* Slight lift and tilt */
+        }
+        
+        .nav-button:active {
+            background-color: var(--color-ink-brown);
+            color: var(--color-parchment-light);
+            transform: translateY(1px) perspective(500px) rotateX(2deg); /* Pressed down effect */
+            box-shadow: 1px 1px 0px var(--color-dark-border);
+        }
+
+        .nav-button.back-button::before {
+            content: "« "; /* More ornate back arrow */
+            font-weight: bold;
+            margin-right: 7px;
+        }
+
+        .nav-button.next-button::after {
+            content: " »"; /* More ornate next arrow */
+            font-weight: bold;
+            margin-left: 7px;
+        }
+
+        /* :: Decorative Elements & Flourishes - Cartographer's Marks :: */
+        /* -------------------------------------------------------------------------- */
+        hr.fancy-divider {
+            border: 0;
+            height: 3px; /* Thicker divider */
+            background-image: linear-gradient(to right, 
+                transparent, 
+                var(--color-gold-accent) 20%, 
+                var(--color-gold-accent) 80%, 
+                transparent);
+            margin: 40px auto; /* Centered margin */
+            width: 70%; /* Not full width */
+            opacity: 0.7;
+        }
+        
+        hr.fancy-divider::before, hr.fancy-divider::after {
+            content: "⚜"; /* Fleur-de-lis or other symbol */
+            color: var(--color-gold-accent);
+            display: inline-block;
+            position: relative;
+            top: -0.6em; /* Adjust based on symbol */
+            font-size: 1.2em;
+        }
+        hr.fancy-divider::before { margin-right: 10px; }
+        hr.fancy-divider::after { margin-left: 10px; }
+
+
+        /* Custom Scrollbar Styling for WebKit (Chrome, Safari, new Edge) */
+        .flowchart-container::-webkit-scrollbar {
+            height: 15px; 
+            width: 15px; /* For vertical if ever needed */
+        }
+
+        .flowchart-container::-webkit-scrollbar-track {
+            background: var(--color-parchment-dark); 
+            border-radius: 10px;
+            border: 1px solid var(--color-wood-brown);
+            box-shadow: var(--shadow-inset);
+        }
+
+        .flowchart-container::-webkit-scrollbar-thumb {
+            background-color: var(--color-wood-brown); 
+            border-radius: 10px;
+            border: 3px solid var(--color-parchment-dark); 
+        }
+
+        .flowchart-container::-webkit-scrollbar-thumb:hover {
+            background-color: var(--color-gold-accent);
+            border-color: var(--color-parchment-medium);
+        }
+        
+        /* Footer - Scribe's Colophon */
+        .page-footer {
+            text-align: center; 
+            font-size: 0.85em; 
+            color: var(--color-wood-brown); 
+            opacity: 0.75; 
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px dashed var(--color-wood-brown);
+            font-style: italic;
+            min-height: 1.5em; /* Ensure footer has some height even if empty */
+        }
+        .page-footer span { font-family: var(--font-title); } /* Give span a title font */
+
+
+        /* :: Responsive Design - Adapting the Map to Smaller Scrolls :: */
+        /* -------------------------------------------------------------------------- */
+        @media (max-width: 992px) { /* Tablet and below */
+            .page-wrapper {
+                padding: 25px 30px;
+                border-width: 6px;
+            }
+             .page-wrapper::before { top: 8px; left: 8px; right: 8px; bottom: 8px; }
+             .page-wrapper::after { top: 12px; left: 12px; right: 12px; bottom: 12px; }
+            .main-title { font-size: 2.8em; }
+        }
+
+        @media (max-width: 768px) { /* Smaller tablets / large phones */
+            body { font-size: 16px; padding: 15px; }
+            .main-title {
+                font-size: 2.4em;
+            }
+             .main-title::before, .main-title::after { margin: 0 10px; font-size: 0.6em; }
+            .page-wrapper {
+                padding: 20px 15px;
+            }
+            .flowchart-section {
+                min-width: 300px; /* Allow sections to be a bit narrower */
+                max-width: 380px;
+                padding: 20px;
+            }
+             .flowchart-section h2 { font-size: 1.6em; }
+            .page-navigation {
+                flex-direction: column; /* Stack nav buttons */
+                align-items: center;
+                gap: 20px; /* Adjusted gap for stacked buttons */
+            }
+            .nav-button {
+                width: 90%; 
+                max-width: 300px;
+                font-size: 1.2em;
+                padding: 12px 20px;
+            }
+            hr.fancy-divider { width: 85%; }
+        }
+
+        @media (max-width: 480px) { /* Most mobile phones */
+            body { padding: 10px; }
+            .main-title {
+                font-size: 2em;
+            }
+             .main-title::before, .main-title::after {
+                display: none; /* Remove flourishes on very small screens if too cluttered */
+            }
+            .page-wrapper {
+                padding: 15px 10px;
+                border-width: 5px;
+            }
+             .page-wrapper::before { top: 6px; left: 6px; right: 6px; bottom: 6px; }
+             .page-wrapper::after { display:none; } /* Remove one layer of inner border */
+            .flowchart-container {
+                gap: 15px; 
+            }
+            .flowchart-section {
+                min-width: 260px; /* Further reduce min-width */
+                padding: 15px;
+            }
+             .flowchart-section h2 { font-size: 1.45em; }
+             .project-node h4, .challenge-item h4 { font-size: 1.2em; }
+            .node { padding: 10px 15px; font-size: 0.95em; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="page-wrapper" role="document" aria-labelledby="mainPageTitle">
+        <header role="banner">
+            <h1 class="main-title" id="mainPageTitle">Scientific &amp; Professional Skills</h1>
+        </header>
+
+        <main role="main">
+            <div class="flowchart-container" aria-label="Flowchart detailing skill development">
+                <!-- SECTION 1: YEAR 1 – PERSONAL DEVELOPMENT -->
+                <section id="year1" class="flowchart-section year1" aria-labelledby="year1Title">
+                    <h2 id="year1Title"><span class="emoji-icon">📘</span> YEAR 1 Foundation</h2>
+                    
+                    <div class="node start-node" role="listitem"><span class="emoji-icon">🔹</span> Start of my personal Design Journey</div>
+                    
+                    <div class="branch-group" role="list">
+                        <div class="branch" role="listitem">
+                            <h3>Focus</h3>
+                            <div class="node" role="listitem"><span class="arrow">➡️</span> Meditated Daily</div>
+                            <div class="node" role="listitem"><span class="arrow">➡️</span> Improved focus for design projects</div>
+                        </div>
+                        <div class="branch" role="listitem">
+                            <h3>Creativity</h3>
+                            <div class="node" role="listitem"><span class="arrow">➡️</span> Daily sketching exercises</div>
+                            <div class="node" role="listitem"><span class="arrow">➡️</span> improved sketching skills</div>
+                        </div>
+                        <div class="branch" role="listitem">
+                            <h3>Collaboration</h3>
+                            <div class="node" role="listitem"><span class="arrow">➡️</span> Used reflective listening</div>
+                            <div class="node" role="listitem"><span class="arrow">➡️</span> Better in group work</div>
+                        </div>
+                    </div>
+                    
+                    <div class="node merge-node" role="listitem"><span class="emoji-icon">✅</span> Built Habits → Confidence + Motivation</div>
+                </section>
+
+                <!-- SECTION 2: YEAR 2 – APPLYING PROFESSIONAL SKILLS -->
+                <section id="year2" class="flowchart-section year2" aria-labelledby="year2Title">
+                    <h2 id="year2Title"><span class="emoji-icon">🧰</span> YEAR 2 APPLYING SKILLS</h2>
+                    <div class="section-subtitle">(Orange Section – Real Projects & Tools)</div>
+                    
+                    <div class="project-node" role="listitem">
+                        <h4>KitchenCompass Project</h4>
+                        <div class="node" role="listitem"><span class="arrow">➡️</span> Learned and improved HTML, CSS, JavaScript skills</div>
+                        <div class="node" role="listitem"><span class="arrow">➡️</span> Created working Prototypes</div>
+                        <div class="node negative-outcome" role="listitem"><span class="arrow">➡️</span> Bad and confusing UI/UX design→ Learned from Testing Gaps</div>
+                    </div>
+                    
+                    <div class="project-node" role="listitem">
+                        <h4>Games & Play Project</h4>
+                        <div class="node" role="listitem"><span class="arrow">➡️</span> Devided tasks based on strenghts</div>
+                        <div class="node" role="listitem"><span class="arrow">➡️</span> Clear Roles meant smooth teamwork</div>
+                        <div class="node" role="listitem"><span class="arrow">➡️</span> Learned Group Structure Matters</div>
+                    </div>
+                    
+                    <div class="project-node" role="listitem">
+                        <h4>Work at Zeliox</h4>
+                        <div class="node" role="listitem"><span class="arrow">➡️</span> Presented Ideas to Clients</div>
+                        <div class="node" role="listitem"><span class="arrow">➡️</span> Learned to Ask the Right Questions</div>
+                        <div class="node" role="listitem"><span class="arrow">➡️</span> Can now communicate correctly with clients</div>
+                    </div>
+                    
+                    <div class="node merge-node" role="listitem"><span class="emoji-icon">⚙️</span> Shift to Leading & Planning</div>
+                </section>
+
+                <!-- SECTION 3: CHALLENGES & FEEDBACK -->
+                <section id="challenges" class="flowchart-section challenges" aria-labelledby="challengesTitle">
+                    <h2 id="challengesTitle"><span class="emoji-icon">⚠️</span> CHALLENGES & FEEDBACK</h2>
+                    <div class="section-subtitle">(Red/Yellow Section – Honest Reflections)</div>
+                    
+                    <div class="challenge-item" role="listitem">
+                        <h4>KitchenCompass Issues:</h4>
+                        <div class="node issue" role="listitem"><span class="emoji-icon">❌</span> UI Confusing</div>
+                        <div class="node issue" role="listitem"><span class="emoji-icon">❌</span> no good testing</div>
+                        <div class="node feedback" role="listitem"><span class="arrow">➡️</span> <span class="emoji-icon">💬</span> Feedback on Midterm Demo Day</div>
+                    </div>
+                    
+                    <div class="challenge-item" role="listitem">
+                        <h4>Group Struggles:</h4>
+                        <div class="node issue" role="listitem"><span class="emoji-icon">❌</span> In Connected Experiences → Poor Team Planning</div>
+                        <div class="node issue" role="listitem"><span class="emoji-icon">❌</span> I Took on Too Much in most group projects</div>
+                        <div class="node feedback" role="listitem"><span class="arrow">➡️</span> Learned to Share Responsibility</div>
+                    </div>
+                    
+                    <div class="challenge-item" role="listitem">
+                        <h4>Zeliox Challenges:</h4>
+                        <div class="node issue" role="listitem"><span class="emoji-icon sad">😓</span> No confidence when talking to clients</div>
+                        <div class="node issue" role="listitem"><span class="emoji-icon sad">😓</span> Did not know what to ask clients</div>
+                        <div class="node feedback" role="listitem"><span class="arrow">➡️</span> Practice Helped Me Improve + more preparation</div>
+                    </div>
+                </section>
+
+                <!-- SECTION 4: INSIGHTS & FUTURE GOALS -->
+                <section id="insights" class="flowchart-section insights" aria-labelledby="insightsTitle">
+                    <h2 id="insightsTitle"><span class="emoji-icon">🌱</span> INSIGHTS & FUTURE GOALS</h2>
+                    <div class="section-subtitle">(Green Section – Personal and Societal Reflections)</div>
+                    
+                    <div class="node insight-node" role="listitem"><span class="emoji-icon">💡</span> You can grow with feedback and reflection</div>
+                    <div class="node insight-node" role="listitem"><span class="emoji-icon">💡</span> Desing really affects people and the world – it’s not just making things pretty</div>
+                    <div class="node insight-node" role="listitem"><span class="emoji-icon">💡</span> I Learn Best Real Projects + good feedback - practical learning</div>
+                    
+                    <div class="node final-node" role="listitem"><span class="emoji-icon">🚀</span> Clearer more focused smart goals for next year</div>
+                </section>
+            </div> <!-- end .flowchart-container -->
+
+            <hr class="fancy-divider" aria-hidden="true">
+
+        </main>
+        
+        <nav class="page-navigation" role="navigation" aria-label="Page">
+            <a href="Page10.html" class="nav-button back-button">Back</a>
+            <a href="Portfolio.html" class="nav-button next-button">Next</a>
+        </nav>
+
+        <footer class="page-footer" role="contentinfo">
+            <!-- Removed the paragraph as requested -->
+        </footer>
+
+    </div> <!-- end .page-wrapper -->
+
+</body>
+</html>

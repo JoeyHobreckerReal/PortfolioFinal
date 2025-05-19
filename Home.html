@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joey Hobrecker - Design Symphony</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Space+Mono:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            color: #121212;
+            background-color: #f8f8f8;
+            line-height: 1.6;
+            background-image: linear-gradient(to right, rgba(0,0,0,0.03) 1px, transparent 1px), 
+                              linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        header {
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        h1 {
+            font-family: 'Abril Fatface', cursive;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+            transform: rotate(-1deg);
+        }
+        
+        h1::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 25%;
+            width: 50%;
+            height: 3px;
+            background-color: #121212;
+        }
+        
+        h2 {
+            font-family: 'Abril Fatface', cursive;
+            font-size: 2rem;
+            margin: 2rem 0 1rem;
+            position: relative;
+            transform: rotate(-0.5deg);
+            padding-left: 10px;
+        }
+        
+        h2::before {
+            content: "♪";
+            position: absolute;
+            left: -15px;
+            opacity: 0.7;
+            font-size: 1.5rem;
+            transform: rotate(-5deg);
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        p {
+            margin-bottom: 1.5rem;
+        }
+        
+        .figure {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .figure img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .figure img:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .figure-caption {
+            padding: 1rem 0;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            color: #555;
+            line-height: 1.4;
+            border-bottom: 1px dashed rgba(0,0,0,0.2);
+            position: relative;
+        }
+        
+        .figure-number {
+            font-weight: 700;
+            color: #000;
+            margin-right: 0.5rem;
+        }
+        
+        .music-notes {
+            position: absolute;
+            font-family: Arial, sans-serif;
+            opacity: 0.15;
+            font-size: 2rem;
+            user-select: none;
+        }
+        
+        .note-1 {
+            top: 20px;
+            left: 10%;
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .note-2 {
+            top: 80px;
+            right: 15%;
+            animation: float 6s ease-in-out infinite 1s;
+        }
+        
+        .note-3 {
+            bottom: 30px;
+            left: 20%;
+            animation: float 7s ease-in-out infinite 0.5s;
+        }
+        
+        .note-4 {
+            bottom: 80px;
+            right: 10%;
+            animation: float 9s ease-in-out infinite 1.5s;
+        }
+        
+        .note-5 {
+            top: 40%;
+            left: 5%;
+            animation: float 10s ease-in-out infinite 2s;
+        }
+        
+        .note-6 {
+            bottom: 35%;
+            right: 5%;
+            animation: float 9s ease-in-out infinite 1s;
+        }
+        
+        .clef {
+            position: absolute;
+            font-size: 6rem;
+            opacity: 0.05;
+            z-index: -1;
+            transform: rotate(-5deg);
+        }
+        
+        .treble-clef {
+            top: 15%;
+            left: -5%;
+            animation: sway 15s ease-in-out infinite;
+        }
+        
+        .bass-clef {
+            bottom: 15%;
+            right: -5%;
+            animation: sway 18s ease-in-out infinite 2s;
+        }
+        
+        @keyframes sway {
+            0%, 100% {
+                transform: rotate(-5deg);
+            }
+            50% {
+                transform: rotate(5deg);
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+        }
+        
+        .section {
+            margin: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .intro-section {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            position: relative;
+        }
+        
+        .intro-text {
+            flex: 1;
+            position: relative;
+        }
+        
+        .intro-text p {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .intro-text::before {
+            content: "♬";
+            position: absolute;
+            font-size: 8rem;
+            opacity: 0.03;
+            top: -40px;
+            left: -30px;
+            z-index: 1;
+            transform: rotate(-15deg);
+        }
+        
+        .intro-image {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .intro-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .intro-image img:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .cycle-section {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+        
+        .cycle-image {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .cycle-text {
+            flex: 1;
+        }
+        
+        .cycle-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .cycle-image img:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .cta-button {
+            display: block;
+            width: 220px;
+            margin: 4rem auto;
+            padding: 1rem 2rem;
+            text-align: center;
+            font-family: 'Space Mono', monospace;
+            font-size: 1rem;
+            background-color: #121212;
+            color: #fff;
+            border: none;
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            transform: rotate(-1deg);
+            box-shadow: 5px 5px 0 rgba(0,0,0,0.1);
+        }
+        
+        .cta-button:hover {
+            background-color: #333;
+            transform: translateY(-3px) rotate(-1deg);
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.1);
+        }
+        
+        .cta-button::before {
+            content: "♪";
+            position: absolute;
+            left: 15px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button:hover::before {
+            opacity: 1;
+            transform: translateX(5px);
+        }
+        
+        .cta-button::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: skewX(-20deg);
+            transition: all 0.5s ease;
+        }
+        
+        .cta-button:hover::after {
+            left: 100%;
+        }
+        
+        .staff-line {
+            position: absolute;
+            height: 1px;
+            background-color: rgba(0, 0, 0, 0.1);
+            width: 100%;
+            z-index: -1;
+        }
+        
+        .line-1 {
+            top: 20%;
+        }
+        
+        .line-2 {
+            top: 40%;
+        }
+        
+        .line-3 {
+            top: 60%;
+        }
+        
+        .line-4 {
+            top: 80%;
+        }
+        
+        .emphasis {
+            font-style: italic;
+        }
+
+        .highlight-link {
+            color: green;
+            text-decoration: underline;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            font-size: 0.9rem;
+            color: #666;
+            border-top: 1px solid #eaeaea;
+            margin-top: 4rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>A Design Symphony</h1>
+            <div class="music-notes note-1">♪</div>
+            <div class="music-notes note-2">♫</div>
+            <div class="music-notes note-3">♩</div>
+            <div class="music-notes note-4">♬</div>
+            <div class="music-notes note-5">♪</div>
+            <div class="music-notes note-6">♫</div>
+            <div class="clef treble-clef">𝄞</div>
+            <div class="clef bass-clef">𝄢</div>
+        </header>
+        
+        <section class="section">
+            <h2>Tuning the Orchestra</h2>
+            <div class="intro-section">
+                <div class="intro-text">
+                    <p>Hello, my name is Joey Hobrecker and I'm a second year Industrial Design Bachelor student at the TU/E. My studies are driven by a single idea – <span class="emphasis">How can I create designs that can restore a natural balance between human nature and the digital world?</span></p>
+                </div>
+                <div class="intro-image">
+                    <div class="figure">
+                        <img src="joey.png" alt="Joey Hobrecker">
+                        <div class="figure-caption">
+                            <span class="figure-number">Figure 1:</span> Me- Joey Hobrecker.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>Setting the Stage</h2>
+            <p>My first year was a chaotic mess; I learned the basic of coding, made messy and broken prototypes and finished the year with a typical, ugly and <a href="https://jmhobrecker.wixstudio.com/my-site-1" target="_blank" class="highlight-link">simple portfolio</a> (when something is Highlighted green in this portfolio it will lead to an example in a different tab when you click on it). Studying in a choatic mess was fun, but I had to increaze the bar in the second year.</p>
+            
+            <p>So in year 2 the sounds completely changed. Having to retake Physics and Calculus made me realize I had to put in more effort, I really had to start singing. The five expertise areas were no longer just instruments; they were the strings, brass and bass lines I needed to use to create my own harmony, my own song. I needed to stop improvising and start to orchestrate.</p>
+        </section>
+   
+        
+        <section class="section">
+            <h2>Personal Credo</h2>
+            <p>Music is the space between the notes, so are my values for designs. I see value in the gaps between people, technology and nature. So, my credo is "Design the Intervals".</p>
+        </section>
+        
+        <a href="Page1.html" class="cta-button">Continue Symphony</a>
+        
+        <div class="staff-line line-1"></div>
+        <div class="staff-line line-2"></div>
+        <div class="staff-line line-3"></div>
+        <div class="staff-line line-4"></div>
+    </div>
+
+    <script>
+        // Add subtle animation for staff lines
+        document.addEventListener('DOMContentLoaded', function() {
+            const staffLines = document.querySelectorAll('.staff-line');
+            
+            window.addEventListener('scroll', function() {
+                let scrollPos = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+                
+                staffLines.forEach((line, index) => {
+                    let translateX = (index % 2 === 0) ? scrollPos * 50 : scrollPos * -50;
+                    line.style.transform = `translateX(${translateX}px)`;
+                });
+            });
+            
+            // Animate sections on scroll
+            const sections = document.querySelectorAll('.section');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            sections.forEach(section => {
+                section.style.opacity = 0;
+                section.style.transform = 'translateY(20px)';
+                section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(section);
+            });
+            
+            // Add cursor trail effect with music notes
+            const notes = ['♪', '♫', '♩', '♬', '♭', '♮'];
+            let mouseX = 0;
+            let mouseY = 0;
+            
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+            
+            setInterval(() => {
+                if (mouseX > 0 && mouseY > 0) {
+                    createNote(mouseX, mouseY);
+                }
+            }, 300);
+            
+            function createNote(x, y) {
+                const note = document.createElement('div');
+                note.innerHTML = notes[Math.floor(Math.random() * notes.length)];
+                note.className = 'cursor-note';
+                note.style.left = x + 'px';
+                note.style.top = y + 'px';
+                note.style.position = 'fixed';
+                note.style.fontSize = '1.5rem';
+                note.style.color = 'rgba(0,0,0,0.2)';
+                note.style.pointerEvents = 'none';
+                note.style.zIndex = '9999';
+                note.style.userSelect = 'none';
+                note.style.transition = 'all 1s ease';
+                document.body.appendChild(note);
+                
+                setTimeout(() => {
+                    note.style.opacity = '0';
+                    note.style.transform = `translateY(-20px) rotate(${Math.random() * 40 - 20}deg)`;
+                }, 50);
+                
+                setTimeout(() => {
+                    document.body.removeChild(note);
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>

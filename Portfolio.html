@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creative Portfolio - Joey Hobrecker</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Qwitcher+Grypen:wght@700&family=Monument+Valley:ital,wght@0,400;0,700;1,400&family=Monoton&display=swap');
+        
+        :root {
+            --bg-color: #080808;
+            --paper-color: #121212;
+            --accent-color: #ff6b35;
+            --text-color: #f8f8f8;
+            --secondary-color: #4cc9f0;
+            --tertiary-color: #8338ec;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Monument Valley', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Click for More Info Badge */
+        .info-badge {
+            position: fixed;
+            top: 40px;
+            left: 30px;
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+            padding: 12px 20px;
+            font-family: 'Qwitcher Grypen', cursive;
+            font-size: 2rem;
+            transform: rotate(-8deg);
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+            border-radius: 4px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: rotate(-8deg) translateY(0px); }
+            50% { transform: rotate(-10deg) translateY(-10px); }
+            100% { transform: rotate(-8deg) translateY(0px); }
+        }
+        
+        /* Header Styles */
+        .header {
+            position: relative;
+            padding: 5rem 2rem;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(140, 56, 236, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(76, 201, 240, 0.2) 0%, transparent 40%);
+        }
+        
+        .year-tag {
+            font-family: 'Monoton', cursive;
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            margin-bottom: 2rem;
+            letter-spacing: 0.2em;
+            text-shadow: 0 0 15px rgba(255, 107, 53, 0.7);
+        }
+        
+        h1 {
+            font-family: 'Abril Fatface', serif;
+            font-size: 6rem;
+            margin-bottom: 1rem;
+            line-height: 1;
+            text-align: center;
+            letter-spacing: -0.02em;
+            position: relative;
+            z-index: 2;
+        }
+        
+        h1 .portfolio {
+            display: block;
+            font-size: 8rem;
+            line-height: 0.9;
+            background: linear-gradient(45deg, var(--accent-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+        }
+        
+        .author {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            text-align: center;
+            color: var(--text-color);
+            letter-spacing: 0.1em;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .author-note {
+            font-size: 0.9rem;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 4rem;
+            opacity: 0.7;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .camera-icon {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            opacity: 0.6;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+        }
+        
+        .camera-1 {
+            top: 15%;
+            right: 15%;
+            transform: rotate(15deg);
+            animation: float-camera 8s ease-in-out infinite;
+        }
+        
+        .camera-2 {
+            bottom: 20%;
+            left: 15%;
+            transform: rotate(-10deg);
+            animation: float-camera 6s ease-in-out infinite 1s;
+        }
+
+        @keyframes float-camera {
+            0% { transform: rotate(15deg) translateY(0px); }
+            50% { transform: rotate(18deg) translateY(-15px); }
+            100% { transform: rotate(15deg) translateY(0px); }
+        }
+        
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--text-color);
+            opacity: 0.7;
+            font-size: 0.9rem;
+            letter-spacing: 0.2em;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); }
+            40% { transform: translateY(-20px) translateX(-50%); }
+            60% { transform: translateY(-10px) translateX(-50%); }
+        }
+        
+        /* Portfolio Layout */
+        .portfolio-container {
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .portfolio-layout {
+            position: relative;
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .portfolio-item {
+            position: relative;
+            margin-bottom: 150px;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            width: 80%;
+            max-width: 800px;
+        }
+        
+        .portfolio-item:nth-child(odd) {
+            align-self: flex-start;
+            margin-left: 5%;
+        }
+        
+        .portfolio-item:nth-child(even) {
+            align-self: flex-end;
+            margin-right: 5%;
+        }
+        
+        .portfolio-item:hover {
+            transform: scale(1.03);
+        }
+        
+        .portfolio-image {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        }
+        
+        .portfolio-image::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, 
+                rgba(0, 0, 0, 0.1), 
+                rgba(0, 0, 0, 0.6)
+            );
+            z-index: 1;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+        
+        .portfolio-item:hover .portfolio-image::before {
+            opacity: 0.4;
+        }
+        
+        .portfolio-image img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            display: block;
+        }
+        
+        .portfolio-item:hover .portfolio-image img {
+            transform: scale(1.1) rotate(1deg);
+        }
+        
+        .portfolio-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 2rem;
+            z-index: 2;
+            transform: translateY(50%);
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            max-height: 70%;
+            overflow: hidden;
+        }
+        
+        .portfolio-item:hover .portfolio-content {
+            transform: translateY(0);
+            background: rgba(0, 0, 0, 0.7);
+            max-height: 100%;
+        }
+        
+        .portfolio-title {
+            font-family: 'Abril Fatface', serif;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+            position: relative;
+        }
+        
+        .portfolio-title::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+        
+        .portfolio-item:hover .portfolio-title::after {
+            width: 100px;
+        }
+        
+        .portfolio-description {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+            max-width: 80%;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .portfolio-item:hover .portfolio-description {
+            opacity: 1;
+            transform: translateY(0);
+            -webkit-line-clamp: unset;
+            display: block;
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: var(--paper-color);
+            padding: 6rem 2rem 3rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .footer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 30px;
+            background-color: var(--paper-color);
+            clip-path: polygon(
+                0% 0%, 5% 100%, 15% 30%, 25% 100%, 35% 30%, 45% 100%, 
+                55% 30%, 65% 100%, 75% 30%, 85% 100%, 95% 30%, 100% 100%, 
+                100% 0%, 0% 0%
+            );
+        }
+        
+        .home-button {
+            display: inline-block;
+            padding: 1rem 3rem;
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.2rem;
+            letter-spacing: 0.1em;
+            border-radius: 50px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 10px 25px rgba(255, 107, 53, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .home-button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.2), 
+                transparent
+            );
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .home-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(255, 107, 53, 0.6);
+            background: linear-gradient(45deg, var(--accent-color), var(--tertiary-color));
+        }
+        
+        .home-button:hover::before {
+            left: 100%;
+        }
+        
+        /* Responsive Adjustments */
+        @media (min-width: 768px) {
+            .portfolio-layout {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+            
+            .portfolio-item {
+                width: calc(50% - 50px);
+                margin-bottom: 200px;
+            }
+            
+            .portfolio-item:nth-child(3n+1) {
+                width: calc(60% - 50px);
+            }
+            
+            .portfolio-item:nth-child(4n) {
+                margin-top: -100px;
+            }
+            
+            .portfolio-item:nth-child(5n) {
+                margin-top: 100px;
+            }
+        }
+        
+        @media (max-width: 767px) {
+            h1 {
+                font-size: 3.5rem;
+            }
+            
+            h1 .portfolio {
+                font-size: 4.5rem;
+            }
+            
+            .author {
+                font-size: 1.8rem;
+            }
+            
+            .author-note {
+                font-size: 0.8rem;
+                padding: 0 20px;
+            }
+            
+            .portfolio-item {
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+            }
+            
+            .portfolio-title {
+                font-size: 2rem;
+            }
+            
+            .portfolio-description {
+                max-width: 100%;
+            }
+            
+            .info-badge {
+                top: 20px;
+                left: 20px;
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Portfolio Items Staggered Animation */
+        .portfolio-item {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        /* Decorative Elements */
+        .decorative-circle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.2;
+            filter: blur(60px);
+            z-index: -1;
+        }
+
+        .circle-1 {
+            width: 400px;
+            height: 400px;
+            background-color: var(--tertiary-color);
+            top: -200px;
+            right: -200px;
+        }
+
+        .circle-2 {
+            width: 300px;
+            height: 300px;
+            background-color: var(--secondary-color);
+            bottom: 30%;
+            left: -150px;
+        }
+
+        .circle-3 {
+            width: 500px;
+            height: 500px;
+            background-color: var(--accent-color);
+            opacity: 0.1;
+            top: 40%;
+            right: -250px;
+        }
+    </style>
+</head>
+<body>
+    <div class="info-badge">Click for more Info!</div>
+
+    <div class="decorative-circle circle-1"></div>
+    <div class="decorative-circle circle-2"></div>
+    <div class="decorative-circle circle-3"></div>
+    
+    <header class="header">
+        <div class="camera-icon camera-1">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <rect x="10" y="25" width="80" height="60" rx="5" fill="#ff6b35"/>
+                <rect x="30" y="15" width="40" height="10" rx="3" fill="#ff6b35"/>
+                <circle cx="50" cy="55" r="20" fill="#cf5a2c"/>
+                <circle cx="50" cy="55" r="15" fill="#e5612f"/>
+                <rect x="70" y="35" width="15" height="10" rx="2" fill="#cf5a2c"/>
+                <rect x="15" y="35" width="10" height="5" rx="1" fill="#cf5a2c"/>
+            </svg>
+        </div>
+        
+        <div class="camera-icon camera-2">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <rect x="10" y="25" width="80" height="60" rx="5" fill="#4cc9f0"/>
+                <rect x="30" y="15" width="40" height="10" rx="3" fill="#4cc9f0"/>
+                <circle cx="50" cy="55" r="20" fill="#3ba7c8"/>
+                <circle cx="50" cy="55" r="15" fill="#45b8dc"/>
+                <rect x="70" y="35" width="15" height="10" rx="2" fill="#3ba7c8"/>
+                <rect x="15" y="35" width="10" height="5" rx="1" fill="#3ba7c8"/>
+            </svg>
+        </div>
+        
+        <div class="year-tag">2025</div>
+        <h1>Creative <span class="portfolio">PORTFOLIO</span></h1>
+        <div class="author">Joey Hobrecker</div>
+        <div class="author-note">I did not count the descriptions of my projects to the total word count. If this is not allowed you can get the same experience withouth reading the descriptions. I wanted to add context to make the experience better.</div>
+        
+        <div class="scroll-indicator">SCROLL DOWN</div>
+    </header>
+    
+    <main class="portfolio-container">
+        <div class="portfolio-layout">
+            <!-- Portfolio Item 1 -->
+            <a href="Port1/Port1.html" class="portfolio-item" target="_blank">
+                <div class="portfolio-image">
+                    <img src="Port1/Front.png" alt="FINA TaskManager">
+                </div>
+                <div class="portfolio-content">
+                    <h3 class="portfolio-title">FINA TaskManager</h3>
+                    <p class="portfolio-description">I created my own line of self management applications called Fina. Some are still full in development, while others (like this one) are finished. I'm now working on turning FINA TaskManager into a fully working product by adding payment and login options and connecting it to a webserver. This Version in my portfolio is fully functional and I invite you to try it out for yourself.</p>
+                </div>
+            </a>
+            
+            <!-- Portfolio Item 2 -->
+            <a href="Port2/Port2.html" class="portfolio-item" target="_blank">
+                <div class="portfolio-image">
+                    <img src="Port2/Front.png" alt="FINA Selfhelp">
+                </div>
+                <div class="portfolio-content">
+                    <h3 class="portfolio-title">FINA Selfhelp</h3>
+                    <p class="portfolio-description">This is another instalment in my self management applications. This is a AI based therapy system. This too is fully functional but I removed the API key for the AI model so the conversations don't work now. You can still experience the UI and UX design.</p>
+                </div>
+            </a>
+            
+            <!-- Portfolio Item 3 -->
+            <a href="Port3/Port3.html" class="portfolio-item" target="_blank">
+                <div class="portfolio-image">
+                    <img src="Port3/Front.png" alt="Fina Pulse">
+                </div>
+                <div class="portfolio-content">
+                    <h3 class="portfolio-title">Fina Pulse</h3>
+                    <p class="portfolio-description">This is another instalment in my self management applications. This one Is still in the prototyping face but is already fully functional and I again invite you to try out the different features. It is an agenda application with several original features, like for example the weekly tasks system and automatic breaks system.</p>
+                </div>
+            </a>
+            
+            <!-- Portfolio Item 4 -->
+            <a href="Port4/Port4.html" class="portfolio-item" target="_blank">
+                <div class="portfolio-image">
+                    <img src="Port4/Front.png" alt="Fina Pomodoro">
+                </div>
+                <div class="portfolio-content">
+                    <h3 class="portfolio-title">Fina Pomodoro</h3>
+                    <p class="portfolio-description">(OpenAI, 2025c). This is another prototype of my Fina line. It's a simple, but clear and functional pomodoro timer. The goal is to combine all the different Fina Applications into one ultimate self management system. I'm now working on integrating an overall AI model that can help you manage your mental state, your tasks and your agenda. Nothing has been released for now and it's now just for my personal use.</p>
+                </div>
+            </a>
+            
+            <!-- Portfolio Item 5 -->
+            <a href="Port5/Port5.html" class="portfolio-item" target="_blank">
+                <div class="portfolio-image">
+                    <img src="Port5/Front.png" alt="AI Debate">
+                </div>
+                <div class="portfolio-content">
+                    <h3 class="portfolio-title">AI Debate</h3>
+                    <p class="portfolio-description">(OpenAI, 2025d). This is a website I created to become familiar with coding with AI for Artifice (CBL3). Normally it's fully functional and two different AI models will argue with each other about a given topic but I removed the API key again.</p>
+                </div>
+            </a>
+            
+            <!-- Portfolio Item 6 -->
+            <a href="Port6/Port6.html" class="portfolio-item" target="_blank">
+                <div class="portfolio-image">
+                    <img src="Port6/Front.png" alt="Final Prototype Artifice Kitchencompass">
+                </div>
+                <div class="portfolio-content">
+                    <h3 class="portfolio-title">Final Prototype Artifice Kitchencompass CBL3</h3>
+                    <p class="portfolio-description">(OpenAI, 2025e). This is the final prototype I created for my CBL3. Everything is fully functional except the recipe generation since I removed the API key again. This website has been build up over multiple month completely by me – I did all the coding, all the UI and UX design, everything. To get by the login screen just fill in a random username and password and press "Create New Account". Some features of this website are an interactive map and saving your favourite recipes to improve generation.</p>
+                </div>
+            </a>
+            
+            <!-- Portfolio Item 7 -->
+            <a href="Port7/Port7.html" class="portfolio-item" target="_blank">
+                <div class="portfolio-image">
+                    <img src="Port7/Front.png" alt="Prototype Food Recognition Artifice Kitchencompass">
+                </div>
+                <div class="portfolio-content">
+                    <h3 class="portfolio-title">Prototype Food Recognition Artifice Kitchencompass CBL3</h3>
+                    <p class="portfolio-description">(OpenAI, 2025f). For our final product we needed a system that would recognize ingredients from a picture. I created a method that worked with this prototype. I removed the API key again so it will not work in this portfolio.</p>
+                </div>
+            </a>
+            
+            <!-- Portfolio Item 8 -->
+            <a href="Port8/Port8.html" class="portfolio-item" target="_blank">
+                <div class="portfolio-image">
+                    <img src="Port8/Front.png" alt="Escape room Connected Experiences">
+                </div>
+                <div class="portfolio-content">
+                    <h3 class="portfolio-title">Escape room Connected Experiences</h3>
+                    <p class="portfolio-description">(OpenAI, 2025g). These are all the websites I created (I did almost all of the coding in my group) for my escape room. They are all interconnected and are meant to be connected to an ESP32 via OOCSI.</p>
+                </div>
+            </a>
+            
+            <!-- Portfolio Item 9 -->
+            <a href="Port9/Port9.html" class="portfolio-item" target="_blank">
+                <div class="portfolio-image">
+                    <img src="Port9/Front.png" alt="Game for Games and Play II">
+                </div>
+                <div class="portfolio-content">
+                    <h3 class="portfolio-title">Game for Games and Play II</h3>
+                    <p class="portfolio-description">Here you can find my work for the games and play course. We needed to create a game here. I was in charge of the aesthetics. I decided on our style and created all the character you see in the videos, created some of the objects in the game and created the front page. I also did all of the sound design.</p>
+                </div>
+            </a>
+            
+            <!-- Portfolio Item 10 -->
+            <a href="Port10/Port10.pdf" class="portfolio-item" target="_blank">
+                <div class="portfolio-image">
+                    <img src="Port10/Front.png" alt="Research done for Design and Research">
+                </div>
+                <div class="portfolio-content">
+                    <h3 class="portfolio-title">Research done for Design and Research</h3>
+                    <p class="portfolio-description">(OpenAI, 2025h). With my group I did research about the community of the Eindhoven Design Café. This is the pictorial that discusses our complete process and findings.</p>
+                </div>
+            </a>
+            
+            <!-- Portfolio Item 11 -->
+            <a href="Port11/Port11.pdf" class="portfolio-item" target="_blank">
+                <div class="portfolio-image">
+                    <img src="Port11/Front.png" alt="Individual Pictorial Aesthetics of Interaction">
+                </div>
+                <div class="portfolio-content">
+                    <h3 class="portfolio-title">Individual Pictorial Aesthetics of Interaction</h3>
+                    <p class="portfolio-description">(OpenAI, 2025i). Here you can find the pictorial for the course Aesthetics of Interaction. You can see my complete process and the products me and my group created.</p>
+                </div>
+            </a>
+            
+            <!-- Portfolio Item 12 -->
+            <a href="Port12/Port12.pdf" class="portfolio-item" target="_blank">
+                <div class="portfolio-image">
+                    <img src="Port12/Front.png" alt="Artifice Kitchencompass">
+                </div>
+                <div class="portfolio-content">
+                    <h3 class="portfolio-title">Artifice Kitchencompass</h3>
+                    <p class="portfolio-description">(OpenAI, 2025j). This is the complete rapport of my Artifice CBL3 project Kitchencompass.</p>
+                </div>
+            </a>
+            
+            <!-- Portfolio Item 13 -->
+            <a href="Port13/Port13.pdf" class="portfolio-item" target="_blank">
+                <div class="portfolio-image">
+                    <img src="Port13/Front.png" alt="Kitchencompass Design Innovation">
+                </div>
+                <div class="portfolio-content">
+                    <h3 class="portfolio-title">Kitchencompass Design Innovation</h3>
+                    <p class="portfolio-description">(OpenAI, 2025k). For this assignment we needed to create a business proposal for a new market for one of one of our own CBL projects. I chose to market Kitchencompass to kids.</p>
+                </div>
+            </a>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <a href="References.html" class="home-button" target="_blank">Next</a>
+    </footer>
+    
+    <script>
+        // Add animation effect when portfolio items come into view
+        document.addEventListener('DOMContentLoaded', function() {
+            const portfolioItems = document.querySelectorAll('.portfolio-item');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        // Add staggered delay based on index
+                        setTimeout(() => {
+                            entry.target.style.opacity = 1;
+                            entry.target.style.transform = 'translateY(0)';
+                        }, 150 * index);
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            portfolioItems.forEach(item => {
+                observer.observe(item);
+            });
+
+            // Add parallax effect on scroll
+            window.addEventListener('scroll', function() {
+                const scrollY = window.scrollY;
+                
+                // Parallax header elements
+                document.querySelector('.year-tag').style.transform = `translateY(${scrollY * 0.2}px)`;
+                document.querySelector('.author').style.transform = `translateY(${scrollY * 0.1}px)`;
+                
+                // Fade out header elements on scroll
+                const header = document.querySelector('.header');
+                const headerHeight = header.offsetHeight;
+                const opacity = 1 - Math.min(1, scrollY / (headerHeight * 0.7));
+                
+                document.querySelector('.year-tag').style.opacity = opacity;
+                document.querySelector('h1').style.opacity = opacity;
+                document.querySelector('.author').style.opacity = opacity;
+                document.querySelector('.author-note').style.opacity = opacity;
+                document.querySelector('.scroll-indicator').style.opacity = opacity;
+            });
+        });
+    </script>
+</body>
+</html>
