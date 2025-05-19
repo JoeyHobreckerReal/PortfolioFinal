@@ -1,0 +1,24 @@
+/* patch_ui.css – light visual refresh with imagery */
+header {
+    background-image: url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1600&q=60');
+    background-size: cover;
+    background-position: center;
+    border-radius: 12px;
+    margin-bottom: 40px;
+    padding: 50px 40px;
+}
+header h1 {
+    font-size: 48px;
+    color: #eceff4;
+    text-shadow: 0 2px 5px rgba(0,0,0,.5);
+}
+/* Glass effect cards */
+.task-card, .project-card, .concept-item, .note-card {
+    background: rgba(46, 52, 64, 0.75);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+    transition: transform .2s ease;
+}
+.task-card:hover, .project-card:hover, .concept-item:hover, .note-card:hover {
+    transform: translateY(-4px) scale(1.02);
+}

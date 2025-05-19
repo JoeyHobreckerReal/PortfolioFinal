@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Debate Game</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <!-- Include p5.js library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
+  <script src="sketch.js" defer></script>
+</head>
+<body>
+  <main>
+    <div id="controls">
+      <h1>AI Debate Game</h1>
+      <input type="text" id="topicInput" placeholder="Enter debate topic" />
+
+      <!-- Character Sliders -->
+      <div id="characterSliders">
+        <h2>Customize Debaters</h2>
+        <div class="sliderGroup">
+          <h3>Alice (For)</h3>
+          <label>Aggressiveness: <span id="aliceAggressivenessValue">5</span></label>
+          <input type="range" id="aliceAggressiveness" min="1" max="10" value="5">
+          <label>Politeness: <span id="alicePolitenessValue">5</span></label>
+          <input type="range" id="alicePoliteness" min="1" max="10" value="5">
+        </div>
+        <div class="sliderGroup">
+          <h3>Bob (Against)</h3>
+          <label>Aggressiveness: <span id="bobAggressivenessValue">5</span></label>
+          <input type="range" id="bobAggressiveness" min="1" max="10" value="5">
+          <label>Politeness: <span id="bobPolitenessValue">5</span></label>
+          <input type="range" id="bobPoliteness" min="1" max="10" value="5">
+        </div>
+      </div>
+
+      <button id="startButton">Start Debate</button>
+    </div>
+    <div id="debateArea">
+      <div id="debater1" class="debater for">
+        <img src="debater1_avatar.png" alt="Debater 1 Avatar" class="avatar">
+        <h2>Alice (For)</h2>
+        <div id="debater1Output" class="debaterOutput"></div>
+      </div>
+      <div id="debater2" class="debater against">
+        <img src="debater2_avatar.png" alt="Debater 2 Avatar" class="avatar">
+        <h2>Bob (Against)</h2>
+        <div id="debater2Output" class="debaterOutput"></div>
+      </div>
+    </div>
+    <div id="winnerSection" style="display: none;">
+      <h2>Who won the debate?</h2>
+      <button id="voteDebater1">Vote for Alice</button>
+      <button id="voteDebater2">Vote for Bob</button>
+      <div id="result"></div>
+    </div>
+  </main>
+</body>
+</html>
+

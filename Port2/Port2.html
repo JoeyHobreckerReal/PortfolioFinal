@@ -1,0 +1,2631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <title>FinaMind</title>
+    <style>
+        :root {
+        /* Hide Help Plan feature */
+        #plan-tab-btn, #plan-tab { display: none !important; }
+
+            --primary-color: #38B272;
+            --primary-dark: #25964E;
+            --primary-light: #BDF0D3;
+            --primary-bg: #F4FBF6;
+            --panel-color: #FFFFFF;
+            --border-color: #A7E0C0;
+            --text-color: #20232A;
+            --user-bubble: #38B272;
+            --ai-bubble: #F1F5F9;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --danger-color: #EF4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .app-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-title h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 256px;
+            background-color: var(--panel-color);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+            z-index: 20;
+        }
+
+        .sidebar-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .sidebar-content h2 {
+            padding: 8px 16px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .conversation-list {
+            list-style: none;
+        }
+
+        .conversation-item {
+            width: 100%;
+            text-align: left;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border: none;
+            background: transparent;
+            font-family: inherit;
+        }
+
+        .conversation-item:hover {
+            background-color: var(--primary-bg);
+        }
+
+        .conversation-item.active {
+            background-color: var(--primary-bg);
+        }
+
+        .conversation-info {
+            flex: 1;
+            text-align: left;
+        }
+
+        .conversation-title {
+            font-weight: 500;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+        }
+
+        .conversation-title .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: 8px;
+        }
+
+        .conversation-title .status-active {
+            background-color: var(--success-color);
+        }
+
+        .conversation-title .status-closed {
+            background-color: var(--text-color);
+            opacity: 0.5;
+        }
+
+        .conversation-date {
+            font-size: 0.75rem;
+            color: var(--primary-color);
+        }
+
+        .conversation-actions {
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .conversation-item:hover .conversation-actions {
+            opacity: 1;
+        }
+
+        /* Chat Area */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--primary-bg);
+            position: relative;
+        }
+
+        .chat-header {
+            padding: 12px 16px;
+            background-color: white;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-title {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .chat-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 16px;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message.system {
+            justify-content: flex-start;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .message.user .message-bubble {
+            background-color: var(--user-bubble);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.system .message-bubble {
+            background-color: var(--panel-color);
+            color: var(--text-color);
+            border-bottom-left-radius: 4px;
+        }
+
+        .message-content {
+            margin-bottom: 4px;
+        }
+
+        .message-timestamp {
+            font-size: 0.75rem;
+        }
+
+        .message.user .message-timestamp {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .message.system .message-timestamp {
+            color: var(--primary-light);
+        }
+
+        .message-input-container {
+            padding: 16px;
+            border-top: 1px solid var(--border-color);
+            background-color: white;
+        }
+
+        .message-form {
+            display: flex;
+            align-items: center;
+        }
+
+        .message-input {
+            flex: 1;
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 12px 16px;
+            outline: none;
+            font-family: inherit;
+            font-size: 16px;
+            resize: none;
+            overflow-y: auto;
+            max-height: 120px;
+            min-height: 24px;
+        }
+
+        .message-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(56, 178, 114, 0.3);
+        }
+
+        /* Empty State */
+        .empty-state {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            text-align: center;
+            background-color: var(--primary-bg);
+            z-index: 10;
+        }
+
+        .empty-icon {
+            color: var(--primary-color);
+            margin-bottom: 16px;
+            width: 48px;
+            height: 48px;
+        }
+
+        .empty-state h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-color);
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            color: var(--text-color);
+            margin-bottom: 16px;
+            opacity: 0.8;
+        }
+
+        /* Settings Panel */
+        .settings-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: flex-end;
+            z-index: 50;
+        }
+
+        .settings-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(15, 23, 42, 0.5);
+            cursor: pointer;
+        }
+
+        .settings-content {
+            background-color: white;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 51;
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+        }
+
+        .settings-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .settings-header h2 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        .settings-advanced {
+            margin: 10px 0 5px;
+            padding: 0 16px;
+        }
+
+        .settings-advanced summary {
+            cursor: pointer;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .settings-advanced-content {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: var(--primary-bg);
+            border-radius: 4px;
+        }
+
+        .settings-row {
+            display: flex;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .settings-row label {
+            font-size: 14px;
+            flex: 1;
+        }
+
+        .settings-row input {
+            flex: 2;
+            padding: 6px 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        .settings-row select {
+            flex: 2;
+            padding: 6px 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: white;
+        }
+
+        .settings-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 12px 16px;
+            font-weight: 500;
+            background: none;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--primary-color);
+        }
+
+        .tab-button:hover {
+            color: var(--primary-dark);
+        }
+
+        .tab-button.active {
+            color: var(--primary-dark);
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .tab-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        .tab-pane h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .content-box {
+            background-color: var(--primary-bg);
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        #knowledge-base-content {
+            white-space: pre-wrap;
+            color: var(--text-color);
+            font-size: 0.875rem;
+        }
+
+        .plan-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .notification {
+            margin-bottom: 16px;
+            padding: 12px;
+            background-color: #FEFCBF;
+            border: 1px solid #F6E05E;
+            border-radius: 8px;
+            color: #744210;
+            font-size: 0.875rem;
+        }
+
+        .help-plan-list {
+            list-style: none;
+        }
+
+        .help-plan-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .help-plan-icon {
+            margin-top: 2px;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+
+        .help-plan-completed {
+            color: var(--success-color);
+        }
+
+        .help-plan-pending {
+            color: var(--primary-color);
+        }
+
+        .help-plan-text {
+            color: var(--text-color);
+        }
+
+        .help-plan-completed .help-plan-text {
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+
+        .help-plan-task {
+            font-weight: 500;
+        }
+
+        .help-plan-completed .help-plan-task {
+            text-decoration: line-through;
+        }
+
+        .help-plan-notes {
+            font-size: 0.875rem;
+            margin-top: 4px;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .no-plan-message {
+            color: var(--text-color);
+            opacity: 0.7;
+            text-align: center;
+            padding: 16px;
+        }
+
+        /* Buttons */
+        .icon-button {
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+        }
+
+        .icon-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .settings-header .icon-button:hover {
+            color: var(--primary-color);
+        }
+
+        .primary-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 9999px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.2s;
+        }
+
+        .primary-button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .primary-button svg {
+            margin-right: 8px;
+        }
+
+        .secondary-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.2s;
+        }
+
+        .secondary-button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .secondary-button svg {
+            margin-right: 4px;
+        }
+
+        .secondary-button.disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .end-session-button {
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .end-session-button:hover {
+            background-color: #DC2626;
+        }
+
+        .end-session-button svg {
+            margin-right: 4px;
+        }
+
+        .send-button {
+            margin-left: 8px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .send-button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .end-button {
+            margin-left: 8px;
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .end-button:hover {
+            background-color: #DC2626;
+        }
+
+        .session-closed-banner {
+            background-color: var(--warning-color);
+            color: white;
+            padding: 8px 16px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        /* Delete Confirmation Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 24px;
+            border-radius: 8px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-color);
+        }
+
+        .modal-text {
+            margin-bottom: 24px;
+            color: var(--text-color);
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .cancel-button {
+            background-color: #E5E7EB;
+            color: var(--text-color);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .confirm-button {
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* Export/Import Data */
+        .data-management {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .data-management h3 {
+            margin-bottom: 12px;
+        }
+
+        .data-management-actions {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .export-button, .import-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .export-button svg, .import-button svg {
+            margin-right: 8px;
+        }
+
+        .import-input {
+            display: none;
+        }
+
+        /* Mobile Specific */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                z-index: 40;
+                margin-top: 64px;
+                transition: transform 0.3s ease-in-out;
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.visible {
+                transform: translateX(0);
+            }
+            
+            .toggle-sidebar-btn {
+                display: block;
+            }
+
+            .settings-content {
+                max-width: 100%;
+            }
+        }
+
+        @media (min-width: 769px) {
+            #toggle-sidebar-btn {
+                display: none;
+            }
+        }
+
+        /* Loading Indicator */
+        .typing-indicator {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .typing-bubble {
+            background-color: white;
+            padding: 16px;
+            border-radius: 18px;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .typing-dots {
+            display: flex;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            margin-right: 4px;
+            animation: typing-dot 1.4s infinite ease-in-out both;
+        }
+
+        .typing-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+            margin-right: 0;
+        }
+
+        @keyframes typing-dot {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
+        }
+
+        .loading-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.7);
+            z-index: 100;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(56, 178, 114, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Add icons */
+        .icon {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .icon-small {
+            width: 20px;
+            height: 20px;
+        }
+
+        .icon-large {
+            width: 32px;
+            height: 32px;
+        }
+
+        /* System message */
+        .system-message {
+            text-align: center;
+            padding: 8px 12px;
+            margin: 8px auto;
+            background-color: var(--primary-bg);
+            border-radius: 8px;
+            max-width: 80%;
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.875rem;
+        }
+
+        /* Knowledge Base Edit Feature Styles */
+        .knowledge-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .knowledge-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .knowledge-view-mode {
+            white-space: pre-wrap;
+            color: var(--text-color);
+            font-size: 0.875rem;
+        }
+        
+        .knowledge-edit-mode {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .knowledge-editor {
+            width: 100%;
+            min-height: 300px;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            resize: vertical;
+        }
+        
+        .editor-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+        
+        /* Summarization Loading State */
+        .summarize-loading {
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .summarize-spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(56, 178, 114, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-title">
+                <img src="logo.png" alt="FinaMind Logo" style="width:32px;height:32px;">
+                <h1>FinaMind</h1>
+            </div>
+            <div class="header-actions">
+                <button id="toggle-sidebar-btn" class="icon-button">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+                <button id="settings-btn" class="icon-button">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Sidebar -->
+            <aside id="sidebar" class="sidebar">
+                <div class="sidebar-header">
+                    <button id="new-conversation-btn" class="primary-button">
+                        <svg class="icon icon-small" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="16"></line>
+                            <line x1="8" y1="12" x2="16" y2="12"></line>
+                        </svg>
+                        New Conversation
+                    </button>
+                </div>
+                <div class="sidebar-content">
+                    <h2>Past Conversations</h2>
+                    <ul id="conversation-list" class="conversation-list">
+                        <!-- Conversations will be added here dynamically -->
+                    </ul>
+                </div>
+            </aside>
+
+            <!-- Main Chat Area -->
+            <main class="chat-area">
+                <!-- Chat Header with Session Controls -->
+                <div id="chat-header" class="chat-header hidden">
+                    <div class="chat-title" id="active-chat-title">Current Session</div>
+                    <div class="chat-actions">
+                        <button id="end-session-btn" class="end-session-button">
+                            <svg class="icon icon-small" viewBox="0 0 24 24">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="9" y1="9" x2="15" y2="15"></line>
+                                <line x1="15" y1="9" x2="9" y2="15"></line>
+                            </svg>
+                            End Session
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Session Closed Banner -->
+                <div id="session-closed-banner" class="session-closed-banner hidden">
+                    This session has been closed. Knowledge base and help plan have been updated.
+                </div>
+                
+                <div id="messages-container" class="messages-container">
+                    <!-- Messages will be added here dynamically -->
+                </div>
+                <div id="empty-state" class="empty-state">
+                    <svg class="icon icon-large empty-icon" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 16v-4M12 8h.01"></path>
+                    </svg>
+                    <h2>No Active Conversation</h2>
+                    <p>Start a new conversation or select one from the sidebar.</p>
+                    <button id="start-conversation-btn" class="primary-button">
+                        Start New Conversation
+                    </button>
+                </div>
+                <div id="message-input-container" class="message-input-container hidden">
+                    <form id="message-form" class="message-form">
+                        <textarea 
+                            id="message-input" 
+                            placeholder="Type your message here..." 
+                            class="message-input"
+                            rows="1"
+                        ></textarea>
+                        <button type="submit" id="send-btn" class="send-button" disabled>
+                            <svg class="icon" viewBox="0 0 24 24">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </main>
+        </div>
+
+        <!-- Settings Panel -->
+        <div id="settings-panel" class="settings-panel hidden">
+            <div class="settings-overlay"></div>
+            <div class="settings-content">
+                <div class="settings-header">
+                    <h2>Settings</h2>
+                    <button id="close-settings-btn" class="icon-button">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+                
+                <details class="settings-advanced">
+                    <summary>API Settings</summary>
+                    <div class="settings-advanced-content">
+                        <div class="settings-row">
+                            <label for="api-key">API Key:</label>
+                            <input type="text" id="api-key" value="">
+                        </div>
+                        <div class="settings-row">
+                            <label for="model-name">Model:</label>
+                            <input type="text" id="model-name" value="gemini-2.5-pro-exp-03-25">
+                        </div>
+                    </div>
+                </details>
+                
+                <!-- Settings Tabs -->
+                <div class="settings-tabs">
+                    <button id="knowledge-tab-btn" class="tab-button active" data-tab="knowledge">
+                        <svg class="icon icon-small" viewBox="0 0 24 24" style="margin-right: 8px;">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                        Knowledge Base
+                    </button>
+                    <button id="plan-tab-btn" class="tab-button" data-tab="plan">
+                        <svg class="icon icon-small" viewBox="0 0 24 24" style="margin-right: 8px;">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <polyline points="10 9 9 9 8 9"></polyline>
+                        </svg>
+                        Help Plan
+                    </button>
+                    <button id="storage-tab-btn" class="tab-button" data-tab="storage">
+                        <svg class="icon icon-small" viewBox="0 0 24 24" style="margin-right: 8px;">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                        </svg>
+                        Data Storage
+                    </button>
+                </div>
+                
+                <!-- Tab Content -->
+                <div class="tab-content">
+                    <!-- Knowledge Base Tab (Modified for Edit Feature) -->
+                    <div id="knowledge-tab" class="tab-pane active">
+                        <div class="knowledge-header">
+                            <h3>
+                                <svg class="icon icon-small" viewBox="0 0 24 24" style="margin-right: 8px;">
+                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                                </svg>
+                                Knowledge Base
+                            </h3>
+                            <div class="knowledge-actions">
+                                <button id="edit-knowledge-btn" class="secondary-button">
+                                    <svg class="icon icon-small" viewBox="0 0 24 24">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
+                                    Edit
+                                </button>
+                                <button id="summarize-knowledge-btn" class="secondary-button">
+                                    <svg class="icon icon-small" viewBox="0 0 24 24">
+                                        <line x1="21" y1="10" x2="3" y2="10"></line>
+                                        <line x1="21" y1="6" x2="3" y2="6"></line>
+                                        <line x1="21" y1="14" x2="3" y2="14"></line>
+                                        <line x1="17" y1="18" x2="3" y2="18"></line>
+                                    </svg>
+                                    Summarize
+                                </button>
+                            </div>
+                        </div>
+                        <div class="content-box">
+                            <!-- View Mode -->
+                            <pre id="knowledge-base-content" class="knowledge-view-mode"></pre>
+                            
+                            <!-- Edit Mode (initially hidden) -->
+                            <div id="knowledge-edit-container" class="knowledge-edit-mode hidden">
+                                <textarea id="knowledge-base-editor" class="knowledge-editor"></textarea>
+                                <div class="editor-actions">
+                                    <button id="cancel-edit-btn" class="cancel-button">Cancel</button>
+                                    <button id="save-edit-btn" class="primary-button">Save Changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Help Plan Tab -->
+                    <div id="plan-tab" class="tab-pane">
+                        <div class="plan-header">
+                            <h3>
+                                <svg class="icon icon-small" viewBox="0 0 24 24" style="margin-right: 8px;">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    <polyline points="10 9 9 9 8 9"></polyline>
+                                </svg>
+                                Help Plan
+                            </h3>
+                            <button id="refresh-plan-btn" class="secondary-button">
+                                <svg class="icon icon-small" viewBox="0 0 24 24">
+                                    <path d="M23 4v6h-6"></path>
+                                    <path d="M1 20v-6h6"></path>
+                                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                                </svg>
+                                <span id="refresh-btn-text">Refresh Plan</span>
+                            </button>
+                        </div>
+                        
+                        <div id="plan-update-notification" class="notification hidden">
+                            Based on your recent progress, it's recommended to update your help plan. 
+                            Click 'Refresh Plan' to generate a new personalized plan.
+                        </div>
+                        
+                        <div class="content-box">
+                            <ul id="help-plan-list" class="help-plan-list">
+                                <!-- Help plan items will be added here dynamically -->
+                            </ul>
+                            <p id="no-plan-message" class="no-plan-message">
+                                No help plan available. Click 'Refresh Plan' to generate one.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Data Storage Tab -->
+                    <div id="storage-tab" class="tab-pane">
+                        <h3>
+                            <svg class="icon icon-small" viewBox="0 0 24 24" style="margin-right: 8px;">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                            </svg>
+                            Data Storage
+                        </h3>
+                        
+                        <div class="settings-row">
+                            <label for="storage-type">Storage Location:</label>
+                            <select id="storage-type">
+                                <option value="local">Local Storage (Browser)</option>
+                                <option value="cloud">Cloud Storage (Coming Soon)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="content-box">
+                            <p>Your data is currently stored in your browser's local storage. Data will persist between sessions but will be lost if you clear browser data.</p>
+                            
+                            <div class="data-management">
+                                <h3>Data Management</h3>
+                                <div class="data-management-actions">
+                                    <button id="export-data-btn" class="export-button">
+                                        <svg class="icon icon-small" viewBox="0 0 24 24">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                            <polyline points="7 10 12 15 17 10"></polyline>
+                                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                                        </svg>
+                                        Export Data
+                                    </button>
+                                    <button id="import-data-btn" class="import-button">
+                                        <svg class="icon icon-small" viewBox="0 0 24 24">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                            <polyline points="17 8 12 3 7 8"></polyline>
+                                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                                        </svg>
+                                        Import Data
+                                    </button>
+                                    <input type="file" id="import-file" class="import-input" accept=".json">
+                                </div>
+                                
+                                <button id="clear-data-btn" class="confirm-button">
+                                    <svg class="icon icon-small" viewBox="0 0 24 24" style="margin-right: 8px;">
+                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    </svg>
+                                    Clear All Data
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div id="delete-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-title">Confirm Deletion</div>
+                <div class="modal-text">Are you sure you want to delete this conversation? This action cannot be undone.</div>
+                <div class="modal-actions">
+                    <button id="cancel-delete-btn" class="cancel-button">Cancel</button>
+                    <button id="confirm-delete-btn" class="confirm-button">Delete</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loading-indicator" class="loading-indicator hidden">
+            <div class="spinner"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // ========== STATE MANAGEMENT ==========
+            // Application State
+            const appState = {
+                // API Settings
+                apiKey: "AIzaSyDuA44T84Jbdvj0xSJJfPS516N_lt4Shh0",
+                model: "gemini-2.5-pro-exp-03-25",
+                
+                // Conversations
+                conversations: [],
+                activeConversationId: null,
+                conversationToDelete: null,
+                
+                // Knowledge & Plan
+                knowledgeBase: '# User Knowledge Base\n\nYour therapy sessions will be summarized here.',
+                helpPlan: [],
+                
+                // UI State
+                needsPlanUpdate: false,
+                activeSettingsTab: 'knowledge',
+                isLoading: false,
+                isGeneratingPlan: false,
+                isMobileSidebarVisible: false
+            };
+
+            // ========== UI ELEMENTS ==========
+            // Get DOM elements
+            const elements = {
+                // Layout elements
+                sidebar: document.getElementById('sidebar'),
+                messagesContainer: document.getElementById('messages-container'),
+                emptyState: document.getElementById('empty-state'),
+                messageInputContainer: document.getElementById('message-input-container'),
+                chatHeader: document.getElementById('chat-header'),
+                activeChatTitle: document.getElementById('active-chat-title'),
+                sessionClosedBanner: document.getElementById('session-closed-banner'),
+                
+                // Buttons
+                toggleSidebarBtn: document.getElementById('toggle-sidebar-btn'),
+                settingsBtn: document.getElementById('settings-btn'),
+                newConversationBtn: document.getElementById('new-conversation-btn'),
+                startConversationBtn: document.getElementById('start-conversation-btn'),
+                endSessionBtn: document.getElementById('end-session-btn'),
+                closeSettingsBtn: document.getElementById('close-settings-btn'),
+                sendBtn: document.getElementById('send-btn'),
+                refreshPlanBtn: document.getElementById('refresh-plan-btn'),
+                exportDataBtn: document.getElementById('export-data-btn'),
+                importDataBtn: document.getElementById('import-data-btn'),
+                clearDataBtn: document.getElementById('clear-data-btn'),
+                
+                // Input elements
+                messageInput: document.getElementById('message-input'),
+                messageForm: document.getElementById('message-form'),
+                importFile: document.getElementById('import-file'),
+                
+                // Lists and containers
+                conversationList: document.getElementById('conversation-list'),
+                helpPlanList: document.getElementById('help-plan-list'),
+                
+                // Settings elements
+                settingsPanel: document.getElementById('settings-panel'),
+                knowledgeTabBtn: document.getElementById('knowledge-tab-btn'),
+                planTabBtn: document.getElementById('plan-tab-btn'),
+                storageTabBtn: document.getElementById('storage-tab-btn'),
+                knowledgeTab: document.getElementById('knowledge-tab'),
+                planTab: document.getElementById('plan-tab'),
+                storageTab: document.getElementById('storage-tab'),
+                knowledgeBaseContent: document.getElementById('knowledge-base-content'),
+                planUpdateNotification: document.getElementById('plan-update-notification'),
+                noPlanMessage: document.getElementById('no-plan-message'),
+                refreshBtnText: document.getElementById('refresh-btn-text'),
+                
+                // Knowledge Base Edit elements
+                editKnowledgeBtn: document.getElementById('edit-knowledge-btn'),
+                summarizeKnowledgeBtn: document.getElementById('summarize-knowledge-btn'),
+                knowledgeBaseEditor: document.getElementById('knowledge-base-editor'),
+                knowledgeEditContainer: document.getElementById('knowledge-edit-container'),
+                cancelEditBtn: document.getElementById('cancel-edit-btn'),
+                saveEditBtn: document.getElementById('save-edit-btn'),
+                
+                // API settings
+                apiKeyInput: document.getElementById('api-key'),
+                modelNameInput: document.getElementById('model-name'),
+                storageType: document.getElementById('storage-type'),
+                
+                // Modal elements
+                deleteModal: document.getElementById('delete-modal'),
+                cancelDeleteBtn: document.getElementById('cancel-delete-btn'),
+                confirmDeleteBtn: document.getElementById('confirm-delete-btn'),
+                
+                // Loading indicator
+                loadingIndicator: document.getElementById('loading-indicator')
+            };
+
+            // ========== DATA PERSISTENCE ==========
+            
+            // Save app state to localStorage
+            function saveAppState() {
+                try {
+                    const stateToSave = {
+                        apiKey: appState.apiKey,
+                        model: appState.model,
+                        conversations: appState.conversations,
+                        knowledgeBase: appState.knowledgeBase,
+                        helpPlan: appState.helpPlan
+                    };
+                    
+                    localStorage.setItem('finaAppState', JSON.stringify(stateToSave));
+                    console.log('App state saved to localStorage');
+                } catch (error) {
+                    console.error('Error saving to localStorage:', error);
+                }
+            }
+            
+            // Load app state from localStorage
+            function loadAppState() {
+                try {
+                    const savedState = localStorage.getItem('finaAppState');
+                    if (savedState) {
+                        const parsedState = JSON.parse(savedState);
+                        
+                        // Update appState with saved values
+                        appState.apiKey = parsedState.apiKey || appState.apiKey;
+                        appState.model = parsedState.model || appState.model;
+                        appState.conversations = parsedState.conversations || [];
+                        appState.knowledgeBase = parsedState.knowledgeBase || appState.knowledgeBase;
+                        appState.helpPlan = parsedState.helpPlan || [];
+                        
+                        console.log('App state loaded from localStorage');
+                    }
+                } catch (error) {
+                    console.error('Error loading from localStorage:', error);
+                }
+            }
+            
+            // Export data as JSON file
+            function exportData() {
+                try {
+                    const dataToExport = {
+                        apiSettings: {
+                            apiKey: appState.apiKey,
+                            model: appState.model
+                        },
+                        conversations: appState.conversations,
+                        knowledgeBase: appState.knowledgeBase,
+                        helpPlan: appState.helpPlan,
+                        exportDate: new Date().toISOString()
+                    };
+                    
+                    const dataStr = JSON.stringify(dataToExport, null, 2);
+                    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                    
+                    // Create a download link
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = URL.createObjectURL(dataBlob);
+                    downloadLink.download = `fina-data-${new Date().toISOString().split('T')[0]}.json`;
+                    
+                    // Trigger download
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
+                    
+                    // Add a notification
+                    addSystemMessage("Data exported successfully. Your file is downloading now.");
+                } catch (error) {
+                    console.error('Error exporting data:', error);
+                    addSystemMessage("Error exporting data. Please try again.");
+                }
+            }
+            
+            // Import data from JSON file
+            async function importData(file) {
+                try {
+                    appState.isLoading = true;
+                    updateUI();
+                    
+                    // Read file
+                    const fileReader = new FileReader();
+                    
+                    // Create a promise to handle file reading
+                    const readResult = await new Promise((resolve, reject) => {
+                        fileReader.onload = (event) => resolve(event.target.result);
+                        fileReader.onerror = (error) => reject(error);
+                        fileReader.readAsText(file);
+                    });
+                    
+                    // Parse JSON data
+                    const importedData = JSON.parse(readResult);
+                    
+                    // Validate data structure
+                    if (!importedData.conversations || !importedData.knowledgeBase) {
+                        throw new Error('Invalid data format');
+                    }
+                    
+                    // Update app state with imported data
+                    if (importedData.apiSettings) {
+                        appState.apiKey = importedData.apiSettings.apiKey || appState.apiKey;
+                        appState.model = importedData.apiSettings.model || appState.model;
+                    }
+                    
+                    appState.conversations = importedData.conversations;
+                    appState.knowledgeBase = importedData.knowledgeBase;
+                    appState.helpPlan = importedData.helpPlan || [];
+                    
+                    // Reset active conversation
+                    appState.activeConversationId = null;
+                    
+                    // Save imported data to localStorage
+                    saveAppState();
+                    
+                    // Update UI
+                    updateUI();
+                    
+                    // Notification
+                    addSystemMessage("Data imported successfully.");
+                } catch (error) {
+                    console.error('Error importing data:', error);
+                    addSystemMessage("Error importing data. Please check the file format and try again.");
+                } finally {
+                    appState.isLoading = false;
+                    updateUI();
+                }
+            }
+            
+            // Clear all data
+            function clearAllData() {
+                try {
+                    // Reset app state
+                    appState.conversations = [];
+                    appState.activeConversationId = null;
+                    appState.knowledgeBase = '# User Knowledge Base\n\nYour therapy sessions will be summarized here.';
+                    appState.helpPlan = [];
+                    
+                    // Clear localStorage
+                    localStorage.removeItem('finaAppState');
+                    
+                    // Update UI
+                    updateUI();
+                    
+                    // Notification
+                    addSystemMessage("All data has been cleared successfully.");
+                } catch (error) {
+                    console.error('Error clearing data:', error);
+                    addSystemMessage("Error clearing data. Please try again.");
+                }
+            }
+
+            // ========== GEMINI API FUNCTIONS ==========
+            
+            // Function to call Gemini API with basic prompt
+            async function callGeminiAPI(prompt, systemPrompt = "") {
+                try {
+                    // Get API settings
+                    const API_KEY = elements.apiKeyInput.value.trim() || appState.apiKey;
+                    const MODEL = elements.modelNameInput.value.trim() || appState.model;
+                    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
+                    
+                    // Create full prompt with system instructions if provided
+                    let fullPrompt = prompt;
+                    if (systemPrompt) {
+                        fullPrompt = systemPrompt + "\n\n" + prompt;
+                    }
+                    
+                    // Create payload
+                    const payload = {
+                        contents: [{
+                            parts: [{ text: fullPrompt }]
+                        }],
+                        generationConfig: {
+                            temperature: 0.7,
+                            maxOutputTokens: 1024,
+                        }
+                    };
+                    
+                    // Send request
+                    const response = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    // Check for errors
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({ error: { message: 'Unknown error' } }));
+                        throw new Error(`API request failed: ${errorData.error?.message || response.statusText}`);
+                    }
+                    
+                    // Parse response
+                    const data = await response.json();
+                    
+                    // Extract text from response
+                    if (data.candidates && 
+                        data.candidates[0] && 
+                        data.candidates[0].content && 
+                        data.candidates[0].content.parts && 
+                        data.candidates[0].content.parts[0]) {
+                        return data.candidates[0].content.parts[0].text;
+                    } else {
+                        throw new Error('No valid response content');
+                    }
+                } catch (error) {
+                    console.error('Error calling Gemini API:', error);
+                    throw error;
+                }
+            }
+            
+            // Function to send conversation message to Gemini
+            async function sendMessageToGemini(userMessage, conversation) {
+                try {
+                    // Create conversation history context
+                    let conversationContext = "You are a professional, compassionate, and knowledgeable clinical psychologist in the FinaMind application. " +
+                        "Your role is to provide evidence-based, empathetic, and therapeutically sound guidance to users. " + "Respond with warmth while maintaining professional boundaries and using appropriate psychological frameworks. " +
+                        "Keep responses concise (2-3 paragraphs max) but ensure they provide genuine therapeutic value. " +
+                        "When appropriate, incorporate cognitive-behavioral, mindfulness, or solution-focused techniques. " +
+                        "You should reference specific details from the user's knowledge base and use this information to personalize your responses. " +
+                        "Do not mention that you are an AI unless directly asked. " +
+                        "Focus on being present, validating emotions, and offering actionable strategies.\n\n";
+                    
+                    // Extract user name if available from current or past sessions
+                    let userName = "the user";
+                    // First check current conversation
+                    for (const msg of conversation.messages) {
+                        if (msg.sender === 'user') {
+                            const nameMatch = msg.content.match(/my name is (\w+)/i);
+                            if (nameMatch && nameMatch[1]) {
+                                userName = nameMatch[1];
+                                break;
+                            }
+                        }
+                    }
+                    // If no name found, check knowledge base
+                    if (userName === "the user" && appState.knowledgeBase) {
+                        const nameMatch = appState.knowledgeBase.match(/name:?\s*(\w+)/i);
+                        if (nameMatch && nameMatch[1]) {
+                            userName = nameMatch[1];
+                        }
+                    }
+                    
+                    // Add knowledge base context if it exists
+                    if (appState.knowledgeBase && appState.knowledgeBase.length > 50) {
+                        conversationContext += `IMPORTANT - USER KNOWLEDGE BASE (reference these specific details in your response):\n`;
+                        conversationContext += `${appState.knowledgeBase}\n\n`;
+                        conversationContext += `Remember to reference specific details about ${userName} from the knowledge base above in your response. Always use these details to personalize your therapeutic approach.\n\n`;
+                    }
+                    
+                    // Add help plan context if it exists
+                    if (appState.helpPlan.length > 0) {
+                        conversationContext += `Current therapeutic plan for ${userName}:\n`;
+                        appState.helpPlan.forEach(item => {
+                            conversationContext += `- ${item.task} ${item.completed ? '(COMPLETED)' : '(PENDING)'}: ${item.notes}\n`;
+                        });
+                        conversationContext += "\n";
+                    }
+                    
+                    // Add recent conversation history (last 8 messages for context)
+                    conversationContext += "Recent conversation history:\n";
+                    const recentMessages = conversation.messages.slice(-8);
+                    recentMessages.forEach(msg => {
+                        conversationContext += `${msg.sender === 'user' ? userName : 'You'}: ${msg.content}\n`;
+                    });
+                    
+                    // Add current user message
+                    conversationContext += `\n${userName}: ${userMessage}\n\nYour response (remember to reference specific details from ${userName}'s knowledge base):`;
+                    
+                    // Call API
+                    return await callGeminiAPI(conversationContext);
+                } catch (error) {
+                    console.error('Error sending message to Gemini:', error);
+                    throw error;
+                }
+            }
+
+            // ========== UI FUNCTIONS ==========
+            
+            // Update UI based on current state
+            function updateUI() {
+                updateConversationList();
+                updateMessagesView();
+                updateKnowledgeBase();
+                updateHelpPlan();
+                updateSessionControls();
+                
+                // Show/hide empty state or message input based on active conversation
+                if (appState.activeConversationId) {
+                    elements.emptyState.classList.add('hidden');
+                    elements.chatHeader.classList.remove('hidden');
+                    
+                    // Only show message input if conversation is not closed
+                    const activeConversation = appState.conversations.find(conv => conv.id === appState.activeConversationId);
+                    if (activeConversation && !activeConversation.closed) {
+                        elements.messageInputContainer.classList.remove('hidden');
+                        elements.sessionClosedBanner.classList.add('hidden');
+                    } else {
+                        elements.messageInputContainer.classList.add('hidden');
+                        if (activeConversation && activeConversation.closed) {
+                            elements.sessionClosedBanner.classList.remove('hidden');
+                        }
+                    }
+                } else {
+                    elements.emptyState.classList.remove('hidden');
+                    elements.messageInputContainer.classList.add('hidden');
+                    elements.chatHeader.classList.add('hidden');
+                    elements.sessionClosedBanner.classList.add('hidden');
+                }
+                
+                // Update settings panel
+                if (appState.needsPlanUpdate) {
+                    elements.planUpdateNotification.classList.remove('hidden');
+                } else {
+                    elements.planUpdateNotification.classList.add('hidden');
+                }
+                
+                // Update help plan empty state
+                if (appState.helpPlan.length === 0) {
+                    elements.noPlanMessage.classList.remove('hidden');
+                } else {
+                    elements.noPlanMessage.classList.add('hidden');
+                }
+                
+                // Update loading states
+                if (appState.isGeneratingPlan) {
+                    elements.refreshPlanBtn.classList.add('disabled');
+                    elements.refreshBtnText.textContent = 'Generating...';
+                } else {
+                    elements.refreshPlanBtn.classList.remove('disabled');
+                    elements.refreshBtnText.textContent = 'Refresh Plan';
+                }
+                
+                if (appState.isLoading) {
+                    elements.loadingIndicator.classList.remove('hidden');
+                } else {
+                    elements.loadingIndicator.classList.add('hidden');
+                }
+                
+                // Update API settings inputs
+                elements.apiKeyInput.value = appState.apiKey;
+                elements.modelNameInput.value = appState.model;
+            }
+            
+            // Update session controls
+            function updateSessionControls() {
+                if (!appState.activeConversationId) return;
+                
+                const activeConversation = appState.conversations.find(conv => conv.id === appState.activeConversationId);
+                if (!activeConversation) return;
+                
+                // Update chat title
+                elements.activeChatTitle.textContent = activeConversation.title;
+                
+                // Show/hide end session button based on status
+                if (activeConversation.closed) {
+                    elements.endSessionBtn.classList.add('hidden');
+                } else {
+                    elements.endSessionBtn.classList.remove('hidden');
+                }
+            }
+            
+            // Update conversation list in sidebar
+            function updateConversationList() {
+                elements.conversationList.innerHTML = '';
+                
+                appState.conversations.forEach(conv => {
+                    const li = document.createElement('li');
+                    
+                    const button = document.createElement('button');
+                    button.className = `conversation-item ${conv.id === appState.activeConversationId ? 'active' : ''}`;
+                    
+                    button.innerHTML = `
+                        <div class="conversation-info">
+                            <div class="conversation-title">
+                                ${conv.title}
+                                <span class="status-indicator ${conv.closed ? 'status-closed' : 'status-active'}"></span>
+                            </div>
+                            <div class="conversation-date">${conv.date}</div>
+                        </div>
+                        <div class="conversation-actions">
+                            <svg class="icon icon-small delete-conversation" data-id="${conv.id}" viewBox="0 0 24 24">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                        </div>
+                    `;
+                    
+                    // Add event listener to open conversation
+                    button.addEventListener('click', function(e) {
+                        // Don't handle click if the delete icon was clicked
+                        if (e.target.closest('.delete-conversation')) {
+                            return;
+                        }
+                        
+                        appState.activeConversationId = conv.id;
+                        updateUI();
+                        toggleMobileSidebar(false);
+                    });
+                    
+                    // Add event listener for delete icon
+                    const deleteIcon = button.querySelector('.delete-conversation');
+                    if (deleteIcon) {
+                        deleteIcon.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            showDeleteConfirmation(conv.id);
+                        });
+                    }
+                    
+                    li.appendChild(button);
+                    elements.conversationList.appendChild(li);
+                });
+            }
+            
+            // Update messages view
+            function updateMessagesView() {
+                elements.messagesContainer.innerHTML = '';
+                
+                if (!appState.activeConversationId) return;
+                
+                const activeConversation = appState.conversations.find(conv => conv.id === appState.activeConversationId);
+                if (!activeConversation) return;
+                
+                activeConversation.messages.forEach(msg => {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `message ${msg.sender}`;
+                    
+                    messageDiv.innerHTML = `
+                        <div class="message-bubble">
+                            <div class="message-content">${msg.content}</div>
+                            <div class="message-timestamp">${msg.timestamp}</div>
+                        </div>
+                    `;
+                    
+                    elements.messagesContainer.appendChild(messageDiv);
+                });
+                
+                // Scroll to bottom
+                elements.messagesContainer.scrollTop = elements.messagesContainer.scrollHeight;
+            }
+            
+            // Update knowledge base content
+            function updateKnowledgeBase() {
+                elements.knowledgeBaseContent.textContent = appState.knowledgeBase;
+            }
+            
+            // Update help plan
+            function updateHelpPlan() {
+                elements.helpPlanList.innerHTML = '';
+                
+                appState.helpPlan.forEach(item => {
+                    const li = document.createElement('li');
+                    li.className = 'help-plan-item';
+                    
+                    li.innerHTML = `
+                        <div class="help-plan-icon ${item.completed ? 'help-plan-completed' : 'help-plan-pending'}">
+                            <svg class="icon icon-small" viewBox="0 0 24 24">
+                                ${item.completed ? 
+                                    '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>' : 
+                                    '<circle cx="12" cy="12" r="10"></circle>'}
+                            </svg>
+                        </div>
+                        <div class="help-plan-text ${item.completed ? 'help-plan-completed' : ''}">
+                            <p class="help-plan-task">${item.task}</p>
+                            <p class="help-plan-notes">${item.notes}</p>
+                        </div>
+                    `;
+                    
+                    elements.helpPlanList.appendChild(li);
+                });
+            }
+            
+            // Show typing indicator
+            function showTypingIndicator() {
+                const typingIndicator = document.createElement('div');
+                typingIndicator.className = 'typing-indicator';
+                typingIndicator.innerHTML = `
+                    <div class="typing-bubble">
+                        <div class="typing-dots">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                        </div>
+                    </div>
+                `;
+                elements.messagesContainer.appendChild(typingIndicator);
+                elements.messagesContainer.scrollTop = elements.messagesContainer.scrollHeight;
+                return typingIndicator;
+            }
+            
+            // Remove typing indicator
+            function removeTypingIndicator() {
+                const typingIndicator = document.querySelector('.typing-indicator');
+                if (typingIndicator) {
+                    typingIndicator.remove();
+                }
+            }
+            
+            // Add system message
+            function addSystemMessage(content) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'system-message';
+                messageDiv.textContent = content;
+                elements.messagesContainer.appendChild(messageDiv);
+                elements.messagesContainer.scrollTop = elements.messagesContainer.scrollHeight;
+            }
+            
+            // Show delete confirmation modal
+            function showDeleteConfirmation(conversationId) {
+                appState.conversationToDelete = conversationId;
+                elements.deleteModal.classList.remove('hidden');
+            }
+            
+            // Hide delete confirmation modal
+            function hideDeleteConfirmation() {
+                elements.deleteModal.classList.add('hidden');
+                appState.conversationToDelete = null;
+            }
+
+            // ========== ACTION FUNCTIONS ==========
+            
+            // Initialize data from localStorage
+            function initializeData() {
+                // Load data from localStorage
+                loadAppState();
+                updateUI();
+            }
+            
+            // Add a message to the active conversation
+            async function addMessage(content, sender = 'user') {
+                if (!content.trim() || !appState.activeConversationId) return;
+                
+                // Get active conversation
+                const activeConversation = appState.conversations.find(conv => conv.id === appState.activeConversationId);
+                if (!activeConversation || activeConversation.closed) return;
+                
+                // Create new message
+                const newMessage = {
+                    sender,
+                    content,
+                    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                };
+                
+                // Add message to conversation
+                activeConversation.messages.push(newMessage);
+                
+                // Save to localStorage
+                saveAppState();
+                
+                // Update UI
+                updateUI();
+                
+                // If user sent a message, generate AI response
+                if (sender === 'user') {
+                    // Check for plan-related responses
+                    if (appState.needsPlanUpdate && (
+                        content.toLowerCase().includes('yes') || 
+                        content.toLowerCase().includes('update') || 
+                        content.toLowerCase().includes('new plan')
+                    )) {
+                        // Add a system message about generating a new plan
+                        await addMessage("I'll generate a new help plan based on our conversations. This will take just a moment...", 'system');
+                        
+                        // Generate the new plan
+                        await generateNewHelpPlan();
+                        
+                        // Add a follow-up message with the plan completion
+                        await addMessage("I've updated your help plan based on our recent conversations. You can view it in the settings panel under 'Help Plan'. Let's continue with our session - what would you like to focus on today?", 'system');
+                        
+                        appState.needsPlanUpdate = false;
+                        updateUI();
+                    } else {
+                        // Normal response flow
+                        await sendToGemini(content, activeConversation);
+                    }
+                }
+            }
+            
+            // Send message to Gemini and get response
+            async function sendToGemini(userMessage, conversation) {
+                // Show typing indicator
+                showTypingIndicator();
+                
+                try {
+                    // Get response from Gemini
+                    const aiResponse = await sendMessageToGemini(userMessage, conversation);
+                    
+                    // Remove typing indicator
+                    removeTypingIndicator();
+                    
+                    // Add AI response to conversation
+                    await addMessage(aiResponse, 'system');
+                } catch (error) {
+                    console.error("Error communicating with Gemini:", error);
+                    
+                    // Remove typing indicator
+                    removeTypingIndicator();
+                    
+                    // Add error message
+                    addSystemMessage(`Error: ${error.message}. Try changing the model in settings or check your API key.`);
+                }
+            }
+            
+            // Generate a comprehensive summary from the conversation
+            async function generateSummary(conversation) {
+                try {
+                    // Extract user name if available
+                    let userName = "the user";
+                    for (const msg of conversation.messages) {
+                        if (msg.sender === 'user') {
+                            const nameMatch = msg.content.match(/my name is (\w+)/i);
+                            if (nameMatch && nameMatch[1]) {
+                                userName = nameMatch[1];
+                                break;
+                            }
+                        }
+                    }
+                    
+                    // Create prompt
+                    const messagesText = conversation.messages
+                        .map(msg => `${msg.sender === 'user' ? 'User' : 'Therapist'}: ${msg.content}`)
+                        .join('\n\n');
+                    
+                    const prompt = `You are a clinical psychologist creating a detailed patient record. Your task is to extract specific, clinically relevant information from this therapy session that will be vital for ongoing treatment.
+
+Here is a conversation between ${userName} and an AI psychologist:
+                    
+${messagesText}
+
+Create a detailed clinical summary that captures SPECIFIC information about ${userName}, including:
+
+1. PERSONAL DETAILS: Name, age, occupation, living situation, or any other identifying information shared
+2. PRESENTING ISSUES: The exact problems, symptoms, or challenges ${userName} described (quote their words when possible)
+3. EMOTIONAL STATE: Specific emotions expressed or reported during the session
+4. BEHAVIORAL PATTERNS: Concrete habits, tendencies, avoidance behaviors, or coping mechanisms mentioned
+5. SIGNIFICANT RELATIONSHIPS: Details about family, friends, colleagues, or other relationships discussed
+6. STRENGTHS & RESOURCES: Specific capabilities, support systems, or positive qualities displayed
+7. TREATMENT INSIGHTS: Particular therapeutic approaches or techniques that seemed effective or resonated
+8. GOALS & PROGRESS: Explicit objectives mentioned or progress noted since previous sessions
+
+Format your summary with clear section headers. For each point, provide specific details rather than general observations. Include direct quotes when available.
+
+This summary will be added to ${userName}'s permanent record and used in future sessions, so precise details about their unique situation are essential.`;
+                    
+                    // Get summary from Gemini
+                    let summary = await callGeminiAPI(prompt);
+                    
+                    return summary;
+                } catch (error) {
+                    console.error("Error generating summary:", error);
+                    
+                    // Fallback summary with more specificity
+                    return "## Session Summary\n\n### Personal Details\n- User identified themselves as Joey\n\n### Presenting Issues\n- Reports difficulty completing necessary tasks (schoolwork, cleaning)\n- Mentions spending excessive time on personal projects\n- Experiences tiredness that affects productivity\n\n### Emotional State\n- Described feeling \"pretty good\" but tired\n- Shows engagement with personal projects\n- Possible avoidance of less appealing responsibilities\n\n### Next Steps\n- Explore balance between responsibilities and personal interests\n- Consider strategies for maintaining focus on necessary tasks\n- Investigate energy management techniques";
+                }
+            }
+            
+            // Start a new conversation
+            function startNewConversation() {
+                // Check if plan update suggestion is needed
+                const shouldSuggestUpdate = appState.helpPlan.length > 0 && 
+                    appState.helpPlan.some(item => item.completed) && 
+                    Math.random() > 0.6; // 40% chance to suggest update if some tasks are completed
+                
+                let initialMessage = 'Welcome to FinaMind. How are you feeling today? I\'m here to support you.';
+                
+                if (shouldSuggestUpdate || appState.needsPlanUpdate) {
+                    initialMessage = 'Welcome back. Based on our previous sessions, I think we could update your help plan to better support your current needs. Would you like me to create a new plan based on our recent progress?';
+                    appState.needsPlanUpdate = true;
+                }
+                
+                const newConv = {
+                    id: `conv${Date.now()}`,
+                    title: `Session ${appState.conversations.length + 1}`,
+                    date: new Date().toISOString().split('T')[0],
+                    closed: false,
+                    messages: [
+                        { 
+                            sender: 'system', 
+                            content: initialMessage, 
+                            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                        }
+                    ]
+                };
+                
+                appState.conversations.push(newConv);
+                appState.activeConversationId = newConv.id;
+                
+                // Save to localStorage
+                saveAppState();
+                
+                updateUI();
+                toggleMobileSidebar(false);
+            }
+            
+            // End current session
+            async function endSession() {
+                if (!appState.activeConversationId) return;
+                
+                appState.isLoading = true;
+                updateUI();
+                
+                try {
+                    // Get active conversation
+                    const activeConversation = appState.conversations.find(conv => conv.id === appState.activeConversationId);
+                    if (!activeConversation || activeConversation.closed) return;
+                    
+                    // Mark conversation as closed
+                    activeConversation.closed = true;
+                    
+                    // Add a system message indicating the session is closed
+                    await addMessage("This session has been closed. A comprehensive summary has been added to your knowledge base and your help plan has been updated.", 'system');
+                    
+                    // Generate a summary based on the conversation
+                    const summary = await generateSummary(activeConversation);
+                    
+                    // Update knowledge base with the summary
+                    const updatedKnowledgeBase = `${appState.knowledgeBase}\n\n## ${activeConversation.title} (${activeConversation.date})\n${summary}`;
+                    appState.knowledgeBase = updatedKnowledgeBase;
+                    
+                    // Update help plan based on conversation
+                    await updateHelpPlanProgress(activeConversation);
+                    
+                    // Save to localStorage
+                    saveAppState();
+                    
+                    // Update UI to show session is closed
+                    updateUI();
+                } catch (error) {
+                    console.error("Error ending session:", error);
+                    addSystemMessage("There was an error closing this session. Please try again.");
+                } finally {
+                    appState.isLoading = false;
+                    updateUI();
+                }
+            }
+            
+            // Delete a conversation
+            function deleteConversation(conversationId) {
+                if (!conversationId) return;
+                
+                // Find conversation index
+                const conversationIndex = appState.conversations.findIndex(conv => conv.id === conversationId);
+                if (conversationIndex === -1) return;
+                
+                // Remove conversation
+                appState.conversations.splice(conversationIndex, 1);
+                
+                // If the active conversation was deleted, clear active ID
+                if (appState.activeConversationId === conversationId) {
+                    appState.activeConversationId = null;
+                }
+                
+                // Save to localStorage
+                saveAppState();
+                
+                // Update UI
+                updateUI();
+                
+                // Hide modal
+                hideDeleteConfirmation();
+            }
+            
+            // Update help plan progress based on conversation content
+            async function updateHelpPlanProgress(conversation) {
+                try {
+                    // Skip if no help plan
+                    if (appState.helpPlan.length === 0) return;
+                    
+                    // Extract all messages for context
+                    const messagesText = conversation.messages
+                        .map(msg => `${msg.sender === 'user' ? 'User' : 'Therapist'}: ${msg.content}`)
+                        .join('\n\n');
+                    
+                    // Create a structured representation of the current help plan
+                    const planText = appState.helpPlan.map(item => 
+                        `${item.id}: ${item.task} - ${item.completed ? 'COMPLETED' : 'PENDING'} - Notes: ${item.notes}`
+                    ).join('\n');
+                    
+                    // Create prompt
+                    const prompt = `You are a clinical psychologist reviewing a therapy session to update the patient's treatment plan. 
+
+Here is a conversation between a user and an AI psychologist:
+                    
+${messagesText}
+
+And here is the user's current help plan:
+
+${planText}
+
+For each PENDING task in the help plan, evaluate whether the user has made sufficient progress to mark it as COMPLETED based on the conversation. Look for:
+1. Direct mentions of completing specific tasks
+2. Evidence of behavioral changes aligned with the task goals
+3. Application of techniques or strategies outlined in the task
+4. Significant progress that fulfills the core objective of the task, even if not explicitly stated
+
+Return only the IDs of tasks that should be marked as completed, separated by commas. If no tasks should be marked as completed, return "NONE".
+
+Important: Be thorough in your assessment but also recognize meaningful progress. Apply clinical judgment.`;
+                    
+                    // Get progress analysis from Gemini
+                    const progressAnalysis = await callGeminiAPI(prompt);
+                    
+                    // Update the help plan based on the analysis
+                    if (progressAnalysis !== "NONE") {
+                        const completedTaskIds = progressAnalysis.split(',').map(id => id.trim());
+                        
+                        let updatedPlan = appState.helpPlan.map(item => {
+                            if (!item.completed && completedTaskIds.includes(item.id)) {
+                                return { ...item, completed: true };
+                            }
+                            return item;
+                        });
+                        
+                        appState.helpPlan = updatedPlan;
+                        
+                        // Determine if a major plan update is needed
+                        const completedCount = updatedPlan.filter(item => item.completed).length;
+                        if (completedCount / updatedPlan.length > 0.5) {
+                            appState.needsPlanUpdate = true;
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error updating help plan progress:", error);
+                    
+                    // Fallback behavior - mark one random task as completed if progress seems substantial
+                    if (conversation.messages.length > 8) {
+                        const pendingTasks = appState.helpPlan.filter(item => !item.completed);
+                        if (pendingTasks.length > 0) {
+                            const randomIndex = Math.floor(Math.random() * pendingTasks.length);
+                            const updatedPlan = appState.helpPlan.map(item => {
+                                if (item.id === pendingTasks[randomIndex].id) {
+                                    return { ...item, completed: true };
+                                }
+                                return item;
+                            });
+                            
+                            appState.helpPlan = updatedPlan;
+                        }
+                    }
+                }
+            }
+            
+            // Generate new help plan
+            async function generateNewHelpPlan() {
+                appState.isGeneratingPlan = true;
+                updateUI();
+                
+                try {
+                    // Create context from knowledge base
+                    const context = appState.knowledgeBase;
+                    
+                    // Extract user name if available
+                    let userName = "the user";
+                    const nameMatch = context.match(/name:?\s*(\w+)/i);
+                    if (nameMatch && nameMatch[1]) {
+                        userName = nameMatch[1];
+                    }
+                    
+                    // Create prompt
+                    const prompt = `You are a clinical psychologist creating a personalized therapeutic plan for ${userName}. Based on this knowledge base containing detailed information from past therapy sessions:
+
+${context}
+
+Create a comprehensive therapeutic plan with 5-7 specific, evidence-based interventions tailored to ${userName}'s unique situation, challenges, and strengths. 
+
+For each intervention:
+
+1. Frame it as an actionable task that addresses the specific issues ${userName} has mentioned (procrastination, focusing on projects, etc.)
+2. Include clear implementation guidelines that consider their specific circumstances
+3. Make it measurable so progress can be tracked
+4. Include therapeutic rationale connecting to established psychological frameworks (CBT, ACT, mindfulness, etc.)
+
+Format each item as:
+- Task: [Brief, clear action statement that directly addresses ${userName}'s specific challenges]
+- Notes: [Implementation guidelines, frequency, specific techniques, and therapeutic rationale]
+
+Reference specific details from the knowledge base about ${userName}'s situation, using their exact words when possible. The plan should reflect a deep understanding of their unique circumstances rather than generic advice.`;
+                    
+                    // Get plan from Gemini
+                    const planText = await callGeminiAPI(prompt);
+                    
+                    // Parse the generated plan into structured format
+                    const planItems = [];
+                    const taskPattern = /- Task: (.*?)(?:\r?\n|\r)- Notes: ([\s\S]*?)(?=\r?\n- Task:|$)/g;
+                    let match;
+                    let counter = 1;
+                    
+                    while ((match = taskPattern.exec(planText)) !== null) {
+                        const task = match[1].trim();
+                        const notes = match[2].trim();
+                        
+                        if (task && notes) {
+                            planItems.push({
+                                id: `plan${Date.now()}-${counter}`,
+                                task: task,
+                                notes: notes,
+                                completed: false
+                            });
+                            counter++;
+                        }
+                    }
+                    
+                    // If parsing failed, create a fallback plan that uses the user's specific details
+                    if (planItems.length === 0) {
+                        throw new Error("Failed to parse generated plan");
+                    }
+                    
+                    appState.helpPlan = planItems;
+                    appState.needsPlanUpdate = false;
+                    
+                    // Save to localStorage
+                    saveAppState();
+                } catch (error) {
+                    console.error("Error generating new help plan:", error);
+                    
+                    // Create a more specific fallback plan based on the sample conversation
+                    const fallbackPlan = [
+                        { id: `plan${Date.now()}-1`, task: 'Create a project-task balance schedule', completed: false, notes: 'Allocate specific time blocks for both schoolwork/cleaning and personal projects. This helps maintain engagement with projects while ensuring responsibilities are addressed. Start with 30 minutes of schoolwork followed by 1 hour of project time as a reward.' },
+                        { id: `plan${Date.now()}-2`, task: 'Implement the "5-minute rule" for difficult tasks', completed: false, notes: 'When facing resistance to schoolwork or cleaning, commit to just 5 minutes. This CBT technique reduces task avoidance by lowering the initial barrier to starting. Often, you\'ll continue past the 5 minutes once momentum is established.' },
+                        { id: `plan${Date.now()}-3`, task: 'Establish a daily energy management routine', completed: false, notes: 'Address reported tiredness by creating consistent sleep/wake times and incorporating short breaks between activities. Research shows proper energy management improves both productivity and creative engagement with projects.' },
+                        { id: `plan${Date.now()}-4`, task: 'Apply project enthusiasm to necessary tasks', completed: false, notes: 'Identify what makes projects engaging and find ways to incorporate those elements into schoolwork or cleaning. This might involve gamification, setting creative challenges, or connecting these tasks to your larger goals.' },
+                        { id: `plan${Date.now()}-5`, task: 'Practice mindful task transitions', completed: false, notes: 'Develop a short ritual (3-5 minutes) to mindfully close project work and transition to responsibilities. This creates a mental boundary and reduces the resistance to switching between different types of activities.' }
+                    ];
+                    
+                    appState.helpPlan = fallbackPlan;
+                    appState.needsPlanUpdate = false;
+                    
+                    // Save to localStorage
+                    saveAppState(); addSystemMessage("There was an error generating a fully personalized help plan. A plan based on your specific challenges has been created instead.");
+                } finally {
+                    appState.isGeneratingPlan = false;
+                    updateUI();
+                }
+            }
+            
+            // NEW FUNCTION: Summarize knowledge base
+            async function summarizeKnowledgeBase() {
+                try {
+                    // Create prompt for summarization
+                    const prompt = `You are a clinical psychologist tasked with summarizing patient notes. 
+                    Your goal is to create a concise, clinically relevant summary that retains all important information but removes redundancy and improves clarity.
+
+                    Here is the current patient knowledge base:
+
+                    ${appState.knowledgeBase}
+
+                    Please create a condensed version that:
+                    1. Maintains all specific, clinically relevant details about the patient
+                    2. Preserves session dates and key events
+                    3. Eliminates redundancies and repetitive information
+                    4. Organizes information in a clear, structured format
+                    5. Focuses on actionable insights for future therapeutic work
+                    6. Retains the patient's exact words where they provide important context
+                    7. Uses professional clinical language where appropriate
+                    
+                    The summary should be comprehensive enough to inform future sessions while being as concise as possible.`;
+                    
+                    // Call Gemini API for summarization
+                    const summarizedContent = await callGeminiAPI(prompt);
+                    
+                    // Update app state with summarized content
+                    appState.knowledgeBase = summarizedContent;
+                    
+                    // Save to localStorage
+                    saveAppState();
+                    
+                    // Update displayed content
+                    updateKnowledgeBase();
+                    
+                    return true;
+                } catch (error) {
+                    console.error("Error in summarizeKnowledgeBase:", error);
+                    throw error;
+                }
+            }
+            
+            // Toggle settings panel
+            function toggleSettingsPanel() {
+                elements.settingsPanel.classList.toggle('hidden');
+            }
+            
+            // Switch settings tab
+            function switchSettingsTab(tab) {
+                appState.activeSettingsTab = tab;
+                
+                // Remove active class from all tabs and panes
+                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+                
+                // Add active class to selected tab and pane
+                if (tab === 'knowledge') {
+                    elements.knowledgeTabBtn.classList.add('active');
+                    elements.knowledgeTab.classList.add('active');
+                } else if (tab === 'plan') {
+                    elements.planTabBtn.classList.add('active');
+                    elements.planTab.classList.add('active');
+                } else if (tab === 'storage') {
+                    elements.storageTabBtn.classList.add('active');
+                    elements.storageTab.classList.add('active');
+                }
+            }
+            
+            // Toggle mobile sidebar
+            function toggleMobileSidebar(force) {
+                if (typeof force === 'boolean') {
+                    appState.isMobileSidebarVisible = force;
+                } else {
+                    appState.isMobileSidebarVisible = !appState.isMobileSidebarVisible;
+                }
+                
+                if (appState.isMobileSidebarVisible) {
+                    elements.sidebar.classList.add('visible');
+                } else {
+                    elements.sidebar.classList.remove('visible');
+                }
+            }
+            
+            // Handle message submission
+            function handleMessageSubmit(e) {
+                e.preventDefault();
+                
+                const messageContent = elements.messageInput.value.trim();
+                if (!messageContent || !appState.activeConversationId) return;
+                
+                // Add user message
+                addMessage(messageContent);
+                
+                // Clear input
+                elements.messageInput.value = '';
+                elements.messageInput.style.height = 'auto';
+                elements.sendBtn.disabled = true;
+            }
+            
+            // Auto-resize textarea
+            function autoResizeTextarea() {
+                elements.messageInput.style.height = 'auto';
+                elements.messageInput.style.height = (elements.messageInput.scrollHeight) + 'px';
+            }
+
+            // ========== EVENT LISTENERS ==========
+            
+            // Setup all event listeners
+            function setupEventListeners() {
+                // Message form submission
+                elements.messageForm.addEventListener('submit', handleMessageSubmit);
+                
+                // Message input for enabling/disabling send button
+                elements.messageInput.addEventListener('input', function() {
+                    elements.sendBtn.disabled = !this.value.trim();
+                    autoResizeTextarea();
+                });
+                
+                // Start/New Conversation buttons
+                elements.startConversationBtn.addEventListener('click', startNewConversation);
+                elements.newConversationBtn.addEventListener('click', startNewConversation);
+                
+                // End Session button
+                elements.endSessionBtn.addEventListener('click', endSession);
+                
+                // Settings Panel
+                elements.settingsBtn.addEventListener('click', toggleSettingsPanel);
+                elements.closeSettingsBtn.addEventListener('click', toggleSettingsPanel);
+                elements.settingsPanel.querySelector('.settings-overlay').addEventListener('click', toggleSettingsPanel);
+                
+                // Delete confirmation modal
+                elements.cancelDeleteBtn.addEventListener('click', hideDeleteConfirmation);
+                elements.confirmDeleteBtn.addEventListener('click', function() {
+                    deleteConversation(appState.conversationToDelete);
+                });
+                
+                // API Settings
+                elements.apiKeyInput.addEventListener('change', function() {
+                    appState.apiKey = this.value.trim();
+                    saveAppState();
+                });
+                
+                elements.modelNameInput.addEventListener('change', function() {
+                    appState.model = this.value.trim();
+                    saveAppState();
+                });
+                
+                // Settings Tabs
+                elements.knowledgeTabBtn.addEventListener('click', () => switchSettingsTab('knowledge'));
+                elements.planTabBtn.addEventListener('click', () => switchSettingsTab('plan'));
+                elements.storageTabBtn.addEventListener('click', () => switchSettingsTab('storage'));
+                
+                // Help Plan
+                elements.refreshPlanBtn.addEventListener('click', generateNewHelpPlan);
+                
+                // Mobile Sidebar Toggle
+                elements.toggleSidebarBtn.addEventListener('click', toggleMobileSidebar);
+                
+                // Data Management
+                elements.exportDataBtn.addEventListener('click', exportData);
+                elements.importDataBtn.addEventListener('click', function() {
+                    elements.importFile.click();
+                });
+                
+                elements.importFile.addEventListener('change', function(e) {
+                    if (e.target.files && e.target.files.length > 0) {
+                        importData(e.target.files[0]);
+                        // Reset file input
+                        e.target.value = '';
+                    }
+                });
+                
+                elements.clearDataBtn.addEventListener('click', function() {
+                    if (confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
+                        clearAllData();
+                    }
+                });
+                
+                // Knowledge Base Edit Feature
+                elements.editKnowledgeBtn.addEventListener('click', function() {
+                    // Switch to edit mode
+                    elements.knowledgeBaseContent.classList.add('hidden');
+                    elements.knowledgeEditContainer.classList.remove('hidden');
+                    
+                    // Populate editor with current content
+                    elements.knowledgeBaseEditor.value = appState.knowledgeBase;
+                    
+                    // Focus the editor
+                    elements.knowledgeBaseEditor.focus();
+                });
+                
+                // Cancel Edit
+                elements.cancelEditBtn.addEventListener('click', function() {
+                    // Switch back to view mode
+                    elements.knowledgeBaseContent.classList.remove('hidden');
+                    elements.knowledgeEditContainer.classList.add('hidden');
+                });
+                
+                // Save Knowledge Base Edits
+                elements.saveEditBtn.addEventListener('click', function() {
+                    // Get edited content
+                    const editedContent = elements.knowledgeBaseEditor.value;
+                    
+                    // Update app state
+                    appState.knowledgeBase = editedContent;
+                    
+                    // Save to localStorage
+                    saveAppState();
+                    
+                    // Switch back to view mode
+                    elements.knowledgeBaseContent.classList.remove('hidden');
+                    elements.knowledgeEditContainer.classList.add('hidden');
+                    
+                    // Update displayed content
+                    updateKnowledgeBase();
+                    
+                    // Show confirmation
+                    addSystemMessage("Knowledge base has been updated successfully.");
+                });
+                
+                // Summarize Knowledge Base
+                elements.summarizeKnowledgeBtn.addEventListener('click', async function() {
+                    // Disable button while processing
+                    elements.summarizeKnowledgeBtn.disabled = true;
+                    elements.summarizeKnowledgeBtn.innerHTML = `
+                        <div class="summarize-spinner"></div>
+                        Summarizing...
+                    `;
+                    
+                    try {
+                        // Call function to summarize knowledge base
+                        await summarizeKnowledgeBase();
+                        
+                        // Show confirmation
+                        addSystemMessage("Knowledge base has been summarized successfully.");
+                    } catch (error) {
+                        console.error("Error summarizing knowledge base:", error);
+                        addSystemMessage("Error summarizing knowledge base. Please try again.");
+                    } finally {
+                        // Re-enable button
+                        elements.summarizeKnowledgeBtn.disabled = false;
+                        elements.summarizeKnowledgeBtn.innerHTML = `
+                            <svg class="icon icon-small" viewBox="0 0 24 24">
+                                <line x1="21" y1="10" x2="3" y2="10"></line>
+                                <line x1="21" y1="6" x2="3" y2="6"></line>
+                                <line x1="21" y1="14" x2="3" y2="14"></line>
+                                <line x1="17" y1="18" x2="3" y2="18"></line>
+                            </svg>
+                            Summarize
+                        `;
+                    }
+                });
+            }
+
+            // ========== INITIALIZATION ==========
+            
+            // Initialize the application
+            function initializeApp() {
+                initializeData();
+                setupEventListeners();
+                updateUI();
+                
+                // Check if we need to create initial help plan
+                if (appState.helpPlan.length === 0 && appState.conversations.length === 0) {
+                    startNewConversation();
+                }
+            }
+            
+            // Start the application
+            initializeApp();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  font-family: Arial, sans-serif;
+}
+
+#videoContainer {
+  position: relative;
+}
+
+canvas {
+  display: block;
+}
+
+#controlPanel {
+  margin-left: 20px;
+  padding: 10px;
+  width: 350px;
+  background-color: #f0f0f0;
+}
+
+#ingredientList {
+  margin-top: 10px;
+}
+
+#backlogCounter {
+  margin-top: 10px;
+}
+
+#loadingIndicator {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+#descriptionDiv {
+  margin-top: 10px;
+}
+
+#descriptionList {
+  list-style-type: disc;
+  margin-left: 20px;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+#generateButton {
+  margin-top: 20px;
+  padding: 10px;
+  width: 100%;
+  background-color: #4CAF50;
+  color: white;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+#generateButton:hover {
+  background-color: #45a049;
+}
+
+#debugDiv {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+h2, h3 {
+  margin: 10px 0;
+}
+
+#controlPanel input[type=range] {
+  width: 100%;
+}
+
+#controlPanel span {
+  display: inline-block;
+  margin-bottom: 5px;
+}

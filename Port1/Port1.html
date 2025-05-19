@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinaFlow - Task & Project Manager</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="patch_ui.css">
+    <link rel="stylesheet" href="patch_brand.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://unpkg.com/dexie@3.2.3/dist/dexie.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <div class="logo-wrapper"><img src="logo.png" alt="FinaFlow logo" class="logo-img"><span class="logo-text">FinaFlow</span></div>
+            <div class="view-controls">
+                <button id="active-view-btn" class="view-btn active">Active Tasks</button>
+                <button id="waiting-view-btn" class="view-btn">Waiting Tasks</button>
+                <button id="completed-view-btn" class="view-btn">Completed Tasks</button>
+                <button id="quick-tasks-view-btn" class="view-btn">Quick Tasks</button>
+                <button id="projects-view-btn" class="view-btn">Projects</button>
+                <button id="concepts-view-btn" class="view-btn">Concepts</button>
+                </div>
+        </header>
+
+        <div class="main-content">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="sort-section">
+                    <h3>Sort By</h3>
+                    <select id="sort-select">
+                        <option value="priority">Priority</option>
+                        <option value="deadline">Deadline</option>
+                        <option value="importance">Importance</option>
+                        <option value="energy">Energy</option>
+                        <option value="focus">Focus</option>
+                        <option value="created">Date Created</option>
+                    </select>
+                </div>
+                
+                <div class="filter-section">
+                    <h3>Filter By Tags</h3>
+                    <div id="tag-filters" class="tag-filters">
+                        <!-- Tags will be dynamically added here -->
+                    </div>
+                <div id="last-backup-indicator" class="backup-indicator" style="font-size:12px;opacity:.8;"></div>
+                </div>
+                
+                <div class="filter-section" id="project-filter-section">
+                    <h3>Filter By Projects</h3>
+                    <div id="project-filters" class="tag-filters">
+                        <!-- Projects will be dynamically added here -->
+                    </div>
+                <div id="last-backup-indicator" class="backup-indicator" style="font-size:12px;opacity:.8;"></div>
+                </div>
+                
+                <div class="manage-section">
+                    <h3>Manage Tags</h3>
+                    <div id="manage-tags" class="manage-tags">
+                        <!-- Tags management will be dynamically added here -->
+                    </div>
+                <div id="last-backup-indicator" class="backup-indicator" style="font-size:12px;opacity:.8;"></div>
+                </div>
+                
+                <div class="manage-section">
+                    <h3>Manage Waiting Reasons</h3>
+                    <div id="manage-reasons" class="manage-reasons">
+                        <!-- Waiting reasons management will be dynamically added here -->
+                    </div>
+                <div id="last-backup-indicator" class="backup-indicator" style="font-size:12px;opacity:.8;"></div>
+                </div>
+            </div>
+
+            <!-- Task Container -->
+            <div class="task-container">
+                <!-- Action Buttons -->
+                <div class="add-task-container">
+                    <button id="add-task-btn" class="add-task-btn">
+                        <i class="fas fa-plus"></i> Add Task
+                    </button>
+                    <button id="quick-add-btn" class="add-quick-task-btn">
+                        <i class="fas fa-bolt"></i> Quick Add
+                    </button>
+                    <button id="new-project-btn" class="add-project-btn">
+                        <i class="fas fa-project-diagram"></i> New Project
+                    </button>
+                    <button id="new-concept-btn" class="add-concept-btn">
+                        <i class="fas fa-lightbulb"></i> New Concept
+                    </button>
+                    <button id="clear-completed-btn" class="clear-completed-btn">
+                        <i class="fas fa-trash-alt"></i> Clear Completed
+                    </button>
+                </div>
+                
+                <!-- Quick Task Entry Area (initially hidden) -->
+                <div id="quick-task-area" class="quick-task-area hidden">
+                    <div class="quick-task-header">
+                        <h3>Quick Task Entry</h3>
+                        <button id="close-quick-task-btn" class="close-quick-task-btn">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="quick-task-input-container">
+                        <input type="text" id="quick-task-input" placeholder="Type task and press Enter to add quickly...">
+                    </div>
+                    <div id="quick-tasks-list" class="quick-tasks-list">
+                        <!-- Quick tasks will be dynamically added here -->
+                    </div>
+                <div id="last-backup-indicator" class="backup-indicator" style="font-size:12px;opacity:.8;"></div>
+                </div>
+
+                <!-- Concept Quick Entry Area (initially hidden) -->
+                <div id="concept-area" class="concept-area hidden">
+                    <div class="concept-header">
+                        <h3>Concept Development</h3>
+                        <button id="close-concept-btn" class="close-concept-btn">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="concept-input-container">
+                        <input type="text" id="concept-title-input" placeholder="Concept title...">
+                        <textarea id="concept-input" placeholder="Jot down your concept ideas here..."></textarea>
+                        <button id="save-concept-btn" class="save-concept-btn">
+                            <i class="fas fa-save"></i> Save Concept
+                        </button>
+                        <button id="work-out-concept-btn" class="work-out-concept-btn">
+                            <i class="fas fa-hammer"></i> Work Out
+                        </button>
+                    </div>
+                    <div id="concepts-list" class="concepts-list">
+                        <!-- Concepts will be dynamically added here -->
+                    </div>
+                <div id="last-backup-indicator" class="backup-indicator" style="font-size:12px;opacity:.8;"></div>
+                </div>
+
+                <!-- Projects Area (initially hidden) -->
+                <div id="projects-area" class="projects-area hidden">
+                    <div class="projects-header">
+                        <h3>Projects</h3>
+                        <div class="projects-view-toggle">
+                            <button id="grid-view-btn" class="view-toggle-btn active">
+                                <i class="fas fa-th"></i> Grid
+                            </button>
+                            <button id="list-view-btn" class="view-toggle-btn">
+                                <i class="fas fa-list"></i> List
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="projects-filter">
+                        <input type="text" id="project-search" placeholder="Search projects...">
+                        <select id="project-status-filter">
+                            <option value="all">All Statuses</option>
+                            <option value="active">Active</option>
+                            <option value="waiting">Waiting</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                    
+                    <div id="projects-grid" class="projects-grid">
+                        <!-- Projects will be dynamically added here -->
+                    </div>
+                    
+                    <div id="projects-list" class="projects-list hidden">
+                        <!-- Projects will be dynamically added here in list view -->
+                    </div>
+                <div id="last-backup-indicator" class="backup-indicator" style="font-size:12px;opacity:.8;"></div>
+                </div>
+
+                <!-- Project Detail View (initially hidden) -->
+                <div id="project-detail" class="project-detail hidden">
+                    <div class="project-detail-header">
+                        <button id="back-to-projects-btn" class="back-btn">
+                            <i class="fas fa-arrow-left"></i> Back to Projects
+                        </button>
+                        <div class="project-detail-actions">
+                            <button id="edit-project-btn" class="edit-project-btn">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button id="delete-project-btn" class="delete-project-btn">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="project-detail-content">
+                        <div class="project-detail-main">
+                            <div class="project-detail-image">
+                                <!-- Project image will be dynamically added here -->
+                            </div>
+                            <div class="project-detail-info">
+                                <h2 id="project-detail-title" class="project-detail-title"></h2>
+                                <div id="project-detail-status" class="project-detail-status"></div>
+                                <div id="project-detail-dates" class="project-detail-dates"></div>
+                                <div id="project-detail-tags" class="project-detail-tags"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="project-detail-tabs">
+                            <button id="overview-tab" class="tab-btn active">Overview</button>
+                            <button id="tasks-tab" class="tab-btn">Tasks</button>
+                            <button id="notes-tab" class="tab-btn">Notes</button>
+                            <button id="files-tab" class="tab-btn">Files</button>
+                        </div>
+                        
+                        <div id="overview-content" class="tab-content">
+                            <div class="overview-section">
+                                <h3>Project Description</h3>
+                                <p id="project-description"></p>
+                            </div>
+                            
+                            <div class="overview-section">
+                                <h3>Next Actionable Task</h3>
+                                <div id="next-action" class="next-action"></div>
+                            </div>
+                            
+                            <div class="overview-section">
+                                <h3>Progress</h3>
+                                <div id="project-progress" class="project-progress"></div>
+                            </div>
+                        </div>
+                        
+                        <div id="tasks-content" class="tab-content hidden">
+                            <div class="project-tasks-header">
+                                <h3>Project Tasks</h3>
+                                <button id="add-project-task-btn" class="add-project-task-btn">
+                                    <i class="fas fa-plus"></i> Add Task
+                                </button>
+                            </div>
+                            <div id="project-tasks-list" class="project-tasks-list">
+                                <!-- Project tasks will be dynamically added here -->
+                            </div>
+                        </div>
+                        
+                        <div id="notes-content" class="tab-content hidden">
+                            <div class="project-notes-header">
+                                <h3>Project Notes</h3>
+                                <button id="add-note-btn" class="add-note-btn">
+                                    <i class="fas fa-plus"></i> Add Note
+                                </button>
+                                <div class="notes-sort-container">
+                                    <select id="notes-sort-select">
+                                        <option value="date">Date Created</option>
+                                        <option value="title">Title</option>
+                                        <option value="tags">Tags</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="notes-filter-container">
+                                <div id="note-tag-filters" class="note-tag-filters">
+                                    <!-- Note tag filters will be dynamically added here -->
+                                </div>
+                            </div>
+                            <div id="notes-grid" class="notes-grid">
+                                <!-- Notes will be dynamically added here -->
+                            </div>
+                        </div>
+                        
+                        <div id="files-content" class="tab-content hidden">
+                            <div class="project-files-header">
+                                <h3>Project Files</h3>
+                                <div class="file-upload-container">
+                                    <label for="file-upload" class="file-upload-label">
+                                        <i class="fas fa-upload"></i> Upload File
+                                    </label>
+                                    <input type="file" id="file-upload" class="file-upload-input" multiple>
+                                </div>
+                            </div>
+                            <div id="files-list" class="files-list">
+                                <!-- Files will be dynamically added here -->
+                            </div>
+                        </div>
+                    </div>
+                <div id="last-backup-indicator" class="backup-indicator" style="font-size:12px;opacity:.8;"></div>
+                </div>
+
+                <!-- Concept Detail View (initially hidden) -->
+                <div id="concept-detail" class="concept-detail hidden">
+                    <div class="concept-detail-header">
+                        <button id="back-to-concepts-btn" class="back-btn">
+                            <i class="fas fa-arrow-left"></i> Back to Concepts
+                        </button>
+                        <div class="concept-detail-actions">
+                            <button id="edit-concept-btn" class="edit-concept-btn">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button id="delete-concept-btn" class="delete-concept-btn">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                            <button id="concept-to-project-btn" class="concept-to-project-btn">
+                                <i class="fas fa-project-diagram"></i> Convert to Project
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="concept-detail-content">
+                        <h2 id="concept-detail-title" class="concept-detail-title"></h2>
+                        <div id="concept-detail-date" class="concept-detail-date"></div>
+                        <div class="concept-detail-body">
+                            <textarea id="concept-detail-text" class="concept-detail-text"></textarea>
+                        </div>
+                        <div class="concept-detail-footer">
+                            <button id="save-concept-detail-btn" class="save-concept-detail-btn">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                        </div>
+                    </div>
+                <div id="last-backup-indicator" class="backup-indicator" style="font-size:12px;opacity:.8;"></div>
+                </div>
+
+                <!-- Tasks List -->
+                <div id="tasks-list" class="tasks-list">
+                    <!-- Tasks will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Task Modal -->
+    <div id="add-task-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Task</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="task-form">
+                    <div class="form-group">
+                        <label for="task-title">Task Title</label>
+                        <input type="text" id="task-title" placeholder="Enter task title" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="task-description">Description (Optional)</label>
+                        <textarea id="task-description" placeholder="Enter task description"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="task-project">Project (Optional)</label>
+                        <select id="task-project">
+                            <option value="">-- None --</option>
+                            <!-- Projects will be dynamically added here -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="task-tags">Tags (Comma separated)</label>
+                        <input type="text" id="task-tags" placeholder="e.g. work, personal, urgent">
+                        <div id="suggested-tags" class="suggested-tags">
+                            <!-- Suggested tags will appear here -->
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="task-deadline-date">Deadline</label>
+                        <div class="deadline-container">
+                            <input type="date" id="task-deadline-date">
+                            <button type="button" id="toggle-time-btn" class="toggle-time-btn">Add Time</button>
+                            <div id="time-container" class="time-container hidden">
+                                <input type="time" id="task-deadline-time">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Importance</label>
+                        <div class="importance-options">
+                            <label class="radio-container">
+                                <input type="radio" name="importance" value="normal" checked>
+                                <span class="radio-label">Normal</span>
+                            </label>
+                            <label class="radio-container">
+                                <input type="radio" name="importance" value="high">
+                                <span class="radio-label">High</span>
+                            </label>
+                            <label class="radio-container">
+                                <input type="radio" name="importance" value="super">
+                                <span class="radio-label">Super Important</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Energy Type</label>
+                        <div class="energy-options">
+                            <label class="radio-container">
+                                <input type="radio" name="energy" value="low" checked>
+                                <span class="radio-label">Low</span>
+                            </label>
+                            <label class="radio-container">
+                                <input type="radio" name="energy" value="medium">
+                                <span class="radio-label">Medium</span>
+                            </label>
+                            <label class="radio-container">
+                                <input type="radio" name="energy" value="high">
+                                <span class="radio-label">High</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Focus Level</label>
+                        <div class="focus-options">
+                            <label class="radio-container">
+                                <input type="radio" name="focus" value="low" checked>
+                                <span class="radio-label">Low</span>
+                            </label>
+                            <label class="radio-container">
+                                <input type="radio" name="focus" value="medium">
+                                <span class="radio-label">Medium</span>
+                            </label>
+                            <label class="radio-container">
+                                <input type="radio" name="focus" value="high">
+                                <span class="radio-label">High</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Status</label>
+                        <div class="status-options">
+                            <label class="radio-container">
+                                <input type="radio" name="status" value="active" checked>
+                                <span class="radio-label">Active</span>
+                            </label>
+                            <label class="radio-container">
+                                <input type="radio" name="status" value="waiting">
+                                <span class="radio-label">Waiting</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div id="waiting-reason-container" class="form-group hidden">
+                        <label for="waiting-reason">Waiting Reason</label>
+                        <input type="text" id="waiting-reason" placeholder="e.g. need to be home, waiting for response">
+                        <div id="suggested-reasons" class="suggested-tags">
+                            <!-- Suggested waiting reasons will appear here -->
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" id="cancel-task-btn" class="cancel-btn">Cancel</button>
+                        <button type="submit" class="submit-btn">Add Task</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Task Modal -->
+    <div id="edit-task-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Task</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="edit-task-form">
+                    <input type="hidden" id="edit-task-id">
+                    <div class="form-group">
+                        <label for="edit-task-title">Task Title</label>
+                        <input type="text" id="edit-task-title" placeholder="Enter task title" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-task-description">Description (Optional)</label>
+                        <textarea id="edit-task-description" placeholder="Enter task description"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-task-project">Project (Optional)</label>
+                        <select id="edit-task-project">
+                            <option value="">-- None --</option>
+                            <!-- Projects will be dynamically added here -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-task-tags">Tags (Comma separated)</label>
+                        <input type="text" id="edit-task-tags" placeholder="e.g. work, personal, urgent">
+                        <div id="edit-suggested-tags" class="suggested-tags">
+                            <!-- Suggested tags will appear here -->
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-task-deadline-date">Deadline</label>
+                        <div class="deadline-container">
+                            <input type="date" id="edit-task-deadline-date">
+                            <button type="button" id="edit-toggle-time-btn" class="toggle-time-btn">Add Time</button>
+                            <div id="edit-time-container" class="time-container hidden">
+                                <input type="time" id="edit-task-deadline-time">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Importance</label>
+                        <div class="importance-options">
+                            <label class="radio-container">
+                                <input type="radio" name="edit-importance" value="normal">
+                                <span class="radio-label">Normal</span>
+                            </label>
+                            <label class="radio-container">
+                                <input type="radio" name="edit-importance" value="high">
+                                <span class="radio-label">High</span>
+                            </label>
+                            <label class="radio-container">
+                                <input type="radio" name="edit-importance" value="super">
+                                <span class="radio-label">Super Important</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Energy Type</label>
+                        <div class="energy-options">
+                            <label class="radio-container">
+                                <input type="radio" name="edit-energy" value="low">
+                                <span class="radio-label">Low</span>
+                            </label>
+                            <label class="radio-container">
+                                <input type="radio" name="edit-energy" value="medium">
+                                <span class="radio-label">Medium</span>
+                            </label>
+                            <label class="radio-container">
+                                <input type="radio" name="edit-energy" value="high">
+                                <span class="radio-label">High</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Focus Level</label>
+                        <div class="focus-options">
+                            <label class="radio-container">
+                                <input type="radio" name="edit-focus" value="low">
+                                <span class="radio-label">Low</span>
+                            </label>
+                            <label class="radio-container">
+                                <input type="radio" name="edit-focus" value="medium">
+                                <span class="radio-label">Medium</span>
+                            </label>
+                            <label class="radio-container">
+                                <input type="radio" name="edit-focus" value="high">
+                                <span class="radio-label">High</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Status</label>
+                        <div class="status-options">
+                            <label class="radio-container">
+                                <input type="radio" name="edit-status" value="active">
+                                <span class="radio-label">Active</span>
+                            </label>
+                            <label class="radio-container">
+                                <input type="radio" name="edit-status" value="waiting">
+                                <span class="radio-label">Waiting</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div id="edit-waiting-reason-container" class="form-group hidden">
+                        <label for="edit-waiting-reason">Waiting Reason</label>
+                        <input type="text" id="edit-waiting-reason" placeholder="e.g. need to be home, waiting for response">
+                        <div id="edit-suggested-reasons" class="suggested-tags">
+                            <!-- Suggested waiting reasons will appear here -->
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" id="delete-task-btn" class="delete-btn">Delete Task</button>
+                        <button type="button" id="cancel-edit-btn" class="cancel-btn">Cancel</button>
+                        <button type="submit" class="submit-btn">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Project Modal -->
+    <div id="add-project-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Project</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="project-form">
+                    <div class="form-group">
+                        <label for="project-title">Project Title</label>
+                        <input type="text" id="project-title" placeholder="Enter project title" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="project-description">Description</label>
+                        <textarea id="project-description" placeholder="Enter project description"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="project-image">Project Image</label>
+                        <div class="image-upload-container">
+                            <label for="project-image-upload" class="image-upload-label">
+                                <i class="fas fa-upload"></i> Choose Image
+                            </label>
+                            <input type="file" id="project-image-upload" class="image-upload-input" accept="image/*">
+                            <div id="image-preview" class="image-preview"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="project-tags">Tags (Comma separated)</label>
+                        <input type="text" id="project-tags" placeholder="e.g. work, personal, urgent">
+                        <div id="project-suggested-tags" class="suggested-tags">
+                            <!-- Suggested tags will appear here -->
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="project-deadline-date">Deadline</label>
+                        <div class="deadline-container">
+                            <input type="date" id="project-deadline-date">
+                            <button type="button" id="project-toggle-time-btn" class="toggle-time-btn">Add Time</button>
+                            <div id="project-time-container" class="time-container hidden">
+                                <input type="time" id="project-deadline-time">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Status</label>
+                        <div class="status-options">
+                            <label class="radio-container">
+                                <input type="radio" name="project-status" value="active" checked>
+                                <span class="radio-label">Active</span>
+                            </label>
+                            <label class="radio-container">
+                                <input type="radio" name="project-status" value="waiting">
+                                <span class="radio-label">Waiting</span>
+                            </label>
+                            <label class="radio-container">
+                                <input type="radio" name="project-status" value="completed">
+                                <span class="radio-label">Completed</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div id="project-waiting-reason-container" class="form-group hidden">
+                        <label for="project-waiting-reason">Waiting Reason</label>
+                        <input type="text" id="project-waiting-reason" placeholder="e.g. need feedback, waiting for resources">
+                        <div id="project-suggested-reasons" class="suggested-tags">
+                            <!-- Suggested waiting reasons will appear here -->
+                        </div>
+                    </div>
+                                        
+                    <div class="form-actions">
+                        <button type="button" id="cancel-project-btn" class="cancel-btn">Cancel</button>
+                        <button type="submit" class="submit-btn">Add Project</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Project Modal -->
+    <div id="edit-project-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Project</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="edit-project-form">
+                    <input type="hidden" id="edit-project-id">
+                    <div class="form-group">
+                        <label for="edit-project-title">Project Title</label>
+                        <input type="text" id="edit-project-title" placeholder="Enter project title" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-project-description">Description</label>
+                        <textarea id="edit-project-description" placeholder="Enter project description"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-project-image">Project Image</label>
+                        <div class="image-upload-container">
+                            <label for="edit-project-image-upload" class="image-upload-label">
+                                <i class="fas fa-upload"></i> Choose Image
+                            </label>
+                            <input type="file" id="edit-project-image-upload" class="image-upload-input" accept="image/*">
+                            <div id="edit-image-preview" class="image-preview"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-project-tags">Tags (Comma separated)</label>
+                        <input type="text" id="edit-project-tags" placeholder="e.g. work, personal, urgent">
+                        <div id="edit-project-suggested-tags" class="suggested-tags">
+                            <!-- Suggested tags will appear here -->
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-project-deadline-date">Deadline</label>
+                        <div class="deadline-container">
+                            <input type="date" id="edit-project-deadline-date">
+                            <button type="button" id="edit-project-toggle-time-btn" class="toggle-time-btn">Add Time</button>
+                            <div id="edit-project-time-container" class="time-container hidden">
+                                <input type="time" id="edit-project-deadline-time">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Status</label>
+                        <div class="status-options">
+                            <label class="radio-container">
+                                <input type="radio" name="edit-project-status" value="active">
+                                <span class="radio-label">Active</span>
+                            </label>
+                            <label class="radio-container">
+                                <input type="radio" name="edit-project-status" value="waiting">
+                                <span class="radio-label">Waiting</span>
+                            </label>
+                            <label class="radio-container">
+                                <input type="radio" name="edit-project-status" value="completed">
+                                <span class="radio-label">Completed</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div id="edit-project-waiting-reason-container" class="form-group hidden">
+                        <label for="edit-project-waiting-reason">Waiting Reason</label>
+                        <input type="text" id="edit-project-waiting-reason" placeholder="e.g. need feedback, waiting for resources">
+                        <div id="edit-project-suggested-reasons" class="suggested-tags">
+                            <!-- Suggested waiting reasons will appear here -->
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" id="delete-project-btn-modal" class="delete-btn">Delete Project</button>
+                        <button type="button" id="cancel-edit-project-btn" class="cancel-btn">Cancel</button>
+                        <button type="submit" class="submit-btn">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Note Modal -->
+    <div id="add-note-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Note</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="note-form">
+                    <input type="hidden" id="note-project-id">
+                    <div class="form-group">
+                        <label for="note-title">Note Title</label>
+                        <input type="text" id="note-title" placeholder="Enter note title" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="note-content">Content</label>
+                        <textarea id="note-content" placeholder="Enter note content" class="note-textarea"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="note-tags">Tags (Comma separated)</label>
+                        <input type="text" id="note-tags" placeholder="e.g. idea, reference, important">
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" id="cancel-note-btn" class="cancel-btn">Cancel</button>
+                        <button type="submit" class="submit-btn">Add Note</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Note Modal -->
+    <div id="edit-note-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Note</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="edit-note-form">
+                    <input type="hidden" id="edit-note-id">
+                    <input type="hidden" id="edit-note-project-id">
+                    <div class="form-group">
+                        <label for="edit-note-title">Note Title</label>
+                        <input type="text" id="edit-note-title" placeholder="Enter note title" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-note-content">Content</label>
+                        <textarea id="edit-note-content" placeholder="Enter note content" class="note-textarea"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-note-tags">Tags (Comma separated)</label>
+                        <input type="text" id="edit-note-tags" placeholder="e.g. idea, reference, important">
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" id="delete-note-btn" class="delete-btn">Delete Note</button>
+                        <button type="button" id="cancel-edit-note-btn" class="cancel-btn">Cancel</button>
+                        <button type="submit" class="submit-btn">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="patch.js"></script>
+    <script src="patch_storage.js"></script>
+    <script src="patch_backup.js"></script>
+</body>
+</html>

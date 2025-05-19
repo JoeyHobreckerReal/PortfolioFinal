@@ -1,0 +1,39 @@
+/* patch_brand.css – FinaFlow brand identity */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400&display=swap');
+
+:root {
+    --sapphire: #4F7FFF;
+    --lavender: #9E7BFF;
+    --mint: #5FF1C6;
+    --charcoal: #20232A;
+    --offwhite: #F9FAFB;
+
+    --primary-color: var(--charcoal);
+    --secondary-color: #2b2e36;
+    --accent-color: var(--sapphire);
+    --text-color: var(--offwhite);
+    --light-text: #dfe3e8;
+    --border-color: #32363f;
+    --success-color: var(--mint);
+    --warning-color: var(--lavender);
+    --danger-color: #FF647C;
+}
+
+body { font-family: 'Inter', sans-serif; color: var(--text-color); background: var(--primary-color); }
+
+h1,h2,h3,h4,h5,h6 { font-family: 'Poppins', sans-serif; color: var(--offwhite); }
+
+.logo-wrapper { display:flex; align-items:center; gap:10px; }
+.logo-img { height:36px; width:auto; border-radius:8px; }
+.logo-text { font-family:'Poppins', sans-serif; font-weight:700; font-size:24px; color:var(--offwhite); }
+
+.view-btn { border-radius:12px; }
+.task-card, .project-card, .concept-item, .note-card { border-radius:16px; }
+
+.task-card:hover, .project-card:hover, .concept-item:hover, .note-card:hover {
+    transition:transform .15s ease;
+    transform:translateY(-4px);
+}
+
+/* Remove previous hero background if exists */
+header { background:none; padding:20px 0; }

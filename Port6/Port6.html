@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Flavor Fusion</title>
+  <!-- Include p5.js library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
+  <!-- Include p5.collide2D library for collision detection -->
+  <script src="https://cdn.jsdelivr.net/npm/p5.collide2d"></script>
+  <!-- Include Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Open+Sans&display=swap" rel="stylesheet">
+  <!-- Include your custom CSS -->
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <!-- Login Screen -->
+  <div id="login-container">
+    <div class="login-form">
+      <h1>Welcome to Flavor Fusion</h1>
+      <input type="text" id="username-input" placeholder="Username">
+      <input type="password" id="password-input" placeholder="Password">
+      <button id="login-button">Login</button>
+      <button id="create-account-button">Create New Account</button>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header style="display:none;">
+    <div class="logo" id="home-button">Flavor Fusion</div>
+    <nav>
+      <button id="favorites-button">Favorites</button>
+      <button id="account-button">User Settings</button>
+      <button id="user-info-button">User Information</button>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <div id="main-menu-container" style="display:none;">
+    <div class="hero">
+      <!-- Background image will be set via CSS -->
+      <div class="hero-content">
+        <h1>Embark on a Culinary Journey</h1>
+        <p>Explore global flavors and create personalized recipes</p>
+        <div class="action-buttons">
+          <button id="start-map-button">Cooking Based on Culture</button>
+          <button id="start-prompt-button">Cook Based on Prompt</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Containers for canvas and interface -->
+  <div id="canvas-container" style="display:none;"></div>
+  <div id="interface-container" style="display:none;"></div>
+  <div id="recipe-container" style="display:none;"></div>
+  <div id="favorites-container" style="display:none;"></div>
+  <div id="user-info-container" style="display:none;"></div>
+
+  <!-- The main content will be handled by p5.js -->
+  <script src="sketch.js"></script>
+</body>
+</html>

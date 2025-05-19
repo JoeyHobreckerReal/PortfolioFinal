@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinaPulse - Stay Organized</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Inter:wght@400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <div class="logo-container">
+                <img src="logo.png" alt="FinaPulse logo" class="logo-img">
+                <h1>FinaPulse</h1>
+            </div>
+            <nav>
+                <button id="settingsBtn" class="nav-button"><i class="fas fa-cog"></i> Settings</button>
+            </nav>
+        </header>
+
+        <main>
+            <!-- Left Sidebar -->
+            <aside class="sidebar left-sidebar">
+                <div class="mini-calendar">
+                    <div class="mini-calendar-header">
+                        <button id="prevMonth"><i class="fas fa-chevron-left"></i></button>
+                        <h3 id="miniCalendarMonth">April 2025</h3>
+                        <button id="nextMonth"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                    <div class="mini-calendar-grid" id="miniCalendarGrid">
+                        <!-- Mini calendar days will be generated here -->
+                    </div>
+                </div>
+                
+                <div class="view-controls">
+                    <button id="dayViewBtn" class="view-btn active">Day</button>
+                    <button id="weekViewBtn" class="view-btn">Week</button>
+                </div>
+                
+                <button id="addEventBtn" class="primary-btn"><i class="fas fa-plus"></i> Add Event</button>
+            </aside>
+
+            <!-- Main Calendar Area -->
+            <section class="calendar-container">
+                <div class="calendar-header">
+                    <div class="calendar-navigation">
+                        <button id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+                        <h2 id="currentDateDisplay">Sunday, April 27, 2025</h2>
+                        <button id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                    <button id="todayBtn" class="today-btn">Today</button>
+                </div>
+
+                <div class="calendar-view">
+                    <div class="day-labels" id="dayLabels">
+                        <!-- Day labels will be generated here -->
+                    </div>
+                    <div class="time-slots-container">
+                        <div class="time-labels">
+                            <!-- Time labels (00:00 - 23:00) -->
+                        </div>
+                        <div class="events-grid" id="eventsGrid">
+                            <!-- Event grid will be generated here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Sidebar -->
+            <aside class="sidebar right-sidebar">
+                <div class="tasks-section">
+                    <h3>Weekly Tasks</h3>
+                    <div class="tasks-list" id="tasksList">
+                        <!-- Tasks will be generated here -->
+                    </div>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <!-- Modal for Adding/Editing Events -->
+    <div id="eventModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Add Event</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="eventForm">
+                    <div class="form-group">
+                        <label for="eventTitle">Title</label>
+                        <input type="text" id="eventTitle" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="eventTag">Tag</label>
+                        <select id="eventTag" required>
+                            <!-- Tags will be populated dynamically -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="eventDate">Date</label>
+                        <input type="date" id="eventDate" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="allDayEvent">
+                            <label for="allDayEvent">All Day Event</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row time-inputs">
+                        <div class="form-group">
+                            <label for="eventStartTime">Start Time</label>
+                            <input type="time" id="eventStartTime">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="eventEndTime">End Time</label>
+                            <input type="time" id="eventEndTime">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="eventDescription">Description (Optional)</label>
+                        <textarea id="eventDescription"></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" id="deleteEventBtn" class="delete-btn" style="display: none;">Delete</button>
+                        <button type="submit" class="save-btn">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Settings -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content settings-modal">
+            <div class="modal-header">
+                <h3>Settings</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="tags">Tags</button>
+                    <button class="tab-btn" data-tab="tasks">Tasks</button>
+                    <button class="tab-btn" data-tab="breaks">Breaks</button>
+                </div>
+                
+                <div class="tab-content" id="tagsTab">
+                    <h4>Manage Tags</h4>
+                    <div class="tags-list" id="tagsList">
+                        <!-- Tags will be generated here -->
+                    </div>
+                    
+                    <form id="addTagForm" class="add-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="tagName">Name</label>
+                                <input type="text" id="tagName" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="tagColor">Color</label>
+                                <input type="color" id="tagColor" value="#9E7BFF">
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="add-btn">Add Tag</button>
+                    </form>
+                </div>
+                
+                <div class="tab-content hidden" id="tasksTab">
+                    <h4>Manage Tasks</h4>
+                    <div class="settings-tasks-list" id="settingsTasksList">
+                        <!-- Tasks will be generated here -->
+                    </div>
+                    
+                    <form id="addTaskForm" class="add-form">
+                        <div class="form-group">
+                            <label for="taskName">Task Name</label>
+                            <input type="text" id="taskName" required>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="taskTag">Tag</label>
+                                <select id="taskTag" required>
+                                    <!-- Tags will be populated dynamically -->
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="taskDuration">Required Time (minutes)</label>
+                                <input type="number" id="taskDuration" min="15" step="15" value="60" required>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="add-btn">Add Task</button>
+                    </form>
+                </div>
+                
+                <div class="tab-content hidden" id="breaksTab">
+                    <h4>Break Settings</h4>
+                    <div class="break-settings-list" id="breakSettingsList">
+                        <!-- Break settings for each tag will be generated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Event Modal -->
+    <div id="viewEventModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="viewEventTitle">Event Title</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="event-details">
+                    <div class="event-tag" id="viewEventTag">
+                        <span class="tag-color"></span>
+                        <span class="tag-name">Tag Name</span>
+                    </div>
+                    
+                    <div class="event-time" id="viewEventTime">
+                        <i class="far fa-clock"></i>
+                        <span>Time</span>
+                    </div>
+                    
+                    <div class="event-description" id="viewEventDescription">
+                        <p>Description will appear here if available.</p>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button id="editEventBtn" class="edit-btn">Edit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
