@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Player - Joey Hobrecker</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Qwitcher+Grypen:wght@700&family=Monument+Valley:ital,wght@0,400;0,700;1,400&family=Monoton&display=swap');
+        
+        :root {
+            --bg-color: #080808;
+            --paper-color: #121212;
+            --accent-color: #ff6b35;
+            --text-color: #f8f8f8;
+            --secondary-color: #4cc9f0;
+            --tertiary-color: #8338ec;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Monument Valley', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        /* Decorative Elements */
+        .decorative-circle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.2;
+            filter: blur(60px);
+            z-index: -1;
+        }
+
+        .circle-1 {
+            width: 400px;
+            height: 400px;
+            background-color: var(--tertiary-color);
+            top: -200px;
+            right: -200px;
+        }
+
+        .circle-2 {
+            width: 300px;
+            height: 300px;
+            background-color: var(--secondary-color);
+            bottom: 30%;
+            left: -150px;
+        }
+
+        .circle-3 {
+            width: 500px;
+            height: 500px;
+            background-color: var(--accent-color);
+            opacity: 0.1;
+            top: 40%;
+            right: -250px;
+        }
+        
+        /* Video Container */
+        .video-container {
+            width: 80%;
+            max-width: 1000px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 50px;
+            animation: fadeIn 1s ease-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        video {
+            width: 100%;
+            display: block;
+            border-radius: 12px;
+        }
+        
+        /* Back Button */
+        .back-button {
+            display: inline-block;
+            padding: 1rem 3rem;
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.2rem;
+            letter-spacing: 0.1em;
+            border-radius: 50px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 10px 25px rgba(255, 107, 53, 0.4);
+            position: relative;
+            overflow: hidden;
+            margin-top: 30px;
+        }
+        
+        .back-button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.2), 
+                transparent
+            );
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .back-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(255, 107, 53, 0.6);
+            background: linear-gradient(45deg, var(--accent-color), var(--tertiary-color));
+        }
+        
+        .back-button:hover::before {
+            left: 100%;
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 767px) {
+            .video-container {
+                width: 95%;
+            }
+            
+            .back-button {
+                padding: 0.8rem 2rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="decorative-circle circle-1"></div>
+    <div class="decorative-circle circle-2"></div>
+    <div class="decorative-circle circle-3"></div>
+    
+    <div class="video-container">
+        <video controls>
+            <source src="Video1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    
+    <script>
+        // Optional: Add event listeners for video if needed
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.querySelector('video');
+            
+            // Example: When video ends, add a subtle animation to the back button
+            video.addEventListener('ended', function() {
+                document.querySelector('.back-button').style.animation = 'pulse 1.5s infinite';
+            });
+        });
+        
+        // Pulse animation
+        if(!document.querySelector('style').textContent.includes('@keyframes pulse')) {
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes pulse {
+                    0% { transform: scale(1); }
+                    50% { transform: scale(1.05); }
+                    100% { transform: scale(1); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    </script>
+</body>
+</html>
